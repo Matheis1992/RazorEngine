@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\RazorEngine.NetFramework.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

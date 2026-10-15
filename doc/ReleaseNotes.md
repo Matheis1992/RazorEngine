@@ -1,7 +1,11 @@
 ﻿### 4.0.0-preview.1 (RazorEngine.NetFramework)
 
  * (BREAKING) First release of the fork, published as the new package `RazorEngine.NetFramework`.
- * (BREAKING) The assembly is now `RazorEngine.NetFramework.dll`, signed with a new key (public key token `58ad996d4f48e61f`), so it can be used side by side with the original `RazorEngine.dll`. Namespaces stay `RazorEngine.*`. If you register the configuration section in `app.config`/`web.config`, change the assembly name in its type, e.g. `type="RazorEngine.Configuration.RazorEngineConfigurationSection, RazorEngine.NetFramework"`.
+ * (BREAKING) The assembly is now `RazorEngine.NetFramework.dll`, signed with a new key (public key token `58ad996d4f48e61f`), so it no longer collides with the original `RazorEngine.dll`. Namespaces stay `RazorEngine.*`. When migrating, update `app.config`/`web.config`:
+   - Change the assembly name of the section registration, e.g. `type="RazorEngine.Configuration.RazorEngineConfigurationSection, RazorEngine.NetFramework"`.
+   - Change every assembly-qualified type name inside `<razorEngine>` that names `, RazorEngine` (`activatorType`, `baseTemplateType`, `cachingProviderType`, `compilerServiceFactoryType`, `encodedStringFactoryType`, `referenceResolverType`, `templateManagerType`, `templateResolverType`).
+   - Remove `bindingRedirect` entries for the old `RazorEngine` assembly.
+ * (BUGFIX) The default reference resolver no longer passes the original `RazorEngine`/`RazorEngine.Roslyn` 3.x assemblies to the template compiler, so templates still compile when the original package is loaded in the same process.
  * (BREAKING) Target .NET Framework 4.8 only. The net40 (Razor 2) and Razor4 (Microsoft.AspNetCore.Razor) builds are dropped.
  * (BUILD) SDK-style projects with NuGet PackageReference replace Paket and FAKE. Build with `dotnet build`, test with `dotnet test`, pack with `dotnet pack`.
  * (BUILD) GitHub Actions replace Travis CI and AppVeyor.

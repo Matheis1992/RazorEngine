@@ -6,7 +6,6 @@
     <AssemblyName>RazorEngine.NetFramework</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\RazorEngine.NetFramework.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <!-- Version and shared assembly attributes. Title and description stay in Properties\AssemblyInfo.cs. -->
