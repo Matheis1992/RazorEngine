@@ -168,44 +168,17 @@ $RECYCLE.BIN/
 .DS_Store
 
 # ===================================================
-# Exclude F# project specific directories and files
+# Build outputs
 # ===================================================
-
-.fake/*
 
 # NuGet Packages Directory
 packages/*
-!packages/Yaaf.AdvancedBuilding
-packages/Yaaf.AdvancedBuilding/*
-!packages/Yaaf.AdvancedBuilding/content
 
-gh-pages/
+# Packages created by dotnet pack -o artifacts
+artifacts/
 
-# Generated documentation folder
-docs/output/
+# Test results (dotnet test --results-directory TestResults)
+TestResults/
 
-# Temp folder used for publishing docs
-temp/
-# Where binaries get build into
-build/
-# Where test binaries get build into
-/test/
-
-# Test results produced by build
-TestResults.xml
-
-# Nuget outputs
-*.nuspec
-!nuget/*.nuspec
-nuget/*.nupkg
-
-
-release.cmd
-release.sh
-localpackages/
-paket-files
 *.orig
-.paket/paket.exe
-docs/content/license.md
-docs/content/release-notes.md
 
