@@ -24,12 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AE7E811A-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{57FF23EF-C0CC-42F2-9CF7-5A468FC50C89}"
 	ProjectSection(SolutionItems) = preProject
-		..\.travis.yml = ..\.travis.yml
-		..\appveyor.yml = ..\appveyor.yml
-		..\build.fsx = ..\build.fsx
-		..\buildConfig.fsx = ..\buildConfig.fsx
-		..\generateDocs.fsx = ..\generateDocs.fsx
-		..\paket.dependencies = ..\paket.dependencies
+		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
 		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
@@ -86,12 +81,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{CF6DB8E1-245
 		..\doc\content\img\github.png = ..\doc\content\img\github.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{77852C68-A0DB-4644-A1B4-17E101DFE9B1}"
-	ProjectSection(SolutionItems) = preProject
-		..\nuget\RazorEngine-razor4.nuspec = ..\nuget\RazorEngine-razor4.nuspec
-		..\nuget\RazorEngine.nuspec = ..\nuget\RazorEngine.nuspec
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.RazorEngine.Core.Roslyn", "test\Test.RazorEngine.Core.Roslyn\Test.RazorEngine.Core.Roslyn.csproj", "{7CB02F9F-7E88-448B-A25B-7985058296C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelper", "test\TestHelper\TestHelper.csproj", "{7899C0AE-844D-4A34-B3BC-96819C73EA68}"
@@ -146,7 +135,6 @@ Global
 		{32977FC4-AC53-4273-97CF-C5FB2212065C} = {47C1804C-3301-4AB6-A14A-30BF72417AA3}
 		{3AC5DA61-ED58-45FA-975B-4FDB23387B7A} = {A9A2DC20-74A8-4F03-8EDB-A0B6B95F7401}
 		{CF6DB8E1-2459-4EFC-84D0-BCBB4834DAB8} = {3AC5DA61-ED58-45FA-975B-4FDB23387B7A}
-		{77852C68-A0DB-4644-A1B4-17E101DFE9B1} = {57FF23EF-C0CC-42F2-9CF7-5A468FC50C89}
 		{7CB02F9F-7E88-448B-A25B-7985058296C5} = {AE7E811A-2B9F-45BC-9752-0FB4D1DEE12D}
 		{7899C0AE-844D-4A34-B3BC-96819C73EA68} = {AE7E811A-2B9F-45BC-9752-0FB4D1DEE12D}
 		{6B0E2ECB-01EE-482B-951C-9E0F0D80F030} = {AE7E811A-2B9F-45BC-9752-0FB4D1DEE12D}

@@ -8,8 +8,35 @@
     <AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
+  <!-- Version and shared assembly attributes. Title and description stay in Properties\AssemblyInfo.cs. -->
+  <PropertyGroup>
+    <Version>4.0.0-preview.1</Version>
+    <Company>RazorEngine</Company>
+    <Product>RazorEngine</Product>
+    <Copyright>RazorEngine Copyright © RazorEngine Project 2011-2017</Copyright>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>RazorEngine.NetFramework</PackageId>
+    <Authors>Matthew Abbott;Ben Dornis;Matthias Dittrich</Authors>
+    <Description>RazorEngine - A templating engine based on the Razor parser, for .NET Framework 4.8.</Description>
+    <PackageTags>C# razor template engine programming</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/Matheis1992/RazorEngine</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/Matheis1992/RazorEngine/blob/develop/doc/ReleaseNotes.md</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/Matheis1992/RazorEngine</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+    <None Include="..\..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

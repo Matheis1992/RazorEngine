@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <!-- Assembly attributes come from Properties\AssemblyInfo.cs and SharedAssemblyInfo.cs. -->
+    <!-- Assembly attributes come from Properties\AssemblyInfo.cs. -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- Only RazorEngine.Core is shipped as a NuGet package. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
 </Project>
