@@ -16,11 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RazorEngine.Configuration;
 using RazorEngine.Compilation.ReferenceResolver;
-#if RAZOR4
-using Microsoft.AspNetCore.Razor;
-#else
 using System.Web.Razor;
-#endif
 
 namespace Test.RazorEngine
 {
@@ -706,11 +702,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
     var t = new TestHelper.TestClass();
 }
 @t.TestProperty";
-#if RAZOR4
-                const string expected = "\nTestPropert";
-#else
                 const string expected = "\n\nTestPropert";
-#endif
 
                 string result = service.RunCompile(template, "test");
 

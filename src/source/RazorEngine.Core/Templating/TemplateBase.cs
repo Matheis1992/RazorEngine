@@ -8,11 +8,7 @@ namespace RazorEngine.Templating
     using System.Text;
     using System.Threading.Tasks;
     using Text;
-#if RAZOR4
-    using SectionAction = System.Action<System.IO.TextWriter>;
-#else
     using SectionAction = System.Action;
-#endif
 
     /// <summary>
     /// Provides a base implementation of a template.
@@ -33,9 +29,6 @@ namespace RazorEngine.Templating
         private bool modelInit = false;
         private dynamic viewBag = null;
 
-#if RAZOR4
-        private AttributeInfo _attributeInfo;
-#endif
 
         /// <summary>
         /// The current context, filled when we are currently writing a template instance.
@@ -71,14 +64,11 @@ namespace RazorEngine.Templating
         /// </summary>
         [Obsolete("Only provided for backwards compatibility, use RazorEngine instead.")]
         public ITemplateService TemplateService { get; set; }
-#if RAZOR4
-#else
         /// <summary>
         /// Gets or sets the current <see cref="IRazorEngineService"/> instance.
         /// </summary>
         [Obsolete("Use the Razor property instead, this is obsolete as it makes it difficult to use the RazorEngine namespace within templates.")]
         public IRazorEngineService RazorEngine { get { return Razor; } set { Razor = value; } }
-#endif
         /// <summary>
         /// Gets or sets the current <see cref="IRazorEngineService"/> instance.
         /// </summary>
@@ -147,9 +137,6 @@ namespace RazorEngine.Templating
             return new TemplateWriter(tw =>
                 instance.Run(
                     InternalTemplateService.CreateExecuteContext(), tw)
-#if RAZOR4
-                    .Wait()
-#endif
                     );
         }
 
@@ -169,11 +156,7 @@ namespace RazorEngine.Templating
         /// <summary>
         /// Executes the compiled template.
         /// </summary>
-#if RAZOR4
-        public virtual Task Execute() { return Task.FromResult(0); }
-#else
         public virtual void Execute() { }
-#endif
 
         /// <summary>
         /// Returns the specified string as a raw string. This will ensure it is not encoded.
@@ -213,11 +196,7 @@ namespace RazorEngine.Templating
         /// <param name="context">The current execution context.</param>
         /// <param name="reader"></param>
         /// <returns>The merged result of the template.</returns>
-#if RAZOR4
-        public async Task Run(ExecuteContext context, TextWriter reader)
-#else
         void ITemplate.Run(ExecuteContext context, TextWriter reader)
-#endif
         {
             _context = context;
 
@@ -225,11 +204,7 @@ namespace RazorEngine.Templating
             using (var writer = new StringWriter(builder))
             {
                 _context.CurrentWriter = writer;
-#if RAZOR4
-                await Execute();
-#else
                 Execute();
-#endif
                 writer.Flush();
                 _context.CurrentWriter = null;
 
@@ -249,11 +224,7 @@ namespace RazorEngine.Templating
                     context.PushBody(body);
                     context.PushSections();
 
-#if RAZOR4
-                    await layout.Run(context, reader);
-#else
                     layout.Run(context, reader);
-#endif
                     return;
                 }
 
@@ -277,11 +248,7 @@ namespace RazorEngine.Templating
                 throw new ArgumentException("No section has been defined with name '" + name + "'");
 
             if (action == null)
-#if RAZOR4
-                action = (tw) => { };
-#else
                 action = () => { };
-#endif
 
             return new TemplateWriter(tw =>
             {
@@ -319,7 +286,6 @@ namespace RazorEngine.Templating
             helper.WriteTo(_context.CurrentWriter);
         }
 
-#if !RAZOR4
         /// <summary>
         /// Writes an attribute to the result.
         /// </summary>
@@ -414,182 +380,7 @@ namespace RazorEngine.Templating
                 }
             }
         }
-#endif
 
-#if RAZOR4
-        /// <summary>
-        /// Writes the specified attribute name to the result.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="prefix">The prefix.</param>
-        /// <param name="prefixOffset">The prefix offset.</param>
-        /// <param name="suffix">The suffix.</param>
-        /// <param name="suffixOffset">The suffix offset</param>
-        /// <param name="attributeValuesCount">The attribute values count.</param>
-        public virtual void BeginWriteAttribute(string name, string prefix, int prefixOffset, string suffix, int suffixOffset, int attributeValuesCount)
-        {
-            BeginWriteAttributeTo(_context.CurrentWriter, name, prefix, prefixOffset, suffix, suffixOffset, attributeValuesCount);
-        }
-
-        /// <summary>
-        /// Writes the specified attribute name to the specified <see cref="TextWriter"/>.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="prefix">The prefix.</param>
-        /// <param name="prefixOffset">The prefix offset.</param>
-        /// <param name="suffix">The suffix.</param>
-        /// <param name="suffixOffset">The suffix offset</param>
-        /// <param name="attributeValuesCount">The attribute values count.</param>
-        public virtual void BeginWriteAttributeTo(TextWriter writer, string name, string prefix, int prefixOffset, string suffix, int suffixOffset, int attributeValuesCount)
-        {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
-
-            if (prefix == null)
-                throw new ArgumentNullException(nameof(prefix));
-
-            if (suffix == null)
-                throw new ArgumentNullException(nameof(suffix));
-
-            _attributeInfo = new AttributeInfo(name, prefix, prefixOffset, suffix, suffixOffset, attributeValuesCount);
-
-            // Single valued attributes might be omitted in entirety if it the attribute value strictly evaluates to
-            // null  or false. Consequently defer the prefix generation until we encounter the attribute value.
-            if (attributeValuesCount != 1)
-            {
-                WritePositionTaggedLiteral(writer, prefix, prefixOffset);
-            }
-        }
-
-        /// <summary>
-        /// Writes the specified attribute value to the result.
-        /// </summary>
-        /// <param name="prefix">The prefix.</param>
-        /// <param name="prefixOffset">The prefix offset.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="valueOffset">The value offset.</param>
-        /// <param name="valueLength">The value length.</param>
-        /// <param name="isLiteral">The is literal.</param>
-        public void WriteAttributeValue(string prefix, int prefixOffset, object value, int valueOffset, int valueLength, bool isLiteral)
-        {
-            WriteAttributeValueTo(_context.CurrentWriter, prefix, prefixOffset, value, valueOffset, valueLength, isLiteral);
-        }
-
-        /// <summary>
-        /// Writes the specified attribute value to the specified <see cref="TextWriter"/>.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="prefix">The prefix.</param>
-        /// <param name="prefixOffset">The prefix offset.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="valueOffset">The value offset.</param>
-        /// <param name="valueLength">The value length.</param>
-        /// <param name="isLiteral">The is literal.</param>
-        public void WriteAttributeValueTo(TextWriter writer, string prefix, int prefixOffset, object value, int valueOffset, int valueLength, bool isLiteral)
-        {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
-
-            if (_attributeInfo.AttributeValuesCount == 1)
-            {
-                if (IsBoolFalseOrNullValue(prefix, value))
-                {
-                    // Value is either null or the bool 'false' with no prefix; don't render the attribute.
-                    _attributeInfo.Suppressed = true;
-                    return;
-                }
-
-                // We are not omitting the attribute. Write the prefix.
-                WritePositionTaggedLiteral(writer, _attributeInfo.Prefix, _attributeInfo.PrefixOffset);
-
-                if (IsBoolTrueWithEmptyPrefixValue(prefix, value))
-                {
-                    // The value is just the bool 'true', write the attribute name instead of the string 'True'.
-                    value = _attributeInfo.Name;
-                }
-            }
-
-            // This block handles two cases.
-            // 1. Single value with prefix.
-            // 2. Multiple values with or without prefix.
-            if (value != null)
-            {
-                if (!string.IsNullOrEmpty(prefix))
-                {
-                    WritePositionTaggedLiteral(writer, prefix, prefixOffset);
-                }
-
-                WriteUnprefixedAttributeValueTo(writer, value, isLiteral);
-            }
-        }
-
-        /// <summary>
-        /// Writes the attribute end to the result.
-        /// </summary>
-        public virtual void EndWriteAttribute()
-        {
-            EndWriteAttributeTo(_context.CurrentWriter);
-        }
-
-        /// <summary>
-        /// Writes the attribute end to the specified <see cref="TextWriter"/>.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        public virtual void EndWriteAttributeTo(TextWriter writer)
-        {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
-
-            if (!_attributeInfo.Suppressed)
-            {
-                WritePositionTaggedLiteral(writer, _attributeInfo.Suffix, _attributeInfo.SuffixOffset);
-            }
-        }
-
-        private void WritePositionTaggedLiteral(TextWriter writer, string value, int position)
-        {
-            WriteLiteralTo(writer, value);
-        }
-
-        private void WriteUnprefixedAttributeValueTo(TextWriter writer, object value, bool isLiteral)
-        {
-            var stringValue = value as string;
-
-            // The extra branching here is to ensure that we call the Write*To(string) overload where possible.
-            if (isLiteral && stringValue != null)
-            {
-                WriteLiteralTo(writer, stringValue);
-            }
-            else if (isLiteral)
-            {
-                WriteLiteralTo(writer, value);
-            }
-            else if (stringValue != null)
-            {
-                WriteTo(writer, stringValue);
-            }
-            else
-            {
-                WriteTo(writer, value);
-            }
-        }
-
-        private bool IsBoolFalseOrNullValue(string prefix, object value)
-        {
-            return string.IsNullOrEmpty(prefix) &&
-                (value == null ||
-                (value is bool && !(bool)value));
-        }
-
-        private bool IsBoolTrueWithEmptyPrefixValue(string prefix, object value)
-        {
-            // If the value is just the bool 'true', use the attribute name as the value.
-            return string.IsNullOrEmpty(prefix) &&
-                (value is bool && (bool)value);
-        }
-
-#endif
 
         /// <summary>
         /// Writes the specified string to the result.
@@ -600,16 +391,6 @@ namespace RazorEngine.Templating
             WriteLiteralTo(_context.CurrentWriter, literal);
         }
 
-#if RAZOR4
-        /// <summary>
-        /// Writes the specified object to the result.
-        /// </summary>
-        /// <param name="literal">The literal to write.</param>
-        public virtual void WriteLiteral(object literal)
-        {
-            WriteLiteralTo(_context.CurrentWriter, literal);
-        }
-#endif
 
         /// <summary>
         /// Writes a string literal to the specified <see cref="TextWriter"/>.
@@ -625,23 +406,6 @@ namespace RazorEngine.Templating
             writer.Write(literal);
         }
 
-#if RAZOR4
-        /// <summary>
-        /// Writes a string literal to the specified <see cref="TextWriter"/>.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="literal">The literal to be written.</param>
-        public virtual void WriteLiteralTo(TextWriter writer, object literal)
-        {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
-
-            if (literal != null)
-            {
-                WriteLiteralTo(writer, literal.ToString());
-            }
-        }
-#endif
 
         /// <summary>
         /// Writes a <see cref="PositionTagged{T}" /> literal to the result.
@@ -676,20 +440,6 @@ namespace RazorEngine.Templating
             }
         }
 
-#if RAZOR4
-        /// <summary>
-        /// Writes the specified string to the result. 
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value to be written.</param>
-        public virtual void WriteTo(TextWriter writer, string value)
-        {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
-
-            writer.Write(value);
-        }
-#endif
 
         /// <summary>
         /// Writes the specfied template helper result to the specified writer.
@@ -703,7 +453,6 @@ namespace RazorEngine.Templating
             helper.WriteTo(writer);
         }
 
-#if !RAZOR4
         /// <summary>
         /// Resolves the specified path
         /// </summary>
@@ -718,45 +467,8 @@ namespace RazorEngine.Templating
             }
             return path;
         }
-#endif
 #endregion
 
-#if RAZOR4
-        private struct AttributeInfo
-        {
-            public AttributeInfo(
-                string name,
-                string prefix,
-                int prefixOffset,
-                string suffix,
-                int suffixOffset,
-                int attributeValuesCount)
-            {
-                Name = name;
-                Prefix = prefix;
-                PrefixOffset = prefixOffset;
-                Suffix = suffix;
-                SuffixOffset = suffixOffset;
-                AttributeValuesCount = attributeValuesCount;
-
-                Suppressed = false;
-            }
-
-            public int AttributeValuesCount { get; }
-
-            public string Name { get; }
-
-            public string Prefix { get; }
-
-            public int PrefixOffset { get; }
-
-            public string Suffix { get; }
-
-            public int SuffixOffset { get; }
-
-            public bool Suppressed { get; set; }
-        }
-#endif
 
     }
 

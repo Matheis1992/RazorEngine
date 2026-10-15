@@ -69,7 +69,6 @@
             return this;
         }
         
-#if !RAZOR4
         /// <summary>
         /// Adds the specified code inspector.
         /// </summary>
@@ -95,7 +94,6 @@
             _config.CodeInspectors.Add(inspector);
             return this;
         }
-#endif
 
         /// <summary>
         /// Sets that dynamic models should be fault tollerant in accepting missing properties.
@@ -271,11 +269,7 @@
         public IConfigurationBuilder UseDefaultCompilerServiceFactory()
         {
             _config.CompilerServiceFactory =
-#if RAZOR4
-                new Roslyn.RoslynCompilerServiceFactory();
-#else
                 new DefaultCompilerServiceFactory();
-#endif
             return this;
         }
 

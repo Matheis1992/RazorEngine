@@ -30,18 +30,12 @@
         {
             Activator = new DefaultActivator();
             CompilerServiceFactory =
-#if RAZOR4
-              new Roslyn.RoslynCompilerServiceFactory();
-#else
                 new DefaultCompilerServiceFactory();
-#endif
             EncodedStringFactory = new HtmlEncodedStringFactory();
             
-#if !RAZOR4
 #pragma warning disable 0618 // Backwards Compat.
             CodeInspectors = new List<ICodeInspector>();
 #pragma warning restore 0618 // Backwards Compat.
-#endif
 
             ReferenceResolver = new UseCurrentAssembliesReferenceResolver();
             CachingProvider = new DefaultCachingProvider();
@@ -90,7 +84,6 @@
         /// </summary>
         public Type BaseTemplateType { get; set; }
 
-#if !RAZOR4
 #pragma warning disable 0618 // Backwards Compat.
         /// <summary>
         /// Gets the set of code inspectors.
@@ -104,7 +97,6 @@
         [Obsolete("This API is obsolete and will be removed in the next version (Razor4 doesn't use CodeDom for code-generation)!")]
         public IList<ICodeInspector> CodeInspectors { get; private set; }
 #pragma warning restore 0618 // Backwards Compat.
-#endif
         
         /// <summary>
         /// Gets or sets the reference resolver

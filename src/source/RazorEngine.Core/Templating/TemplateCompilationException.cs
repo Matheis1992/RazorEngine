@@ -2,9 +2,7 @@
 {
     using RazorEngine.Compilation;
     using System;
-#if !RAZOR4
     using System.CodeDom.Compiler;
-#endif
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
@@ -190,7 +188,6 @@ More details about the error:
         /// </summary>
         public ReadOnlyCollection<RazorEngineCompilerError> CompilerErrors { get; private set; }
 
-#if !RAZOR4
         /// <summary>
         /// Gets the set of compiler errors.
         /// </summary>
@@ -203,7 +200,6 @@ More details about the error:
                     CompilerErrors.Select(error => new CompilerError(error.FileName, error.Line, error.Column, error.ErrorNumber, error.ErrorText)).ToList());
             }
         }
-#endif
 
         /// <summary>
         /// Gets some copilation specific (temporary) data.

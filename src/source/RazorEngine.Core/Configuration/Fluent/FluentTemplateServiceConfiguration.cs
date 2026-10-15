@@ -72,7 +72,6 @@
             get { return _innerConfig.BaseTemplateType; }
         }
         
-#if !RAZOR4
         /// <summary>
         /// Gets the set of code inspectors.
         /// </summary>
@@ -81,7 +80,6 @@
         {
             get { return _innerConfig.CodeInspectors; }
         }
-#endif
         
         /// <summary>
         /// Gets the reference resolver.

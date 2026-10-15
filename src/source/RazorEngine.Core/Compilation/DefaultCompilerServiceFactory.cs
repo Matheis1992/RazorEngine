@@ -29,11 +29,7 @@
                     return new CSharpDirectCompilerService();
 
                 case Language.VisualBasic:
-#if RAZOR4
-                    throw new NotSupportedException("Razor4 doesn't support VB.net apparently.");
-#else
                     return new VBDirectCompilerService();
-#endif
 
                 default:
                     throw new ArgumentException("Unsupported language: " + language);

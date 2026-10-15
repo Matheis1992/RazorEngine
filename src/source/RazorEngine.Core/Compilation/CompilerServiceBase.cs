@@ -6,17 +6,10 @@
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-#if RAZOR4
-    using Microsoft.AspNetCore.Razor;
-    using Microsoft.AspNetCore.Razor.CodeGenerators;
-    using Microsoft.AspNetCore.Razor.Parser;
-    using Microsoft.AspNetCore.Razor.Parser.Internal;
-#else
     using System.Web.Razor;
     using System.Web.Razor.Generator;
     using System.Web.Razor.Parser;
     using System.CodeDom.Compiler;
-#endif
 
     using Inspectors;
     using Templating;
@@ -83,13 +76,11 @@
         #endregion
 
         #region Properties
-#if !RAZOR4
         /// <summary>
         /// Gets or sets the set of code inspectors.
         /// </summary>
         [Obsolete("This API is obsolete and will be removed in the next version (Razor4 doesn't use CodeDom for code-generation)!")]
         public IEnumerable<ICodeInspector> CodeInspectors { get; set; }
-#endif
 
         /// <summary>
         /// Gets or sets the assembly resolver.
@@ -214,15 +205,10 @@
                         new GeneratedClassContext(
                             "Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo",
                             "RazorEngine.Templating.TemplateWriter", "DefineSection"
-#if RAZOR4
-                            , new GeneratedTagHelperContext()
-#endif
                         )
-#if !RAZOR4
                         {
                             ResolveUrlMethodName = "ResolveUrl"
                         }
-#endif
                 };
 
             return host;
@@ -268,14 +254,7 @@
         /// <param name="context"></param>
         /// <returns></returns>
         [SecurityCritical]
-#if RAZOR4
-        public virtual string InspectSource(GeneratorResults results, TypeContext context)
-        {
-            return results.GeneratedCode;
-        }
-#else
         public abstract string InspectSource(GeneratorResults results, TypeContext context);
-#endif
 
         /// <summary>
         /// Gets the code compile unit used to compile a type.
@@ -383,7 +362,6 @@
             return references;
         }
 
-#if !RAZOR4
         /// <summary>
         /// Inspects the generated code compile unit.
         /// </summary>
@@ -400,7 +378,6 @@
             foreach (var inspector in CodeInspectors)
                 inspector.Inspect(unit, ns, type, executeMethod);
         }
-#endif
 
         /// <summary>
         /// Disposes the current instance.

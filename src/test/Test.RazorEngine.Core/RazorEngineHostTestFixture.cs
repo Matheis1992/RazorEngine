@@ -51,7 +51,6 @@ namespace RazorEngine.Tests
             }
         }
 
-#if !RAZOR4
         /// <summary>
         /// Tests that the <see cref="RazorEngineHost"/> supports the @ModelType directive.
         /// </summary>
@@ -84,7 +83,6 @@ namespace RazorEngine.Tests
                 Assert.That(result == expected, "Result does not match expected: " + result);
             }
         }
-#endif
         #endregion
     }
 }

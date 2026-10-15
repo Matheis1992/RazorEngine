@@ -4,11 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-#if RAZOR4
-    using Microsoft.AspNetCore.Razor.Parser;
-#else
     using System.Web.Razor.Parser;
-#endif
 
     using Microsoft.CSharp;
     using Microsoft.CSharp.RuntimeBinder;

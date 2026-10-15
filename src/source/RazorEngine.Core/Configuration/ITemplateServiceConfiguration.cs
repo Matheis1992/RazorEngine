@@ -30,13 +30,11 @@
         /// </summary>
         Type BaseTemplateType { get; }
         
-#if !RAZOR4
         /// <summary>
         /// Gets the code inspectors.
         /// </summary>
         [Obsolete("This API is obsolete and will be removed in the next version (Razor4 doesn't use CodeDom for code-generation)!")]
         IEnumerable<ICodeInspector> CodeInspectors { get; }
-#endif
 
         /// <summary>
         /// Gets the reference resolver.
