@@ -1,30 +1,19 @@
 # RazorEngine
 
-[![Join the chat at https://gitter.im/Antaris/RazorEngine](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Antaris/RazorEngine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![CI](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml)
 
-This project is searching for new maintainers, so if you want to help write on gitter or start sending PRs :)
+This is a maintained fork of [Antaris/RazorEngine](https://github.com/Antaris/RazorEngine), which has not been updated since 2018.
+It targets .NET Framework 4.8 and is published as the NuGet package `RazorEngine.NetFramework`.
+The original package `RazorEngine` (3.10.x) stays on nuget.org but is no longer maintained.
 
-*latest* documentation available on https://antaris.github.io/RazorEngine/.
-
-
-## Build status
-
-Develop Branch (`master`)
-
-[![Build Status](https://travis-ci.org/Antaris/RazorEngine.svg?branch=master)](https://travis-ci.org/Antaris/RazorEngine)
-[![Build status](https://ci.appveyor.com/api/projects/status/39bi38wonhwolrgy/branch/master?svg=true)](https://ci.appveyor.com/project/Antaris/razorengine/branch/master)
-
-Release Branch (`releases`)
-
-[![Build Status](https://travis-ci.org/Antaris/RazorEngine.svg?branch=releases)](https://travis-ci.org/Antaris/RazorEngine)
-[![Build status](https://ci.appveyor.com/api/projects/status/39bi38wonhwolrgy/branch/releases?svg=true)](https://ci.appveyor.com/project/Antaris/razorengine/branch/releases)
+The documentation of the original project is available on https://antaris.github.io/RazorEngine/.
 
 
 ## Quickstart
 
-First install the nuget package (>=3.5.0).
+First install the nuget package (currently a preview).
 
-	Install-Package RazorEngine
+	Install-Package RazorEngine.NetFramework -Prerelease
 
 A templating engine built on Microsoft's Razor parsing engine, RazorEngine allows you to use Razor syntax to build dynamic templates.
 You can find an introduction [here](http://www.asp.net/web-pages/overview/getting-started/introducing-razor-syntax-%28c%29).

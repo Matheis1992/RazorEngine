@@ -1,4 +1,12 @@
-﻿### 3.10.1-alpha001 / 4.5.1-alpha001
+﻿### 4.0.0-preview.1 (RazorEngine.NetFramework)
+
+ * (BREAKING) First release of the fork, published as the new package `RazorEngine.NetFramework`.
+ * (BREAKING) Target .NET Framework 4.8 only. The net40 (Razor 2) and Razor4 (Microsoft.AspNetCore.Razor) builds are dropped.
+ * (BUILD) SDK-style projects with NuGet PackageReference replace Paket and FAKE. Build with `dotnet build`, test with `dotnet test`, pack with `dotnet pack`.
+ * (BUILD) GitHub Actions replace Travis CI and AppVeyor.
+ * Still uses Microsoft.AspNet.Razor 3.2.3, so template syntax is unchanged from the 3.x net45 build.
+
+### 3.10.1-alpha001 / 4.5.1-alpha001
 
  * (NEW) Merge RazorEngine.Roslyn into RazorEngine.Core, thanks conniey (https://github.com/Antaris/RazorEngine/pull/480)
 

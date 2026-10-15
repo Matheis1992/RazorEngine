@@ -67,11 +67,6 @@ namespace Test.RazorEngine
         {
             CheckMono();
 
-#if MONO
-            // Mono has no AddHostEvidence or GetHostEvidence.
-            // We do not run the tests anyway.
-            return null;
-#else
             Evidence ev = new Evidence();
             ev.AddHostEvidence(new Zone(SecurityZone.Internet));
             PermissionSet permSet = SecurityManager.GetStandardSandbox(ev);
@@ -100,7 +95,6 @@ namespace Test.RazorEngine
             adSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             AppDomain newDomain = AppDomain.CreateDomain("Sandbox", null, adSetup, permSet, razorEngineAssembly, razorAssembly, testAssembly);
             return newDomain;
-#endif
         }
 
         /// <summary>

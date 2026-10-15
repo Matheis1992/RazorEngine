@@ -2,8 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <!-- Assembly attributes come from Properties\AssemblyInfo.cs and SharedAssemblyInfo.cs. -->
+    <!-- Assembly attributes come from Properties\AssemblyInfo.cs. -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- Only RazorEngine.Core is shipped as a NuGet package. -->
+    <IsPackable>false</IsPackable>
+    <!-- Deterministic paths in PDBs and symbol packages built by GitHub Actions. -->
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
 </Project>

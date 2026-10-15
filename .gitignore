@@ -25,9 +25,6 @@ build/
 [Bb]in/
 [Oo]bj/
 
-# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
-!packages/*/build/
-
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
@@ -168,44 +165,14 @@ $RECYCLE.BIN/
 .DS_Store
 
 # ===================================================
-# Exclude F# project specific directories and files
+# Build outputs
 # ===================================================
 
-.fake/*
+# Packages created by dotnet pack -o artifacts
+artifacts/
 
-# NuGet Packages Directory
-packages/*
-!packages/Yaaf.AdvancedBuilding
-packages/Yaaf.AdvancedBuilding/*
-!packages/Yaaf.AdvancedBuilding/content
+# Test results (dotnet test --results-directory TestResults)
+TestResults/
 
-gh-pages/
-
-# Generated documentation folder
-docs/output/
-
-# Temp folder used for publishing docs
-temp/
-# Where binaries get build into
-build/
-# Where test binaries get build into
-/test/
-
-# Test results produced by build
-TestResults.xml
-
-# Nuget outputs
-*.nuspec
-!nuget/*.nuspec
-nuget/*.nupkg
-
-
-release.cmd
-release.sh
-localpackages/
-paket-files
 *.orig
-.paket/paket.exe
-docs/content/license.md
-docs/content/release-notes.md
 

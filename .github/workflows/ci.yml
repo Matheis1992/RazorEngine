@@ -18,8 +18,23 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'src/Directory.Build.props') }}
+          restore-keys: nuget-${{ runner.os }}-
+
       - name: Restore
         run: dotnet restore src/RazorEngine.sln
+
+      - name: Check release notes match the package version
+        shell: pwsh
+        run: |
+          $version = dotnet msbuild src/source/RazorEngine.Core/RazorEngine.Core.csproj -getProperty:Version
+          $heading = Get-Content doc/ReleaseNotes.md | Where-Object { $_ -match '^###\s' } | Select-Object -First 1
+          if ($heading -notmatch [regex]::Escape($version)) {
+            throw "The newest heading in doc/ReleaseNotes.md ('$heading') does not mention version $version from RazorEngine.Core.csproj."
+          }
 
       - name: Build
         run: dotnet build src/RazorEngine.sln --configuration Release --no-restore
@@ -33,3 +48,12 @@ jobs:
         with:
           name: test-results
           path: TestResults
+
+      - name: Pack
+        run: dotnet pack src/RazorEngine.sln --configuration Release --no-build --output artifacts
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages
+          path: artifacts
