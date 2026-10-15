@@ -6,6 +6,10 @@ This is a maintained fork of [Antaris/RazorEngine](https://github.com/Antaris/Ra
 It targets .NET Framework 4.8 and is published as the NuGet package `RazorEngine.NetFramework`.
 The original package `RazorEngine` (3.10.x) stays on nuget.org but is no longer maintained.
 
+The assembly is `RazorEngine.NetFramework.dll` with its own signing key, so it can be used next to the original `RazorEngine.dll`.
+The namespaces are unchanged (`RazorEngine`, `RazorEngine.Templating`, ...), so switching from the original package usually only means replacing the package
+(and the assembly name in a `RazorEngineConfigurationSection` registration in `app.config`/`web.config`, if you use one).
+
 The documentation of the original project is available on https://antaris.github.io/RazorEngine/.
 
 
