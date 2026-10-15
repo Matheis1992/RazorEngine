@@ -1,12 +1,11 @@
 
 # Roslyn compiler support
 
-Starting with 3.5.0 RazorEngine supports the Roslyn compilers (via the Microsoft.CodeAnalysis nuget package).
-The first thing you want to do is install the additional package:
+RazorEngine supports the Roslyn compiler (via the Microsoft.CodeAnalysis.CSharp nuget package).
+Roslyn support is included in the `RazorEngine.NetFramework` package; no additional package is needed.
 
-	Install-Package RazorEngine.Roslyn
-
-> If you use the 4.x series (RazorEngine) you need the 4.x series of RazorEngine.Roslyn.
+> Do not install the old `RazorEngine.Roslyn` package. It depends on the original `RazorEngine` package,
+> which ships an assembly with the same name and conflicts with `RazorEngine.NetFramework`.
 
 To activate roslyn all you need to do is set the `CompilerServiceFactory` property in the configuration:
 

@@ -30,6 +30,6 @@ You can find licenses of the programs this project depends on on their nuget pag
 ## Releasing
 
 1. Update `doc/ReleaseNotes.md`.
-2. Update `<Version>` in `src/source/RazorEngine.Core/RazorEngine.Core.csproj`.
+2. Update `<Version>` in `src/source/RazorEngine.Core/RazorEngine.Core.csproj` and increase the last number of `<FileVersion>` (for every release, previews included).
 3. Run `dotnet pack src/RazorEngine.sln -c Release -o artifacts` (or take the `packages` artifact of the CI run).
 4. Push the package with `dotnet nuget push artifacts/RazorEngine.NetFramework.<version>.nupkg --api-key <key> --source https://api.nuget.org/v3/index.json`.
