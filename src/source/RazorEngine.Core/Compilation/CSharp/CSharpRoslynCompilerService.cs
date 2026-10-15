@@ -21,7 +21,7 @@ namespace RazorEngine.Roslyn.CSharp
     public class CSharpRoslynCompilerService : RoslynCompilerServiceBase
     {
         /// <summary>
-        /// We need a CodeDom instance as pre Razor4 uses CodeDom 
+        /// We need a CodeDom instance as Razor uses CodeDom
         /// internally and we need to generate the source code file...
         /// </summary>
         private Microsoft.CSharp.CSharpCodeProvider _codeDomProvider; 

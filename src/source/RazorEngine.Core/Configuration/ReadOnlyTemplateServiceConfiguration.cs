@@ -20,7 +20,7 @@ namespace RazorEngine.Configuration
         private readonly bool _allowMissingPropertiesOnDynamic;
         private readonly Type _baseTemplateType;
         private readonly ICachingProvider _cachingProvider;
-        [Obsolete("This API is obsolete and will be removed in the next version(Razor4 doesn't use CodeDom for code-generation)!")]
+        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
         private readonly IEnumerable<ICodeInspector> _codeInspectors;
         private readonly ICompilerServiceFactory _compilerServiceFactory;
         private readonly bool _debug;
@@ -167,7 +167,7 @@ namespace RazorEngine.Configuration
         /// <summary>
         /// Gets the code inspectors.
         /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (Razor4 doesn't use CodeDom for code-generation)!")]
+        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
         public IEnumerable<ICodeInspector> CodeInspectors
         {
             get
