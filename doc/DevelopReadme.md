@@ -66,7 +66,8 @@ Z version changes are bug-fixes and are highly backwards compatible.
 
 - /doc/
 
-	Project documentation files. This folder contains both development and user documentation.
+	Project documentation files. This folder contains both development and user documentation, read directly on GitHub.
+	`doc/templates` and `doc/content` are left over from the old FSharp.Formatting doc site and are currently unused.
 
 - /src/
 

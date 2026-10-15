@@ -11,6 +11,8 @@ Please send the pull request against the `develop` branch and mention an already
 ## Contributing Documentation
 
 You can help improving the documentation by editing the files in the `/doc` folder.
+The documentation is read directly on GitHub; there is currently no generated documentation website.
+(`doc/templates` and `doc/content` belong to the old FSharp.Formatting doc site and are kept for a possible new one, but nothing uses them at the moment.)
 You can even edit a page directly on github by clicking the edit button ([for example this page](https://github.com/Matheis1992/RazorEngine/blob/develop/CONTRIBUTING.md)).
 See also https://help.github.com/articles/editing-files-in-your-repository/ 
 (don't forget to send a pull request back after forking and changing something).
@@ -29,7 +31,8 @@ You can find licenses of the programs this project depends on on their nuget pag
 
 ## Releasing
 
-1. Update `doc/ReleaseNotes.md`.
+1. Add a heading for the new version at the top of `doc/ReleaseNotes.md` (CI fails if it does not match `<Version>`).
 2. Update `<Version>` in `src/source/RazorEngine.Core/RazorEngine.Core.csproj` and increase the last number of `<FileVersion>` (for every release, previews included).
-3. Run `dotnet pack src/RazorEngine.sln -c Release -o artifacts` (or take the `packages` artifact of the CI run).
-4. Push the package with `dotnet nuget push artifacts/RazorEngine.NetFramework.<version>.nupkg --api-key <key> --source https://api.nuget.org/v3/index.json`.
+3. Merge into `master` and create the tag `v<version>` (e.g. `v4.0.0-preview.1`) on that commit. The package's release notes link points to this tag.
+4. Run `dotnet pack src/RazorEngine.sln -c Release -o artifacts` (or take the `packages` artifact of the CI run).
+5. Push the package with `dotnet nuget push artifacts/RazorEngine.NetFramework.<version>.nupkg --api-key <key> --source https://api.nuget.org/v3/index.json`.
