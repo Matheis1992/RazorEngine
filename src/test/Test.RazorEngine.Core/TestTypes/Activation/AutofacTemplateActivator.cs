@@ -1,7 +1,6 @@
 ﻿namespace RazorEngine.Tests.TestTypes.Activation
 {
     using System;
-#if NET45
     using Autofac;
 
     using Templating;
@@ -41,5 +40,4 @@
         }
         #endregion
     }
-#endif
 }

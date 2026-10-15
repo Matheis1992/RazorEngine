@@ -4,7 +4,6 @@
 
     using NUnit.Framework;
     
-#if !RAZOR4
     using Compilation.Inspectors;
     using Configuration;
     using Templating;
@@ -36,5 +35,4 @@
         }
         #endregion
     }
-#endif
 }

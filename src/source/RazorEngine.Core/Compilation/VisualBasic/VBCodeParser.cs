@@ -1,7 +1,6 @@
 ﻿
 namespace RazorEngine.Compilation.VisualBasic
 {
-#if !RAZOR4 // no support for VB.net in Razor4?
     using System;
     using System.Linq;
     using System.Web.Razor.Generator;
@@ -14,9 +13,7 @@ namespace RazorEngine.Compilation.VisualBasic
     /// <summary>
     /// Defines a code parser that supports the VB syntax.
     /// </summary>
-#if NET45 // Razor 2 has [assembly: SecurityTransparent]
     [SecurityCritical]
-#endif
     public class VBCodeParser : System.Web.Razor.Parser.VBCodeParser
     {
         #region Fields
@@ -39,9 +36,7 @@ namespace RazorEngine.Compilation.VisualBasic
         /// <summary>
         /// Parses the inherits statement.
         /// </summary>
-#if NET45 // Razor 2 has [assembly: SecurityTransparent]
         [SecurityCritical]
-#endif
         protected override bool InheritsStatement()
         {
             // Verify we're on the right keyword and accept
@@ -69,9 +64,7 @@ namespace RazorEngine.Compilation.VisualBasic
         /// <summary>
         /// Parses the modeltype statement.
         /// </summary>
-#if NET45 // Razor 2 has [assembly: SecurityTransparent]
         [SecurityCritical]
-#endif
         protected virtual bool ModelTypeDirective()
         {
             AssertDirective("ModelType");
@@ -120,5 +113,4 @@ namespace RazorEngine.Compilation.VisualBasic
         }
         #endregion
     }
-#endif
 }

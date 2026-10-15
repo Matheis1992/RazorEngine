@@ -5,11 +5,7 @@
     using System.Dynamic;
     using System.IO;
 
-#if RAZOR4
-    using SectionAction = System.Action<System.IO.TextWriter>;
-#else
     using SectionAction = System.Action;
-#endif
 
     /// <summary>
     /// Defines a context for tracking template execution.
@@ -103,9 +99,6 @@
                 var item = _definedSections[section].Pop();
                 poppedSections.Add(Tuple.Create(section, item));
             }
-#if RAZOR4
-            inner(innerArg);
-#else
             var oldWriter = CurrentWriter;
             try
             {
@@ -116,7 +109,6 @@
             {
                 CurrentWriter = oldWriter;
             }
-#endif
             foreach (var item in poppedSections)
 	        {
 		        _definedSections[item.Item1].Push(item.Item2);

@@ -72,16 +72,14 @@
             get { return _innerConfig.BaseTemplateType; }
         }
         
-#if !RAZOR4
         /// <summary>
         /// Gets the set of code inspectors.
         /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (Razor4 doesn't use CodeDom for code-generation)!")]
+        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
         public IEnumerable<ICodeInspector> CodeInspectors
         {
             get { return _innerConfig.CodeInspectors; }
         }
-#endif
         
         /// <summary>
         /// Gets the reference resolver.

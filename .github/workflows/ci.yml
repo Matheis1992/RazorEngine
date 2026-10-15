@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    # .NET Framework 4.8 tests need a Windows runner.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore src/RazorEngine.sln
+
+      - name: Build
+        run: dotnet build src/RazorEngine.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test src/RazorEngine.sln --configuration Release --no-build --logger trx --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: TestResults

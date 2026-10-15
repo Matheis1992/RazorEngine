@@ -133,7 +133,6 @@
             }
         }
         
-#if NET45
         /// <summary>
         /// Parser fails on layout sections if closing brace is not on a new line.
         /// This is a bug on Microsoft.Asp.Razor 2.0.30506.0.
@@ -164,7 +163,6 @@
                 Assert.AreEqual(expected_3, result_3);
             }
         }
-#endif
 
         /// <summary>
         /// Using nested sections doesn't work.

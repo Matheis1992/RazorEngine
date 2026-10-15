@@ -1,8 +1,4 @@
-﻿#if RAZOR4
-using Microsoft.AspNetCore.Razor.Parser;
-#else
-using System.Web.Razor.Parser;
-#endif
+﻿using System.Web.Razor.Parser;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using RazorEngine.Compilation;
@@ -10,12 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Security;
 using System.Text;
-#if !RAZOR4
 using System.CodeDom.Compiler;
 using System.Web.Razor;
 using System.IO;
 using System.Globalization;
-#endif
 using RazorEngine.Compilation.ReferenceResolver;
 
 namespace RazorEngine.Roslyn.CSharp
@@ -26,13 +20,11 @@ namespace RazorEngine.Roslyn.CSharp
     [SecurityCritical]
     public class CSharpRoslynCompilerService : RoslynCompilerServiceBase
     {
-#if !RAZOR4
         /// <summary>
-        /// We need a CodeDom instance as pre Razor4 uses CodeDom 
+        /// We need a CodeDom instance as Razor uses CodeDom
         /// internally and we need to generate the source code file...
         /// </summary>
         private Microsoft.CSharp.CSharpCodeProvider _codeDomProvider; 
-#endif
         /// <summary>
         /// Creates a new CSharpRoslynCompilerService instance.
         /// </summary>
@@ -43,9 +35,7 @@ namespace RazorEngine.Roslyn.CSharp
             : base(
                 new RazorEngine.Compilation.CSharp.CSharpRazorCodeLanguage(strictMode),
                 markupParserFactory) {
-#if !RAZOR4
             _codeDomProvider = new Microsoft.CSharp.CSharpCodeProvider(); 
-#endif
         }
 
         /// <summary>
@@ -57,7 +47,6 @@ namespace RazorEngine.Roslyn.CSharp
             get { return "cs"; }
         }
 
-#if !RAZOR4
         /// <summary>
         /// Inspects the GeneratorResults and returns the source code.
         /// </summary>
@@ -76,7 +65,6 @@ namespace RazorEngine.Roslyn.CSharp
             }
             return generatedCode;
         }
-#endif
 
         /// <summary>
         /// Build a C# typename.
