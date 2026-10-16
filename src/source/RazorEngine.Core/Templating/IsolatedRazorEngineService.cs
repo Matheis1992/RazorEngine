@@ -241,7 +241,30 @@
             if (domain == AppDomain.CurrentDomain)
                 throw new InvalidOperationException("The application domain factory returned the current application domain which cannot be used for isolation.");
 
+            EnsureFullyTrusted(domain);
             return domain;
+        }
+
+        /// <summary>
+        /// Refuses partially trusted (sandboxed) application domains, see CVE-2021-46703.
+        /// Code Access Security is no security boundary: templates can escape such a sandbox,
+        /// so isolation is only supported for unloading templates, not for running untrusted templates.
+        /// The given domain is unloaded before the exception is thrown.
+        /// </summary>
+        /// <param name="domain">The application domain created by the factory.</param>
+        [SecuritySafeCritical]
+        internal static void EnsureFullyTrusted(AppDomain domain)
+        {
+            if (domain.IsFullyTrusted)
+                return;
+
+            AppDomain.Unload(domain);
+            throw new NotSupportedException(
+                "The application domain factory returned a partially trusted (sandboxed) application domain. " +
+                "Sandboxing templates with Code Access Security is not supported, because CAS is no security boundary " +
+                "and templates can escape the sandbox (CVE-2021-46703). Isolation is only supported with fully trusted " +
+                "application domains, to be able to unload templates. To run untrusted templates, isolate them in a " +
+                "separate process with minimal rights instead.");
         }
 
         /// <summary>

@@ -159,6 +159,7 @@
             if (domain == AppDomain.CurrentDomain)
                 throw new InvalidOperationException("The application domain factory returned the current application domain which cannot be used for isolation.");
 
+            IsolatedRazorEngineService.EnsureFullyTrusted(domain);
             return domain;
         }
 
