@@ -27,7 +27,7 @@
         {
             var config = new FluentTemplateServiceConfiguration(c => c.IncludeNamespaces("RazorEngine.Templating"));
 
-            Assert.That(config.Namespaces.Contains("RazorEngine.Templating"));
+            Assert.That(config.Namespaces, Does.Contain("RazorEngine.Templating"));
         }
 
         /// <summary>

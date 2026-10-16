@@ -281,7 +281,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
 }".Replace("$file$", file.Replace("\\", "\\\\"));
                 var test = service.RunCompile(template, "test");
 
-                Assert.That(File.Exists(file));
+                Assert.That(new FileInfo(file), Does.Exist);
                 File.Delete(file);
             });
         }

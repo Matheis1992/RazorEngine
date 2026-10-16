@@ -154,24 +154,15 @@ namespace Test.RazorEngine.Core.Roslyn
                 });
                 exn.CompilationData.DeleteAll();
                 var msg = exn.Message;
-                var errorMessage =
-                    string.Format(
-                        "An expected substring ({{0}}) was not found in: {0}",
-                        msg.Replace("{", "{{").Replace("}", "}}"));
 
                 // Compiler error
-                Assert.That(
-                    msg.Contains("does not contain a definition for"),
-                    string.Format(errorMessage, "compiler error"));
+                Assert.That(msg, Does.Contain("does not contain a definition for"), "compiler error");
                 // Template
-                Assert.That(msg.Contains(template),
-                    string.Format(errorMessage, "template"));
+                Assert.That(msg, Does.Contain(template), "template");
                 // Temp files
-                Assert.That(msg.Contains("Temporary files of the compilation can be found"),
-                    string.Format(errorMessage, "temp files"));
+                Assert.That(msg, Does.Contain("Temporary files of the compilation can be found"), "temp files");
                 // C# source code
-                Assert.That(msg.Contains("namespace " + CompilerServiceBase.DynamicTemplateNamespace),
-                    string.Format(errorMessage, "C# source"));
+                Assert.That(msg, Does.Contain("namespace " + CompilerServiceBase.DynamicTemplateNamespace), "C# source");
             });
         }
 
@@ -231,9 +222,9 @@ namespace Test.RazorEngine.Core.Roslyn
             Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             var data = compiledTemplate.CompilationData;
             var folder = data.TmpFolder;
-            Assert.That(Directory.Exists(folder));
+            Assert.That(new DirectoryInfo(folder), Does.Exist);
             data.DeleteAll();
-            Assert.That(Directory.Exists(folder), Is.False);
+            Assert.That(new DirectoryInfo(folder), Does.Not.Exist);
         }
     }
 }

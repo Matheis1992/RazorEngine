@@ -38,7 +38,7 @@ namespace Test.RazorEngine
             ICompiledTemplate compiledTemplate;
             Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("test", ResolveType.Global, null), null, out compiledTemplate));
             var folder = compiledTemplate.CompilationData.TmpFolder;
-            Assert.That(Directory.Exists(folder));
+            Assert.That(new DirectoryInfo(folder), Does.Exist);
             return folder;
         }
     }
@@ -67,13 +67,13 @@ namespace Test.RazorEngine
             using (var remoteHelper = (AppDomainHelper_Cleanup)handle.Unwrap())
             {
                 tmp_folder = remoteHelper.RazorEngineService_CleanUpWorks(new CrossAppDomainCleanUp.Printer());
-                Assert.That(Directory.Exists(tmp_folder));
+                Assert.That(new DirectoryInfo(tmp_folder), Does.Exist);
             }
 
             AppDomain.Unload(appDomain);
             GC.Collect();
             System.Threading.Thread.Sleep(1000);
-            Assert.That(Directory.Exists(tmp_folder), Is.False);
+            Assert.That(new DirectoryInfo(tmp_folder), Does.Not.Exist);
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace Test.RazorEngine
             Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             var data = compiledTemplate.CompilationData;
             var folder = data.TmpFolder;
-            Assert.That(Directory.Exists(folder));
+            Assert.That(new DirectoryInfo(folder), Does.Exist);
             data.DeleteAll();
-            Assert.That(Directory.Exists(folder), Is.False);
+            Assert.That(new DirectoryInfo(folder), Does.Not.Exist);
         }
     }
 }

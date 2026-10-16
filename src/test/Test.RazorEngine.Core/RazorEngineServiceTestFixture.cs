@@ -218,24 +218,15 @@ namespace Test.RazorEngine
                 });
                 exn.CompilationData.DeleteAll();
                 var msg = exn.Message;
-                var errorMessage =
-                    string.Format(
-                        "An expected substring ({{0}}) was not found in: {0}",
-                        msg.Replace("{", "{{").Replace("}", "}}"));
 
                 // Compiler error
-                Assert.That(
-                    msg.Contains("does not contain a definition for"),
-                    string.Format(errorMessage, "compiler error"));
+                Assert.That(msg, Does.Contain("does not contain a definition for"), "compiler error");
                 // Template
-                Assert.That(msg.Contains(template),
-                    string.Format(errorMessage, "template"));
+                Assert.That(msg, Does.Contain(template), "template");
                 // Temp files
-                Assert.That(msg.Contains("Temporary files of the compilation can be found"),
-                    string.Format(errorMessage, "temp files"));
+                Assert.That(msg, Does.Contain("Temporary files of the compilation can be found"), "temp files");
                 // C# source code
-                Assert.That(msg.Contains("namespace " + CompilerServiceBase.DynamicTemplateNamespace),
-                    string.Format(errorMessage, "C# source"));
+                Assert.That(msg, Does.Contain("namespace " + CompilerServiceBase.DynamicTemplateNamespace), "C# source");
             });
         }
 
@@ -721,7 +712,7 @@ if ((Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum)Model.State == Test.R
             ICompiledTemplate compiledTemplate;
             Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             // Contains line pragmas with the template file.
-            Assert.That(compiledTemplate.CompilationData.SourceCode.Contains(file), "");
+            Assert.That(compiledTemplate.CompilationData.SourceCode, Does.Contain(file));
             File.Delete(file);
         }
 
@@ -750,7 +741,7 @@ if ((Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum)Model.State == Test.R
             ICompiledTemplate compiledTemplate;
             Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             // #line hidden should be removed, so make debugging work, see https://github.com/Antaris/RazorEngine/issues/253.
-            Assert.That(compiledTemplate.CompilationData.SourceCode.Contains("#line hidden"), Is.False);
+            Assert.That(compiledTemplate.CompilationData.SourceCode, Does.Not.Contain("#line hidden"));
         }
 
 
@@ -1099,7 +1090,7 @@ else {
                 // Mono CSC seems to be confused and needs the casts.
                 var body = service.RunCompile(template, "templateKey", (Type)null, (object)null, (DynamicViewBag)viewbag);
 
-                Assert.That(holder.Section1.Contains("sample content"), "Expected section content");
+                Assert.That(holder.Section1, Does.Contain("sample content"), "Expected section content");
 
             }, config => config.AllowMissingPropertiesOnDynamic = true);
         }

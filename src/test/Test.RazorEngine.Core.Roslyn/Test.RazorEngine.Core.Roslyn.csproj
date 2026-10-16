@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-    <!-- NUnit 4+ relies on C# 13/14 features (overload resolution priority, extension members). -->
-    <LangVersion>14.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" PrivateAssets="all" />
-    <PackageReference Include="NUnit" Version="5.0.0" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.15.0" PrivateAssets="all" />
-    <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" PrivateAssets="all" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="NUnit3TestAdapter" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

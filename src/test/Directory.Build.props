@@ -1,0 +1,11 @@
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <!-- NUnit 4+ relies on C# 13/14 features (overload resolution priority, extension members),
+         so the test projects need the .NET 10 SDK (Visual Studio 2026). The library projects do not. -->
+    <LangVersion>14.0</LangVersion>
+  </PropertyGroup>
+
+</Project>
