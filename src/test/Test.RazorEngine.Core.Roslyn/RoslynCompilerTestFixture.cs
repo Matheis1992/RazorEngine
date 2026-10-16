@@ -160,17 +160,17 @@ namespace Test.RazorEngine.Core.Roslyn
                         msg.Replace("{", "{{").Replace("}", "}}"));
 
                 // Compiler error
-                Assert.IsTrue(
+                Assert.That(
                     msg.Contains("does not contain a definition for"),
                     string.Format(errorMessage, "compiler error"));
                 // Template
-                Assert.IsTrue(msg.Contains(template),
+                Assert.That(msg.Contains(template),
                     string.Format(errorMessage, "template"));
                 // Temp files
-                Assert.IsTrue(msg.Contains("Temporary files of the compilation can be found"),
+                Assert.That(msg.Contains("Temporary files of the compilation can be found"),
                     string.Format(errorMessage, "temp files"));
                 // C# source code
-                Assert.IsTrue(msg.Contains("namespace " + CompilerServiceBase.DynamicTemplateNamespace),
+                Assert.That(msg.Contains("namespace " + CompilerServiceBase.DynamicTemplateNamespace),
                     string.Format(errorMessage, "C# source"));
             });
         }
@@ -196,7 +196,7 @@ namespace Test.RazorEngine.Core.Roslyn
                     // We now have a reference to our template in the stacktrace
                     var stack = exn.StackTrace.ToLowerInvariant();
                     var expected = file.ToLowerInvariant();
-                    Assert.IsTrue(
+                    Assert.That(
                         stack.Contains(expected),
                         "Could not find reference to template (" + expected + ") in stacktrace: \n" +
                         stack);
@@ -220,7 +220,7 @@ namespace Test.RazorEngine.Core.Roslyn
             {
                 var model = new { Property = 0 };
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("0", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("0"));
             }, config =>
             {
                 config.Debug = false;
@@ -228,12 +228,12 @@ namespace Test.RazorEngine.Core.Roslyn
                 config.DisableTempFileLocking = true;
             });
             ICompiledTemplate compiledTemplate;
-            Assert.IsTrue(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
+            Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             var data = compiledTemplate.CompilationData;
             var folder = data.TmpFolder;
-            Assert.IsTrue(Directory.Exists(folder));
+            Assert.That(Directory.Exists(folder));
             data.DeleteAll();
-            Assert.IsFalse(Directory.Exists(folder));
+            Assert.That(Directory.Exists(folder), Is.False);
         }
     }
 }

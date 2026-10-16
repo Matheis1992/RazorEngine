@@ -100,19 +100,19 @@ namespace Test.RazorEngine
             m.Test = new Func<string>(() => "mytest");
             m.More = new Func<string>(() => "mymore");
             dynamic _m = Impromptu.DynamicActLike(m, typeof(IMyInterface));
-            Assert.AreEqual("mytest", _m.Test());
+            Assert.That((string)_m.Test(), Is.EqualTo("mytest"));
             var __m = (IMyInterface)_m;
-            Assert.AreEqual("mytest", __m.Test());
+            Assert.That(__m.Test(), Is.EqualTo("mytest"));
 
 
             dynamic o = new MyClass();
             dynamic _o = Impromptu.DynamicActLike(o, typeof(IMyInterface));
-            Assert.AreEqual("test", _o.Test());
+            Assert.That((string)_o.Test(), Is.EqualTo("test"));
             var __o = (IMyInterface)_o;
-            Assert.AreEqual("test", __o.Test());
+            Assert.That(__o.Test(), Is.EqualTo("test"));
 
-            Assert.AreEqual("more", _o.More());
-            Assert.AreEqual("mymore", _m.More());
+            Assert.That((string)_o.More(), Is.EqualTo("more"));
+            Assert.That((string)_m.More(), Is.EqualTo("mymore"));
         }
 
         /// <summary>
@@ -224,17 +224,17 @@ namespace Test.RazorEngine
                         msg.Replace("{", "{{").Replace("}", "}}"));
 
                 // Compiler error
-                Assert.IsTrue(
+                Assert.That(
                     msg.Contains("does not contain a definition for"),
                     string.Format(errorMessage, "compiler error"));
                 // Template
-                Assert.IsTrue(msg.Contains(template),
+                Assert.That(msg.Contains(template),
                     string.Format(errorMessage, "template"));
                 // Temp files
-                Assert.IsTrue(msg.Contains("Temporary files of the compilation can be found"),
+                Assert.That(msg.Contains("Temporary files of the compilation can be found"),
                     string.Format(errorMessage, "temp files"));
                 // C# source code
-                Assert.IsTrue(msg.Contains("namespace " + CompilerServiceBase.DynamicTemplateNamespace),
+                Assert.That(msg.Contains("namespace " + CompilerServiceBase.DynamicTemplateNamespace),
                     string.Format(errorMessage, "C# source"));
             });
         }
@@ -260,7 +260,7 @@ namespace Test.RazorEngine
                     // We now have a reference to our template in the stacktrace
                     var stack = exn.StackTrace.ToLowerInvariant();
                     var expected = file.ToLowerInvariant();
-                    Assert.IsTrue(
+                    Assert.That(
                         stack.Contains(expected),
                         "Could not find reference to template (" + expected + ") in stacktrace: \n" +
                         stack);
@@ -383,7 +383,7 @@ namespace Test.RazorEngine
 
                 service.Compile("@Model.Surname", "test", typeof(Person));
                 string result = service.RunCompile(template, Guid.NewGuid().ToString(), typeof(Person), model);
-                Assert.AreEqual("forname surname lang", result);
+                Assert.That(result, Is.EqualTo("forname surname lang"));
             }, config =>
             {
                 config.BaseTemplateType = typeof(AddLanguageInfo_OverrideModelType<>);
@@ -405,7 +405,7 @@ namespace Test.RazorEngine
 
                 service.Compile("@Model.Surname", "test", typeof(Person));
                 string result = service.RunCompile(template, Guid.NewGuid().ToString(), typeof(Person), model);
-                Assert.AreEqual("forname surname lang", result);
+                Assert.That(result, Is.EqualTo("forname surname lang"));
             }, config =>
             {
                 config.BaseTemplateType = typeof(AddLanguageInfo_OverrideInclude<>);
@@ -428,7 +428,7 @@ namespace Test.RazorEngine
                 dynamic viewbag = new DynamicViewBag();
                 viewbag.Language = "lang";
                 string result = service.RunCompile(template, Guid.NewGuid().ToString(), typeof(Person), model, (DynamicViewBag) viewbag);
-                Assert.AreEqual("forname surname lang", result);
+                Assert.That(result, Is.EqualTo("forname surname lang"));
             }, config =>
             {
                 config.BaseTemplateType = typeof(AddLanguageInfo_Viewbag<>);
@@ -450,7 +450,7 @@ namespace Test.RazorEngine
                 dynamic viewbag = new DynamicViewBag();
                 viewbag.Language = "lang";
                 string result = service.RunCompile(template, Guid.NewGuid().ToString(), typeof(Person), model, (DynamicViewBag)viewbag);
-                Assert.AreEqual("forname surname lang", result);
+                Assert.That(result, Is.EqualTo("forname surname lang"));
             }, config =>
             {
                 config.BaseTemplateType = typeof(AddLanguageInfo_Viewbag_SetModel<>);
@@ -469,7 +469,7 @@ namespace Test.RazorEngine
                 var template = @"@TestProperty";
 
                 string result = service.RunCompile(template, Guid.NewGuid().ToString(), typeof(Person), model);
-                Assert.AreEqual("mytest", result);
+                Assert.That(result, Is.EqualTo("mytest"));
             }, config =>
             {
                 config.BaseTemplateType = typeof(HostingClass.NestedBaseClass<>);
@@ -487,7 +487,7 @@ namespace Test.RazorEngine
                 var template = @"@Model.TestProperty";
                 string result = service.RunCompile(template, "key", typeof(HostingClass.NestedClass),
                     new HostingClass.NestedClass() { TestProperty = "test" });
-                Assert.AreEqual("test", result);
+                Assert.That(result, Is.EqualTo("test"));
             });
         }
 
@@ -502,7 +502,7 @@ namespace Test.RazorEngine
                 var template = @"@Model.TestProperty";
                 string result = service.RunCompile(template, "key", typeof(HostingClass.GenericNestedClass<string>),
                     new HostingClass.GenericNestedClass<string>() { TestProperty = "test" });
-                Assert.AreEqual("test", result);
+                Assert.That(result, Is.EqualTo("test"));
             });
         }
 
@@ -523,7 +523,7 @@ var l = new System.Collections.Generic.List<dynamic>();
 foreach (var t in Model.Types) { l.Add(t); }
 }@foreach (var m in l) {<text>@m.Forename</text>}";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("test1test2", result);
+                Assert.That(result, Is.EqualTo("test1test2"));
             });
         }
 
@@ -545,7 +545,7 @@ IEnumerable<dynamic> types = Model.Types;
 l.AddRange(types);
 }@foreach (var m in l) {<text>@m.Forename</text>}";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("test1test2", result);
+                Assert.That(result, Is.EqualTo("test1test2"));
             });
         }
 
@@ -566,7 +566,7 @@ var l = new System.Collections.Generic.List<dynamic>();
 l.AddRange((IEnumerable<dynamic>)Model.Types);
 }@foreach (var m in l) {<text>@m.Forename</text>}";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("test1test2", result);
+                Assert.That(result, Is.EqualTo("test1test2"));
             });
         }
 
@@ -584,7 +584,7 @@ RazorEngine.Tests.TestTypes.Person p = Model.Person;
 }
 @p.Forename";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("test1", result.TrimStart());
+                Assert.That(result.TrimStart(), Is.EqualTo("test1"));
             });
         }
 
@@ -602,7 +602,7 @@ var p = (RazorEngine.Tests.TestTypes.Person)Model.Person;
 }
 @p.Forename";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("test1", result.TrimStart());
+                Assert.That(result.TrimStart(), Is.EqualTo("test1"));
             });
         }
 
@@ -636,7 +636,7 @@ var p = (RazorEngine.Tests.TestTypes.Person)Model.Person;
 if (RazorDynamicObject.Unwrap(Model.State) == Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum.State1)
 {<text>correct</text>}else{<text>wrong</text>}}";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("correct", result.TrimStart());
+                Assert.That(result.TrimStart(), Is.EqualTo("correct"));
             });
         }
 
@@ -655,7 +655,7 @@ if (RazorDynamicObject.Unwrap(Model.State) == Test.RazorEngine.RazorEngineServic
 if (Model.State == Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum.State1)
 {<text>correct</text>}else{<text>wrong</text>}}";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("correct", result.TrimStart());
+                Assert.That(result.TrimStart(), Is.EqualTo("correct"));
             });
         }
 
@@ -672,7 +672,7 @@ if (Model.State == Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum.State1)
 @"@{Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum v = Model.State;
 if (v == Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum.State1){<text>correct</text>}else{<text>wrong</text>}}";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("correct", result.TrimStart());
+                Assert.That(result.TrimStart(), Is.EqualTo("correct"));
             });
         }
 
@@ -689,7 +689,7 @@ if (v == Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum.State1){<text>cor
 @"@{
 if ((Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum)Model.State == Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum.State1){<text>correct</text>}else{<text>wrong</text>}}";
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("correct", result.TrimStart());
+                Assert.That(result.TrimStart(), Is.EqualTo("correct"));
             });
         }
 
@@ -716,12 +716,12 @@ if ((Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum)Model.State == Test.R
             {
                 var model = new { MyPrice = 0 };
                 string result = service.RunCompile(new LoadedTemplateSource(template, file), "key", null, model);
-                Assert.AreEqual("free", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("free"));
             }, config => config.CachingProvider = cache);
             ICompiledTemplate compiledTemplate;
-            Assert.IsTrue(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
+            Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             // Contains line pragmas with the template file.
-            Assert.IsTrue(compiledTemplate.CompilationData.SourceCode.Contains(file), "");
+            Assert.That(compiledTemplate.CompilationData.SourceCode.Contains(file), "");
             File.Delete(file);
         }
 
@@ -745,12 +745,12 @@ if ((Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum)Model.State == Test.R
             {
                 var model = new { MyPrice = 0 };
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("free", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("free"));
             }, config => config.CachingProvider = cache);
             ICompiledTemplate compiledTemplate;
-            Assert.IsTrue(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
+            Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             // #line hidden should be removed, so make debugging work, see https://github.com/Antaris/RazorEngine/issues/253.
-            Assert.IsFalse(compiledTemplate.CompilationData.SourceCode.Contains("#line hidden"));
+            Assert.That(compiledTemplate.CompilationData.SourceCode.Contains("#line hidden"), Is.False);
         }
 
 
@@ -767,7 +767,7 @@ if ((Test.RazorEngine.RazorEngineServiceTestFixture.MyEnum)Model.State == Test.R
                 {
                     var model = new { Property = 0 };
                     string result = service.RunCompile(template, "key", null, model);
-                    Assert.AreEqual("0", result.Trim());
+                    Assert.That(result.Trim(), Is.EqualTo("0"));
                 }, config =>
                 {
                     config.Debug = true;
@@ -797,11 +797,11 @@ catch (RuntimeBinderException) {
                 service.Compile(template, "key", null);
                 dynamic model = new { Foo = new { Link = "link", Text = "text"} };
                 string result = service.Run("key", null, (object)model);
-                Assert.AreEqual("<a href=\"link\">text</a>", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("<a href=\"link\">text</a>"));
 
                 model = new { Foo = new { Text = "text" } };
                 result = service.Run("key", null, (object)model);
-                Assert.AreEqual("<p>text</p>", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("<p>text</p>"));
             }, config => {
                 config.Namespaces.Add("RazorEngine.Compilation");
                 config.Namespaces.Add("Microsoft.CSharp.RuntimeBinder");
@@ -827,11 +827,11 @@ else {
                 service.Compile(template, "key", null);
                 dynamic model = new { Foo = new { Link = "link", Text = "text" } };
                 string result = service.Run("key", null, (object)model);
-                Assert.AreEqual("<a href=\"link\">text</a>", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("<a href=\"link\">text</a>"));
 
                 model = new { Foo = new { Text = "text" } };
                 result = service.Run("key", null, (object)model);
-                Assert.AreEqual("<p>text</p>", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("<p>text</p>"));
             }, config =>
             {
                 config.Namespaces.Add("RazorEngine.Compilation");
@@ -865,11 +865,11 @@ else {
             {
                 var model = new { MyPrice = 0 };
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("free", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("free"));
                 cache.InvalidateCache(service.GetKey("key"));
                 mgr.RemoveDynamic(service.GetKey("key"));
                 string result2 = service.RunCompile(template2, "key", null, model);
-                Assert.AreEqual("totally free", result2.Trim());
+                Assert.That(result2.Trim(), Is.EqualTo("totally free"));
             }, config => {
                 config.CachingProvider = cache;
                 config.TemplateManager = mgr;
@@ -903,9 +903,9 @@ else {
                 {
                     var model = new { MyPrice = 0 };
                     string result = service.RunCompile(templateName, null, model);
-                    Assert.AreEqual("free", result.Trim());
+                    Assert.That(result.Trim(), Is.EqualTo("free"));
                     string result2 = service.RunCompile(template2File, null, model);
-                    Assert.AreEqual("template2", result2.Trim());
+                    Assert.That(result2.Trim(), Is.EqualTo("template2"));
                 }, config =>
                 {
                     config.CachingProvider = cache;
@@ -951,13 +951,13 @@ else {
                 {
                     var model = new { MyPrice = 0 };
                     string result = service.RunCompile(templateFileName, null, model);
-                    Assert.AreEqual("initial", result.Trim());
+                    Assert.That(result.Trim(), Is.EqualTo("initial"));
 
                     File.WriteAllText(templateFile, templateChanged);
                     Thread.Sleep(2000); // wait for the events to kick in.
 
                     string result2 = service.RunCompile(templateFileName, null, model);
-                    Assert.AreEqual("next", result2.Trim());
+                    Assert.That(result2.Trim(), Is.EqualTo("next"));
                 }, config =>
                 {
                     config.CachingProvider = cache;
@@ -1006,7 +1006,7 @@ else {
                 // Access to @Model.Forename when @Model is null
                 Assert.Throws<NullReferenceException>(() => {
                     result = service.RunCompile(template, "parent", typeof(ComplexModel), model);
-                    Assert.AreEqual(expected, result);
+                    Assert.That(result, Is.EqualTo(expected));
                 });
             });
         }
@@ -1030,7 +1030,7 @@ else {
                 service.Compile(child, "Child", null);
                 string result = service.RunCompile(template, "parent", typeof(ComplexModel), model);
 
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }, config => config.AllowMissingPropertiesOnDynamic = true);
         }
 
@@ -1099,7 +1099,7 @@ else {
                 // Mono CSC seems to be confused and needs the casts.
                 var body = service.RunCompile(template, "templateKey", (Type)null, (object)null, (DynamicViewBag)viewbag);
 
-                Assert.IsTrue(holder.Section1.Contains("sample content"), "Expected section content");
+                Assert.That(holder.Section1.Contains("sample content"), "Expected section content");
 
             }, config => config.AllowMissingPropertiesOnDynamic = true);
         }

@@ -51,7 +51,7 @@
                 service.Compile(key);
                 service.Run(key, writer);
                 var result = writer.ToString();
-                Assert.AreEqual(expected.ToString(), result);
+                Assert.That(result, Is.EqualTo(expected.ToString()));
             }
         }
 
@@ -112,7 +112,7 @@
 
                 var contents = writer.ToString();
 
-                Assert.AreEqual(expected, contents);
+                Assert.That(contents, Is.EqualTo(expected));
             }
         }
 

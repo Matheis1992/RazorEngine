@@ -30,15 +30,15 @@ namespace Test.RazorEngine
                 string template = @"@Model.Name";
 
                 var result = service.RunCompile(template, "test", null, new { Name = "test" });
-                Assert.AreEqual("test", result);
+                Assert.That(result, Is.EqualTo("test"));
             }, config =>
             {
                 config.CachingProvider = cache;
             });
             ICompiledTemplate compiledTemplate;
-            Assert.IsTrue(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("test", ResolveType.Global, null), null, out compiledTemplate));
+            Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("test", ResolveType.Global, null), null, out compiledTemplate));
             var folder = compiledTemplate.CompilationData.TmpFolder;
-            Assert.IsTrue(Directory.Exists(folder));
+            Assert.That(Directory.Exists(folder));
             return folder;
         }
     }
@@ -67,13 +67,13 @@ namespace Test.RazorEngine
             using (var remoteHelper = (AppDomainHelper_Cleanup)handle.Unwrap())
             {
                 tmp_folder = remoteHelper.RazorEngineService_CleanUpWorks(new CrossAppDomainCleanUp.Printer());
-                Assert.IsTrue(Directory.Exists(tmp_folder));
+                Assert.That(Directory.Exists(tmp_folder));
             }
 
             AppDomain.Unload(appDomain);
             GC.Collect();
             System.Threading.Thread.Sleep(1000);
-            Assert.IsFalse(Directory.Exists(tmp_folder));
+            Assert.That(Directory.Exists(tmp_folder), Is.False);
         }
 
         /// <summary>
@@ -88,19 +88,19 @@ namespace Test.RazorEngine
             {
                 var model = new { Property = 0 };
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("0", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("0"));
             }, config =>
             {
                 config.CachingProvider = cache;
                 config.DisableTempFileLocking = true;
             });
             ICompiledTemplate compiledTemplate;
-            Assert.IsTrue(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
+            Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             var data = compiledTemplate.CompilationData;
             var folder = data.TmpFolder;
-            Assert.IsTrue(Directory.Exists(folder));
+            Assert.That(Directory.Exists(folder));
             data.DeleteAll();
-            Assert.IsFalse(Directory.Exists(folder));
+            Assert.That(Directory.Exists(folder), Is.False);
         }
     }
 }

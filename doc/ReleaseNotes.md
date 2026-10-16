@@ -10,7 +10,9 @@
  * (BREAKING) Target .NET Framework 4.8 only. The net40 (Razor 2) and Razor4 (Microsoft.AspNetCore.Razor) builds are dropped.
  * (BUILD) SDK-style projects with NuGet PackageReference replace Paket and FAKE. Build with `dotnet build`, test with `dotnet test`, pack with `dotnet pack`.
  * (BUILD) GitHub Actions replace Travis CI and AppVeyor.
- * Still uses Microsoft.AspNet.Razor 3.2.3, so template syntax is unchanged from the 3.x net45 build.
+ * Uses Microsoft.AspNet.Razor 3.3.0 (3.x maintenance release, the parser is unchanged since 3.2.3), so template syntax is unchanged from the 3.x net45 build.
+ * (SECURITY) Depend on System.Security.Cryptography.X509Certificates 4.3.2 instead of the 4.1.0 pulled in by Roslyn, which is flagged for CVE-2017-11770.
+ * (BUILD) Tests use NUnit 5 (constraint model asserts), Moq 4.21 and Autofac 9; RazorEngine.Mvc uses Microsoft.AspNet.Mvc 5.3.0.
 
 ### 3.10.1-alpha001 / 4.5.1-alpha001
 

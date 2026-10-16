@@ -37,7 +37,7 @@
                     System.Runtime.Remoting.Messaging.CallContext.LogicalSetData("Unserializable", new Unserializable());
                     service.Compile(template, "key", null);
                     string result = service.Run("key", null, (object)null);
-                    Assert.AreEqual("test", result.Trim());
+                    Assert.That(result.Trim(), Is.EqualTo("test"));
                 }
                 finally
                 {
@@ -60,7 +60,7 @@
                 {
                     service.Compile(template, "key", null);
                     string result = service.Run("key", null, (object)null);
-                    Assert.AreEqual("test", result.Trim());
+                    Assert.That(result.Trim(), Is.EqualTo("test"));
                 });
             }
             finally
@@ -95,10 +95,10 @@
                 string applied_3 = service.RunCompile(template, "test3", null, (object)arrayOfAnonymous);
                 //string applied_4 = service.RunCompileOnDemand(template, "test4", (Type)arrayOfAnonymous.GetType(), (object)arrayOfAnonymous);
 
-                Assert.AreEqual(expected, applied_1);
-                //Assert.AreEqual(expected, applied_2);
-                Assert.AreEqual(expected, applied_3);
-                //Assert.AreEqual(expected, applied_4);
+                Assert.That(applied_1, Is.EqualTo(expected));
+                //Assert.That(applied_2, Is.EqualTo(expected));
+                Assert.That(applied_3, Is.EqualTo(expected));
+                //Assert.That(applied_4, Is.EqualTo(expected));
             });
         }
 
@@ -128,8 +128,8 @@
                 var result_1 = service.RunCompile(template1Key, model: model);
                 var result_2 = service.RunCompile(template2Key, model: model);
 
-                Assert.AreEqual(expected_1, result_1);
-                Assert.AreEqual(expected_2, result_2);
+                Assert.That(result_1, Is.EqualTo(expected_1));
+                Assert.That(result_2, Is.EqualTo(expected_2));
             }
         }
         
@@ -158,9 +158,9 @@
                 var result_2 = service.RunCompile(section_test_2, nameof(section_test_2));
                 var result_3 = service.RunCompile(section_test_3, nameof(section_test_3));
 
-                Assert.AreEqual(expected_1, result_1);
-                Assert.AreEqual(expected_2, result_2);
-                Assert.AreEqual(expected_3, result_3);
+                Assert.That(result_1, Is.EqualTo(expected_1));
+                Assert.That(result_2, Is.EqualTo(expected_2));
+                Assert.That(result_3, Is.EqualTo(expected_3));
             }
         }
 
@@ -199,7 +199,7 @@
                     service.AddTemplate(pageKey, pageWithoutOwnScriptsTemplate);
                     string actualPageWithoutOwnScriptsResult = service.RunCompile(pageKey);
 
-                    Assert.AreEqual(expectedPageWithoutOwnScriptsResult, actualPageWithoutOwnScriptsResult);
+                    Assert.That(actualPageWithoutOwnScriptsResult, Is.EqualTo(expectedPageWithoutOwnScriptsResult));
                 }
 
                 // Page with section redefenition (page has own additional scripts)
@@ -215,7 +215,7 @@
                     service.RunCompile(pageKey2, writer);
 
                     string actualPageWithOwnScriptsResult = writer.ToString();
-                    Assert.AreEqual(expectedPageWithOwnScriptsResult, actualPageWithOwnScriptsResult);
+                    Assert.That(actualPageWithOwnScriptsResult, Is.EqualTo(expectedPageWithOwnScriptsResult));
                 }
             });
         }
@@ -237,7 +237,7 @@
 
                 const string expected = @"test and test";
                 string result = service.Run("ChildLayout", null, null);
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             });
         }
          */
