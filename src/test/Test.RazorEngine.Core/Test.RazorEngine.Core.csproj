@@ -3,7 +3,6 @@
   <PropertyGroup>
     <RootNamespace>Test.RazorEngine</RootNamespace>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

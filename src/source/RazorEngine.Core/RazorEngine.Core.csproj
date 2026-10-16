@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <RootNamespace>RazorEngine</RootNamespace>
-    <AssemblyName>RazorEngine</AssemblyName>
+    <!-- Own name and key, so the fork never collides with the original RazorEngine.dll (3.x). -->
+    <AssemblyName>RazorEngine.NetFramework</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>RazorEngine.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <!-- Version and shared assembly attributes. Title and description stay in Properties\AssemblyInfo.cs. -->

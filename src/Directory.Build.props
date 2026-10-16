@@ -6,6 +6,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <!-- Only RazorEngine.Core is shipped as a NuGet package. -->
     <IsPackable>false</IsPackable>
+    <!-- Shared strong-name key; projects opt in with <SignAssembly>true</SignAssembly>. -->
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)RazorEngine.NetFramework.snk</AssemblyOriginatorKeyFile>
     <!-- Deterministic paths in PDBs and symbol packages built by GitHub Actions. -->
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
