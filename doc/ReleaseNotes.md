@@ -1,6 +1,7 @@
 ﻿### 4.0.0-preview.1 (RazorEngine.NetFramework)
 
  * (BREAKING) First release of the fork, published as the new package `RazorEngine.NetFramework`.
+ * (SECURITY, BREAKING) Fix CVE-2021-46703 (sandbox escape in `IsolatedRazorEngineService`): `IsolatedRazorEngineService` and `IsolatedTemplateService` now refuse partially trusted (sandboxed) `AppDomain`s with a `NotSupportedException`, because Code Access Security is no security boundary. Isolation with fully trusted `AppDomain`s (to unload templates) works as before. Templates must come from trusted sources; see doc/Isolation.md.
  * (BREAKING) The assembly is now `RazorEngine.NetFramework.dll`, signed with a new key (public key token `58ad996d4f48e61f`), so it no longer collides with the original `RazorEngine.dll`. Namespaces stay `RazorEngine.*`. When migrating, update `app.config`/`web.config`:
    - Change the assembly name of the section registration, e.g. `type="RazorEngine.Configuration.RazorEngineConfigurationSection, RazorEngine.NetFramework"`.
    - Change every assembly-qualified type name inside `<razorEngine>` that names `, RazorEngine` (`activatorType`, `baseTemplateType`, `cachingProviderType`, `compilerServiceFactoryType`, `encodedStringFactoryType`, `referenceResolverType`, `templateManagerType`, `templateResolverType`).

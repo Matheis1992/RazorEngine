@@ -175,6 +175,15 @@ To remove the RazorEngine warnings you can additionally use `config.CachingProvi
 See also https://github.com/Antaris/RazorEngine/issues/244 for more details.
 
 
+## Security
+
+Templates are C# code and run with the full rights of your application.
+Only use templates from trusted sources, and never build templates by concatenating user input (pass it as model data instead).
+
+`IsolatedRazorEngineService` is meant for unloading templates, not as a sandbox. Partially trusted (sandboxed) `AppDomain`s
+are refused, because templates can escape them ([CVE-2021-46703](https://github.com/advisories/GHSA-ph3v-2hq5-5qfq)).
+See [Isolation](doc/Isolation.md) for details.
+
 ## More
 
 On the right side you can find links to advanced topics and additional [documentation](http://antaris.github.io/RazorEngine/).
