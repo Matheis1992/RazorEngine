@@ -7,6 +7,7 @@ If you want to send a bug report just open a new issue!
 Otherwise just fork the project an send a pull request to discuss and merge the changes.
 If you want to discuss the changes beforehand you can open a new issue.
 Please send the pull request against the `develop` branch and mention an already existing issue (if present).
+To build and run the tests you need the .NET 10 SDK (or Visual Studio 2026), see [DevelopReadme](doc/DevelopReadme.md).
 
 ## Contributing Documentation
 

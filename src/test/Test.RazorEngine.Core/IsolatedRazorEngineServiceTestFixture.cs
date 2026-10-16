@@ -122,7 +122,7 @@ namespace Test.RazorEngine
                 { }
             });
 
-            Assert.IsNotNull(sandbox);
+            Assert.That(sandbox, Is.Not.Null);
             Assert.Throws<AppDomainUnloadedException>(() => { Console.WriteLine(sandbox.FriendlyName); });
         }
 
@@ -140,7 +140,7 @@ namespace Test.RazorEngine
                 viewbag.Test = "TestItem";
 
                 string result = service.RunCompile(template, "test", (Type)null, (object)null, (DynamicViewBag)viewbag);
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 
@@ -157,7 +157,7 @@ namespace Test.RazorEngine
                 dynamic viewbag = new DynamicViewBag();
 
                 string result = service.RunCompile(template, "test", (Type)null, (object)null, (DynamicViewBag)viewbag);
-                Assert.AreEqual(expected, viewbag.Test);
+                Assert.That((string)viewbag.Test, Is.EqualTo(expected));
             }
         }
 
@@ -175,7 +175,7 @@ namespace Test.RazorEngine
                 viewbag.Test = "TestItem";
                 viewbag.Forename = "Matt";
                 string result = service.RunCompile(template, "test", null, (object)viewbag, (DynamicViewBag)viewbag);
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 
@@ -215,7 +215,7 @@ namespace Test.RazorEngine
                     string template = @"@Model.Name";
 
                     var result = service.RunCompile(template, "test", null, new { Name = "test" });
-                    Assert.AreEqual("test", result);
+                    Assert.That(result, Is.EqualTo("test"));
 
 
                     ObjectHandle handle =
@@ -230,7 +230,7 @@ namespace Test.RazorEngine
                     }
                     using (var remoteHelper = (AssemblyChecker)handle.Unwrap())
                     {
-                        Assert.IsTrue(remoteHelper.ExistsCompiledAssembly());
+                        Assert.That(remoteHelper.ExistsCompiledAssembly());
                     }
                 }
                 Assert.Throws<AppDomainUnloadedException>(() => { Console.WriteLine(appDomain.FriendlyName); });
@@ -281,7 +281,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
 }".Replace("$file$", file.Replace("\\", "\\\\"));
                 var test = service.RunCompile(template, "test");
 
-                Assert.IsTrue(File.Exists(file));
+                Assert.That(new FileInfo(file), Does.Exist);
                 File.Delete(file);
             });
         }
@@ -316,7 +316,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
                 // We "abuse" NameOnlyTemplateKey because it is SecurityTransparent and serializable.
                 var model = new NameOnlyTemplateKey("TestForename", ResolveType.Global, null);
                 string result = service.RunCompile(template, "test", typeof(NameOnlyTemplateKey), model);
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 
@@ -333,7 +333,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
                 // We "abuse" NameOnlyTemplateKey because it is SecurityTransparent and serializable.
                 var model = new NameOnlyTemplateKey("Matt", ResolveType.Global, null);
                 string result = service.RunCompile(template, "test", null, model);
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
 
             }
         }
@@ -387,7 +387,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
 
                 var model = new { Type = "Cat" };
                 var result = service.RunCompile(template, "test", null, new RazorDynamicObject(model));
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 
@@ -412,7 +412,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
                 dynamic model = new ExpandoObject();
                 model.Type = "Cat";
                 var result = service.RunCompile(template, "test", null, (object)RazorDynamicObject.Create(model));
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 
@@ -435,7 +435,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
 
                 dynamic model = new ValueObject(new Dictionary<string, object> { { "Type", "Cat" } });
                 string result = service.RunCompile(template, "test", null, (object)RazorDynamicObject.Create(model));
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 
@@ -452,7 +452,7 @@ File.WriteAllText(""$file$"", ""BAD DATA"");
 
                 var model = new Uri("http://example.com");
                 var result = service.RunCompile(template, "test", null, (object)RazorDynamicObject.Create(model));
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 

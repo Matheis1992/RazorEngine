@@ -13,8 +13,6 @@
     <ProjectReference Include="..\..\source\RazorEngine.Core\RazorEngine.Core.csproj" />
     <ProjectReference Include="..\..\source\RazorEngine.Hosts.Console\RazorEngine.Hosts.Console.csproj" />
     <ProjectReference Include="..\..\source\RazorEngine.Mvc\RazorEngine.Mvc.csproj" />
-    <ProjectReference Include="..\Test.RazorEngine.Core.Roslyn\Test.RazorEngine.Core.Roslyn.csproj" />
-    <ProjectReference Include="..\Test.RazorEngine.Core\Test.RazorEngine.Core.csproj" />
   </ItemGroup>
 
 </Project>

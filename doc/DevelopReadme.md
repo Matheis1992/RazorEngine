@@ -2,7 +2,8 @@
 
 ## Building
 
-Requirements: Windows with the .NET Framework 4.8 targeting pack and a current .NET SDK (or Visual Studio 2022 or later).
+Requirements: Windows with the .NET Framework 4.8 targeting pack and the .NET 10 SDK (or Visual Studio 2026).
+The library projects also build with older SDKs, but the test projects use C# 14 (required by NUnit 4 and later).
 
 Open `src/RazorEngine.sln` in Visual Studio, or use the command line:
 
@@ -71,7 +72,8 @@ Z version changes are bug-fixes and are highly backwards compatible.
 
 - /src/
 
-	The Solution directory for all projects. `src/Directory.Build.props` holds the settings shared by all projects (target framework).
+	The Solution directory for all projects. `src/Directory.Build.props` holds the settings shared by all projects (target framework),
+	`src/Directory.Packages.props` holds the versions of all NuGet packages (Central Package Management).
 
 	- /src/source/
 

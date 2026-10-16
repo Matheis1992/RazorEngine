@@ -35,7 +35,7 @@ namespace Test.RazorEngine
             Directory.CreateDirectory(directory);
             var file = Path.Combine(directory, "RazorEngine.dll");
             var result = compilation.Emit(file);
-            Assert.IsTrue(result.Success, string.Join(Environment.NewLine, result.Diagnostics));
+            Assert.That(result.Success, string.Join(Environment.NewLine, result.Diagnostics));
             return Assembly.LoadFrom(file);
         }
 
@@ -49,10 +49,10 @@ namespace Test.RazorEngine
 
             var references = new UseCurrentAssembliesReferenceResolver().GetReferences().ToList();
 
-            Assert.IsFalse(references
+            Assert.That(references
                 .OfType<CompilerReference.DirectAssemblyReference>()
-                .Any(r => r.Assembly == standIn));
-            Assert.IsTrue(references
+                .Any(r => r.Assembly == standIn), Is.False);
+            Assert.That(references
                 .OfType<CompilerReference.DirectAssemblyReference>()
                 .Any(r => r.Assembly == typeof(ITemplate).Assembly));
         }
@@ -68,7 +68,7 @@ namespace Test.RazorEngine
             using (var service = RazorEngineService.Create())
             {
                 var result = service.RunCompile("Hello @Model.Forename", "standInTemplate", typeof(Person), new Person { Forename = "World" });
-                Assert.AreEqual("Hello World", result);
+                Assert.That(result, Is.EqualTo("Hello World"));
             }
         }
     }
