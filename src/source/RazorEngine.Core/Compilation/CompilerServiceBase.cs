@@ -380,6 +380,79 @@
         }
 
         /// <summary>
+        /// Prepares the generated code before it is turned into source code, so that the CodeDom and the
+        /// Roslyn compiler services produce the same template class: makes the template debuggable,
+        /// marks dynamic models, adds the constructors required by the base template type and runs the code inspectors.
+        /// </summary>
+        /// <param name="results">The results of the Razor code generator.</param>
+        /// <param name="context">The type context.</param>
+        [SecurityCritical]
+        protected void PrepareGeneratedCode(GeneratorResults results, TypeContext context)
+        {
+            if (context.TemplateContent.TemplateFile == null)
+            {
+                // Allow to step into the template code by removing the "#line hidden" pragmas
+                foreach (CodeNamespace @namespace in results.GeneratedCode.Namespaces.Cast<CodeNamespace>().ToList())
+                {
+                    foreach (CodeTypeDeclaration @type in @namespace.Types.Cast<CodeTypeDeclaration>().ToList())
+                    {
+                        foreach (CodeTypeMember member in @type.Members.Cast<CodeTypeMember>().ToList())
+                        {
+                            var snippet = member as CodeSnippetTypeMember;
+                            if (snippet != null && snippet.Text.Contains("#line hidden"))
+                            {
+                                snippet.Text = snippet.Text.Replace("#line hidden", "");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Add the dynamic model attribute if the type is an anonymous type.
+            var generatedType = results.GeneratedCode.Namespaces[0].Types[0];
+            if (context.ModelType != null && CompilerServicesUtility.IsDynamicType(context.ModelType))
+                generatedType.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(HasDynamicModelAttribute))));
+
+            // Generate any constructors required by the base template type.
+            GenerateConstructors(CompilerServicesUtility.GetConstructors(context.TemplateType), generatedType);
+
+#pragma warning disable 0618 // Backwards Compat.
+            // Despatch any inspectors
+            Inspect(results.GeneratedCode);
+#pragma warning restore 0618 // Backwards Compat.
+        }
+
+        /// <summary>
+        /// Generates any required contructors for the specified type.
+        /// </summary>
+        /// <param name="constructors">The set of constructors.</param>
+        /// <param name="codeType">The code type declaration.</param>
+        [Pure]
+        private static void GenerateConstructors(IEnumerable<System.Reflection.ConstructorInfo> constructors, CodeTypeDeclaration codeType)
+        {
+            if (constructors == null || !constructors.Any())
+                return;
+
+            var existingConstructors = codeType.Members.OfType<CodeConstructor>().ToArray();
+            foreach (var existingConstructor in existingConstructors)
+                codeType.Members.Remove(existingConstructor);
+
+            foreach (var constructor in constructors)
+            {
+                var ctor = new CodeConstructor();
+                ctor.Attributes = MemberAttributes.Public;
+
+                foreach (var param in constructor.GetParameters())
+                {
+                    ctor.Parameters.Add(new CodeParameterDeclarationExpression(param.ParameterType, param.Name));
+                    ctor.BaseConstructorArgs.Add(new CodeSnippetExpression(param.Name));
+                }
+
+                codeType.Members.Add(ctor);
+            }
+        }
+
+        /// <summary>
         /// Disposes the current instance.
         /// </summary>
         public void Dispose()

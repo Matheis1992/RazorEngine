@@ -90,7 +90,6 @@ This supports the majority of users but with some configuration changes you can 
 which is better suited for templates that generate things like javascript, php, C# and others.
 
 ```csharp
-config.Language = Language.VisualBasic; // VB.NET as template language.
 config.EncodedStringFactory = new RawStringFactory(); // Raw string encoding.
 config.EncodedStringFactory = new HtmlEncodedStringFactory(); // Html encoding.
 ```

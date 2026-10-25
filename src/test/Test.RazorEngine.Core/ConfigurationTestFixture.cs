@@ -56,39 +56,6 @@
         }
 
         /// <summary>
-        /// Tests that the fluent configuration can configure a template service with a specific code language.
-        /// </summary>
-        /// <remarks>
-        /// For this test, we're switching to VB, and using a @Code section:
-        ///     <code>
-        ///         @Code Dim name As String = "Matt" End Code
-        ///         @name
-        ///     </code>
-        /// ... which should result in:
-        ///     <code>
-        ///
-        ///         Matt
-        ///     </code>
-        /// </remarks>
-        [Test]
-        [Category("VBNET")]
-        public void FluentTemplateServiceConfiguration_CanConfigureTemplateService_WithSpecificCodeLanguage()
-        {
-            var config = new FluentTemplateServiceConfiguration(
-                c => c.WithCodeLanguage(Language.VisualBasic));
-
-            using (var service = RazorEngineService.Create(config))
-            {
-                const string template = "@Code Dim name As String = \"Matt\" End Code\n@name";
-                const string expected = "\nMatt";
-
-                string result = service.RunCompile(templateSource: template, name: "template");
-
-                Assert.That(result == expected, "Result does not match expected: " + result);
-            }
-        }
-
-        /// <summary>
         /// Tests that the fluent configuration can configure a template service with a specific encoding.
         /// </summary>
         [Test]
@@ -127,18 +94,6 @@
             var config = new FluentTemplateServiceConfiguration(c => c.ActivateUsing(mock.Object));
 
             Assert.That(config.Activator == mock.Object);
-        }
-
-        /// <summary>
-        /// Tests that the fluent configuration supports setting the code language.
-        /// </summary>
-        [Category("VBNET")]
-        [Test]
-        public void FluentTemplateServiceConfiguration_CanSetCodeLanguage()
-        {
-            var config = new FluentTemplateServiceConfiguration(c => c.WithCodeLanguage(Language.VisualBasic));
-
-            Assert.That(config.Language == Language.VisualBasic);
         }
 
         /// <summary>

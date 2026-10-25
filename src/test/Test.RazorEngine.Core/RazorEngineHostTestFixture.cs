@@ -50,39 +50,6 @@ namespace RazorEngine.Tests
                 Assert.That(result == expected, "Result does not match expected: " + result);
             }
         }
-
-        /// <summary>
-        /// Tests that the <see cref="RazorEngineHost"/> supports the @ModelType directive.
-        /// </summary>
-        /// <remarks>
-        /// As with it's MVC counterpart, we've added support for the @ModelType declaration. This is to enable scenarios
-        /// where the model type might be unknown, but we can pass in an instance of <see cref="object" /> and allow
-        /// the @model directive to switch the model type.
-        /// </remarks>
-        [Category("VBNET")]
-        [Test]
-        public void RazorEngineHost_SupportsModelSpan_UsingVBCodeParser()
-        {
-            var config = new TemplateServiceConfiguration
-                             {
-                                 Language = Language.VisualBasic
-                             };
-
-            using (var service = RazorEngineService.Create(config))
-            {
-                const string template = "@ModelType List(Of RazorEngine.Tests.TestTypes.Person)\n@Model.Count";
-                const string expected = "1";
-
-                var model = new List<Person> { new Person() { Forename = "Matt", Age = 27 } };
-                var key = service.GetKey("template");
-
-                service.AddTemplate(key, new LoadedTemplateSource(template));
-
-                string result = service.RunCompile(key, modelType: typeof(object), model: model);
-
-                Assert.That(result == expected, "Result does not match expected: " + result);
-            }
-        }
         #endregion
     }
 }

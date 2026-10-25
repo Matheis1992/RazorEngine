@@ -1,24 +1,30 @@
 
 # Roslyn compiler support
 
-RazorEngine supports the Roslyn compiler (via the Microsoft.CodeAnalysis.CSharp nuget package).
-Roslyn support is included in the `RazorEngine.NetFramework` package; no additional package is needed.
+Since version 4, C# templates are compiled with Roslyn (via the Microsoft.CodeAnalysis.CSharp nuget package) by default.
+Roslyn support is included in the `RazorEngine.NetFramework` package; no additional package and no configuration is needed.
 
 > Do not install the old `RazorEngine.Roslyn` package. It depends on the original `RazorEngine` package,
 > which ships an assembly with the same name and conflicts with `RazorEngine.NetFramework`.
 
-To activate roslyn all you need to do is set the `CompilerServiceFactory` property in the configuration:
+`DefaultCompilerServiceFactory` (the default `CompilerServiceFactory`) compiles templates with Roslyn.
+To compile templates with CodeDom (C# 5) as before version 4, set:
 
 ```csharp
-config.CompilerServiceFactory = new RazorEngine.Roslyn.RoslynCompilerServiceFactory();
+config.CompilerServiceFactory = new RazorEngine.Compilation.CodeDomCompilerServiceFactory();
 ```
 
-## Why use Roslyn
+`RazorEngine.Roslyn.RoslynCompilerServiceFactory` is still available and does the same as `DefaultCompilerServiceFactory`.
 
-| | CodeDom (default) | Roslyn |
+Templates are always C#: VB.NET templates (`.vbhtml`, `Language.VisualBasic`) are not supported since version 4.
+
+## Roslyn compared to CodeDom
+
+| | CodeDom | Roslyn (default) |
 |---|---|---|
 | C# version in templates | C# 5 (the `csc.exe` of .NET Framework) | latest C# supported by Microsoft.CodeAnalysis.CSharp 5.6 (C# 14) |
-| Compilation | starts `csc.exe` as a separate process for each template | runs in-process |
+| Compilation | starts `csc.exe` as a separate process for each template | runs in-process; the first compilation in a process (or `AppDomain`) is slower because Roslyn has to be loaded |
+| Memory | the compiler runs in its own process | Roslyn stays loaded in your process |
 
 With Roslyn, templates can use modern C#, for example:
 
@@ -34,14 +40,16 @@ are not available on .NET Framework 4.8 unless those types are referenced or pol
 
 Roslyn 5.6 depends on newer System.* packages (System.Collections.Immutable, System.Reflection.Metadata, System.Memory, …).
 Your application needs binding redirects for them; SDK-style projects generate them automatically.
+If you create your own `AppDomain` for `IsolatedRazorEngineService`, give it your configuration file
+(`AppDomainSetup.ConfigurationFile`), otherwise the binding redirects do not apply there (see [Isolation](Isolation.md)).
 
 ## Known Limitation/Bugs
 
 - Debugging symbols do not work currently (If you know how Roslyn works please send a pull request!).
+  If you need to step into templates with the debugger, use `CodeDomCompilerServiceFactory`.
 - Debug symbols cannot be created on mono/unix:
 
          error: (0, 0) Unexpected error writing debug information -- 'The requested feature is not implemented.'
 
-- Only C# support (VB.NET is not supported by the Roslyn compiler service).
 - If you find more please open a issue!
 - Running Roslyn on mono could lead to sigsegv crashes (mono bug): https://travis-ci.org/Antaris/RazorEngine/builds/45375847!

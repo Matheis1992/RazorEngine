@@ -138,29 +138,6 @@ namespace RazorEngine.Compilation
         }
 
         /// <summary>
-        /// Resolves the VB.net name of the given type.
-        /// </summary>
-        /// <param name="type">the type to emit.</param>
-        /// <returns>The full type name or Object if the type is an instance of an dynamic type.</returns>
-        public static string ResolveVBTypeName(Type type)
-        {
-            if (IsIteratorType(type))
-                type = GetIteratorInterface(type);
-
-            if (IsDynamicType(type))
-                return "Object";
-
-            var rawFullName = VBGetRawTypeName(type);
-            if (!type.IsGenericType)
-                return rawFullName;
-
-            return rawFullName
-                  + "(Of "
-                  + string.Join(", ", type.GetGenericArguments().Select(ResolveVBTypeName))
-                  + ")";
-        }
-
-        /// <summary>
         /// Gets the Iterator type for the given compiler generated iterator.
         /// </summary>
         /// <param name="type">The target type.</param>
@@ -218,14 +195,6 @@ namespace RazorEngine.Compilation
 
 
         /// <summary>
-        /// Return the raw type name (including namespace) without any generic arguments.
-        /// Returns the typename in a way it can be used in VB.net code.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static string VBGetRawTypeName(Type type) { return CSharpGetRawTypeName(type); }
-
-        /// <summary>
         /// Return the raw type name (including namespace) with the given modelTypeName as generic argument (if applicable).
         /// Returns the typename in a way it can be used in C# code.
         /// </summary>
@@ -248,30 +217,6 @@ namespace RazorEngine.Compilation
             }
 
             return templateTypeName + "<" + modelTypeName + ">";
-        }
-        
-        /// <summary>
-        /// Return the raw type name (including namespace) with the given modelTypeName as generic argument (if applicable).
-        /// Returns the typename in a way it can be used in VB.net code.
-        /// </summary>
-        /// <param name="templateType"></param>
-        /// <param name="modelTypeName"></param>
-        /// <param name="throwWhenNotGeneric"></param>
-        /// <returns></returns>
-        public static string VBCreateGenericType(Type templateType, string modelTypeName, bool throwWhenNotGeneric)
-        {
-            var templateTypeName = VBGetRawTypeName(templateType);
-
-            if (!templateType.IsGenericTypeDefinition || !templateType.IsGenericType)
-            {
-                if (throwWhenNotGeneric)
-                {
-                    throw new NotSupportedException("The given base type is not generic!");
-                }
-                return templateTypeName;
-            }
-
-            return templateTypeName + "(Of " + modelTypeName + ")";
         }
 
         #endregion

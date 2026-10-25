@@ -18,6 +18,22 @@ using (var service = IsolatedRazorEngineService.Create())
 
 You can provide your own `IAppDomainFactory` or use the `Func<AppDomain>` overloads of `IsolatedRazorEngineService.Create`
 to control how the `AppDomain` is created, as long as it is fully trusted.
+Pass your application's configuration file to the new `AppDomain`, so the binding redirects for Roslyn's dependencies apply there too:
+
+```csharp
+var setup = new AppDomainSetup
+{
+    ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+    ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile
+};
+using (var service = IsolatedRazorEngineService.Create(() => AppDomain.CreateDomain("Templates", null, setup)))
+{
+    ...
+}
+```
+
+Without it, compiling fails with a `FileLoadException` for `System.Collections.Immutable` or a similar assembly.
+The default `IsolatedRazorEngineService.Create()` already does this.
 
 ## Isolation is no security boundary
 

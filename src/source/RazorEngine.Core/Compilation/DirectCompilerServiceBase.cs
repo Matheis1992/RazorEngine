@@ -132,39 +132,8 @@
         [SecurityCritical]
         public override string InspectSource(GeneratorResults results, TypeContext context)
         {
-            if (context.TemplateContent.TemplateFile == null) 
-            {
-                // Allow to step into the template code by removing the "#line hidden" pragmas
-                foreach (CodeNamespace @namespace in results.GeneratedCode.Namespaces.Cast<CodeNamespace>().ToList())
-                {
-                    foreach (CodeTypeDeclaration @type in @namespace.Types.Cast<CodeTypeDeclaration>().ToList())
-                    {
-                        foreach (CodeTypeMember member in @type.Members.Cast<CodeTypeMember>().ToList())
-                        {
-                            var snippet = member as CodeSnippetTypeMember;
-                            if (snippet != null && snippet.Text.Contains("#line hidden"))
-                            {
-                                snippet.Text = snippet.Text.Replace("#line hidden", "");
-                            }
-                        }
-                    }
-                }
-            }
+            PrepareGeneratedCode(results, context);
 
-            
-            // Add the dynamic model attribute if the type is an anonymous type.
-            var generatedType = results.GeneratedCode.Namespaces[0].Types[0];
-            if (context.ModelType != null && CompilerServicesUtility.IsDynamicType(context.ModelType))
-                generatedType.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(HasDynamicModelAttribute))));
-
-            // Generate any constructors required by the base template type.
-            GenerateConstructors(CompilerServicesUtility.GetConstructors(context.TemplateType), generatedType);
-
-#pragma warning disable 0618 // Backwards Compat.
-            // Despatch any inspectors
-            Inspect(results.GeneratedCode);
-#pragma warning restore 0618 // Backwards Compat.
-            
             string generatedCode;
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder, CultureInfo.InvariantCulture))
@@ -175,36 +144,6 @@
             return generatedCode;
         }
 
-        /// <summary>
-        /// Generates any required contructors for the specified type.
-        /// </summary>
-        /// <param name="constructors">The set of constructors.</param>
-        /// <param name="codeType">The code type declaration.</param>
-        [Pure]
-        private static void GenerateConstructors(IEnumerable<ConstructorInfo> constructors, CodeTypeDeclaration codeType)
-        {
-            if (constructors == null || !constructors.Any())
-                return;
-
-            var existingConstructors = codeType.Members.OfType<CodeConstructor>().ToArray();
-            foreach (var existingConstructor in existingConstructors)
-                codeType.Members.Remove(existingConstructor);
-
-            foreach (var constructor in constructors)
-            {
-                var ctor = new CodeConstructor();
-                ctor.Attributes = MemberAttributes.Public;
-
-                foreach (var param in constructor.GetParameters())
-                {
-                    ctor.Parameters.Add(new CodeParameterDeclarationExpression(param.ParameterType, param.Name));
-                    ctor.BaseConstructorArgs.Add(new CodeSnippetExpression(param.Name));
-                }
-
-                codeType.Members.Add(ctor);
-            }
-        }
-        
         [Pure, SecurityCritical]
         private Tuple<Type, CompilationData> CompileTypeImpl(TypeContext context)
         {

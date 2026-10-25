@@ -46,9 +46,7 @@
         {
             if (incomingCodeParser is CSharpCodeParser)
                 return new CSharp.CSharpCodeParser();
-            if (incomingCodeParser is VBCodeParser)
-                return new VisualBasic.VBCodeParser();
-            
+
             return base.DecorateCodeParser(incomingCodeParser);
         }
         #endregion
