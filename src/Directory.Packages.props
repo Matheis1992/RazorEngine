@@ -8,10 +8,8 @@
   <!-- RazorEngine.Core: these become dependencies of the RazorEngine.NetFramework package. -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.AspNet.Razor" Version="3.3.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="1.3.2" />
-    <PackageVersion Include="System.Collections.Immutable" Version="1.3.1" />
-    <PackageVersion Include="System.Reflection.Metadata" Version="1.4.2" />
-    <PackageVersion Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
+    <!-- 5.6.0 is the newest Roslyn whose dependencies are all stable releases (5.9.0 depends on a prerelease analyzer package). -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" />
   </ItemGroup>
 
   <!-- RazorEngine.Mvc -->

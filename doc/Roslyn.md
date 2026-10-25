@@ -13,6 +13,28 @@ To activate roslyn all you need to do is set the `CompilerServiceFactory` proper
 config.CompilerServiceFactory = new RazorEngine.Roslyn.RoslynCompilerServiceFactory();
 ```
 
+## Why use Roslyn
+
+| | CodeDom (default) | Roslyn |
+|---|---|---|
+| C# version in templates | C# 5 (the `csc.exe` of .NET Framework) | latest C# supported by Microsoft.CodeAnalysis.CSharp 5.6 (C# 14) |
+| Compilation | starts `csc.exe` as a separate process for each template | runs in-process |
+
+With Roslyn, templates can use modern C#, for example:
+
+```cshtml
+@($"Hello {Model.Name}!")
+@(Model.Address?.City ?? "unknown")
+@{ var (min, max) = (Model.Min, Model.Max); }
+@{ var label = Model.Age switch { < 18 => "child", _ => "adult" }; }@label
+```
+
+Language features that need newer runtime types (for example `Span<T>`-based features, `init`/records, ranges and indices)
+are not available on .NET Framework 4.8 unless those types are referenced or polyfilled.
+
+Roslyn 5.6 depends on newer System.* packages (System.Collections.Immutable, System.Reflection.Metadata, System.Memory, …).
+Your application needs binding redirects for them; SDK-style projects generate them automatically.
+
 ## Known Limitation/Bugs
 
 - Debugging symbols do not work currently (If you know how Roslyn works please send a pull request!).

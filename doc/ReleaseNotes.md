@@ -11,7 +11,9 @@
  * (BUILD) SDK-style projects with NuGet PackageReference replace Paket and FAKE. Build with `dotnet build`, test with `dotnet test`, pack with `dotnet pack`.
  * (BUILD) GitHub Actions replace Travis CI and AppVeyor.
  * (BREAKING) Requires Microsoft.AspNet.Razor 3.3.0 (3.x maintenance release, the parser is unchanged since 3.2.3, so template syntax is unchanged from the 3.x net45 build). ASP.NET MVC 5.2.x only allows Razor below 3.3.0: apps using MVC have to update to Microsoft.AspNet.Mvc 5.3.0 (and Microsoft.AspNet.WebPages 3.3.0) to install this package, otherwise NuGet reports a version conflict (NU1107).
- * Depend on System.Security.Cryptography.X509Certificates 4.3.2 instead of the 4.1.0 pulled in by Roslyn. NuGet audit flags 4.1.0 for CVE-2017-11770, which only affects .NET Core, not .NET Framework; the pin keeps the audit warning away from consumers.
+ * (NEW) Update Roslyn (Microsoft.CodeAnalysis.CSharp) from 1.3.2 to 5.6.0. Templates compiled with `RoslynCompilerServiceFactory` can now use modern C# (up to C# 14: string interpolation, `?.`, tuples, pattern matching, switch expressions, …) instead of C# 6. The default CodeDom compiler is unchanged and still supports C# 5 only. See doc/Roslyn.md.
+ * (BREAKING) Roslyn 5.6.0 depends on newer System.* packages (System.Collections.Immutable 10, System.Reflection.Metadata 10, System.Memory, …). .NET Framework applications need binding redirects for them: SDK-style projects generate them automatically, and NuGet adds them to `app.config`/`web.config` for packages.config projects. A `FileLoadException` for one of these assemblies means a binding redirect is missing.
+ * The package now only depends on Microsoft.AspNet.Razor and Microsoft.CodeAnalysis.CSharp. The old Roslyn's outdated transitive packages (and the NuGet audit warning for System.Security.Cryptography.X509Certificates 4.1.0) are gone.
  * (BUILD) Tests use NUnit 5 (constraint model asserts), Moq 4.21 and Autofac 9; RazorEngine.Mvc uses Microsoft.AspNet.Mvc 5.3.0. Package versions are managed centrally in `src/Directory.Packages.props`.
 
 ### 3.10.1-alpha001 / 4.5.1-alpha001
