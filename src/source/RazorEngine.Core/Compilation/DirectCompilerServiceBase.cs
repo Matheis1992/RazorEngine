@@ -132,16 +132,7 @@
         [SecurityCritical]
         public override string InspectSource(GeneratorResults results, TypeContext context)
         {
-            PrepareGeneratedCode(results, context);
-
-            string generatedCode;
-            var builder = new StringBuilder();
-            using (var writer = new StringWriter(builder, CultureInfo.InvariantCulture))
-            {
-                CodeDomProvider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, new CodeGeneratorOptions());
-                generatedCode = builder.ToString();
-            }
-            return generatedCode;
+            return GenerateSourceCode(CodeDomProvider, results);
         }
 
         [Pure, SecurityCritical]

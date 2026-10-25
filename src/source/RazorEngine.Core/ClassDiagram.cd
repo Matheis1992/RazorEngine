@@ -80,27 +80,6 @@
       <FileName>Compilation\CSharp\CSharpRazorCodeLanguage.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RazorEngine.Compilation.VisualBasic.VBDirectCompilerService" Collapsed="true">
-    <Position X="5.75" Y="3.25" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Compilation\VisualBasic\VBDirectCompilerService.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="RazorEngine.Compilation.VisualBasic.VBRazorCodeGenerator" Collapsed="true">
-    <Position X="10.5" Y="5.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Compilation\VisualBasic\VBRazorCodeGenerator.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="RazorEngine.Compilation.VisualBasic.VBRazorCodeLanguage" Collapsed="true">
-    <Position X="12.25" Y="5.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAQAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Compilation\VisualBasic\VBRazorCodeLanguage.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="RazorEngine.Configuration.DefaultTemplateServiceConfiguration" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="14" Y="1.5" Width="1.5" />
     <TypeIdentifier>

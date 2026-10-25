@@ -56,16 +56,7 @@ namespace RazorEngine.Roslyn.CSharp
         [SecurityCritical]
         public override string InspectSource(GeneratorResults results, TypeContext context)
         {
-            PrepareGeneratedCode(results, context);
-
-            string generatedCode;
-            var builder = new StringBuilder();
-            using (var writer = new StringWriter(builder, CultureInfo.InvariantCulture))
-            {
-                _codeDomProvider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, new CodeGeneratorOptions());
-                generatedCode = builder.ToString();
-            }
-            return generatedCode;
+            return GenerateSourceCode(_codeDomProvider, results);
         }
 
         /// <summary>

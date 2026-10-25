@@ -303,7 +303,26 @@
             GeneratorResults result;
             using (var reader = context.TemplateContent.GetTemplateReader())
                 result = engine.GenerateCode(reader, null, null, context.TemplateContent.TemplateFile);
+            // Prepared here (not in InspectSource), so every compiler service gets the same template class.
+            PrepareGeneratedCode(result, context);
             return InspectSource(result, context);
+        }
+
+        /// <summary>
+        /// Turns the generated code into source code with the given CodeDom provider.
+        /// </summary>
+        /// <param name="provider">The provider that writes the source code.</param>
+        /// <param name="results">The results of the Razor code generator.</param>
+        /// <returns>The source code.</returns>
+        [SecurityCritical]
+        protected static string GenerateSourceCode(CodeDomProvider provider, GeneratorResults results)
+        {
+            var builder = new System.Text.StringBuilder();
+            using (var writer = new StringWriter(builder, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                provider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, new CodeGeneratorOptions());
+            }
+            return builder.ToString();
         }
 
         /// <summary>
@@ -387,7 +406,7 @@
         /// <param name="results">The results of the Razor code generator.</param>
         /// <param name="context">The type context.</param>
         [SecurityCritical]
-        protected void PrepareGeneratedCode(GeneratorResults results, TypeContext context)
+        private void PrepareGeneratedCode(GeneratorResults results, TypeContext context)
         {
             if (context.TemplateContent.TemplateFile == null)
             {

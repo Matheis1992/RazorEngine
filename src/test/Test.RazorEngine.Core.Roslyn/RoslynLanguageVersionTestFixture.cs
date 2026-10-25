@@ -6,7 +6,7 @@ namespace Test.RazorEngine.Core.Roslyn
 {
     /// <summary>
     /// Checks that templates compiled with the Roslyn backend can use modern C# features
-    /// (the default CodeDom backend only supports C# 5).
+    /// (the CodeDom backend, <c>CodeDomCompilerServiceFactory</c>, only supports C# 5).
     /// </summary>
     [TestFixture]
     public class RoslynLanguageVersionTestFixture
