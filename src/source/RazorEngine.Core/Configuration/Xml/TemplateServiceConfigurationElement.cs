@@ -9,7 +9,6 @@
     {
         #region Fields
         private const string BaseTemplateTypeAttribute = "baseTemplateType";
-        private const string CodeInspectorsElement = "codeInspectors";
         private const string DebugAttribute = "debug";
         private const string EncodedStringFactoryAttribute = "encodedStringFactoryType";
         private const string LanguageAttribute = "language";

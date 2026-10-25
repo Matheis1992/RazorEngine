@@ -28,7 +28,7 @@ namespace RazorEngine.Templating
 
         #region Constructor
         /// <summary>
-        /// Initialises a new instance of <see cref="TemplateService"/>
+        /// Initialises a new instance of <see cref="RazorEngineService"/>
         /// </summary>
         /// <param name="config">The template service configuration.</param>
         internal RazorEngineService(ITemplateServiceConfiguration config)
@@ -48,14 +48,14 @@ namespace RazorEngine.Templating
         }
 
         /// <summary>
-        /// Initialises a new instance of <see cref="TemplateService"/>.
+        /// Initialises a new instance of <see cref="RazorEngineService"/>.
         /// </summary>
         internal RazorEngineService()
             : this(new TemplateServiceConfiguration()) { }
 
 
         /// <summary>
-        /// Initialises a new instance of <see cref="TemplateService"/>
+        /// Initialises a new instance of <see cref="RazorEngineService"/>
         /// </summary>
         /// <param name="language">The code language.</param>
         /// <param name="encoding">the encoding.</param>
@@ -237,20 +237,6 @@ namespace RazorEngine.Templating
         {
             var template = GetCompiledTemplate(key, modelType, false);
             _core_with_cache.RunTemplate(template, writer, model, viewBag);
-        }
-
-        /// <summary>
-        /// Helper method for the legacy <see cref="TemplateService"/> class.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="modelType"></param>
-        /// <param name="model"></param>
-        /// <param name="viewbag"></param>
-        /// <returns></returns>
-        internal ITemplate GetTemplate(ITemplateKey key, Type modelType, object model, DynamicViewBag viewbag)
-        {
-            var template = GetCompiledTemplate(key, modelType, true);
-            return _core_with_cache.CreateTemplate(template, model, viewbag);
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ Templates are C# code and run with the full rights of your application.
 Earlier versions supported running templates in a partially trusted `AppDomain` (a Code Access Security sandbox).
 This is not supported anymore: CAS is obsolete and no security boundary, and templates can escape such a sandbox
 ([CVE-2021-46703](https://github.com/advisories/GHSA-ph3v-2hq5-5qfq)).
-`IsolatedRazorEngineService` and `IsolatedTemplateService` throw a `NotSupportedException` when the
+`IsolatedRazorEngineService` throws a `NotSupportedException` when the
 application domain factory returns a partially trusted `AppDomain`.
 
 If you have to run templates written by untrusted users, isolate them outside of RazorEngine,

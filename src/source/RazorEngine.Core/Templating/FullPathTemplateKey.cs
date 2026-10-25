@@ -10,7 +10,7 @@ namespace RazorEngine.Templating
     /// <summary>
     /// A simple <see cref="ITemplateKey"/> implementation inheriting from <see cref="BaseTemplateKey"/>.
     /// This implementation assumes that the template-names are unique and returns the name as unique key.
-    /// (So this implementation is used by <see cref="DelegateTemplateManager"/> and <see cref="RazorEngine.Configuration.Xml.WrapperTemplateManager"/>.
+    /// (So this implementation is used by <see cref="DelegateTemplateManager"/>.
     /// </summary>
     [Serializable]
     public class FullPathTemplateKey : BaseTemplateKey

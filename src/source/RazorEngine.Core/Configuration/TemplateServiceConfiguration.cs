@@ -4,7 +4,6 @@
     using System.Collections.Generic;
 
     using Compilation;
-    using Compilation.Inspectors;
     using Templating;
     using Text;
     using RazorEngine.Compilation.ReferenceResolver;
@@ -16,10 +15,6 @@
     /// </summary>
     public class TemplateServiceConfiguration : ITemplateServiceConfiguration
     {
-#pragma warning disable 0618 // Backwards Compat.
-        private ITemplateResolver resolver;
-#pragma warning restore 0618 // Backwards Compat.
-
         #region Constructor
 
         /// <summary>
@@ -32,11 +27,6 @@
             CompilerServiceFactory =
                 new DefaultCompilerServiceFactory();
             EncodedStringFactory = new HtmlEncodedStringFactory();
-            
-#pragma warning disable 0618 // Backwards Compat.
-            CodeInspectors = new List<ICodeInspector>();
-#pragma warning restore 0618 // Backwards Compat.
-
             ReferenceResolver = new UseCurrentAssembliesReferenceResolver();
             CachingProvider = new DefaultCachingProvider();
             TemplateManager =
@@ -84,20 +74,6 @@
         /// </summary>
         public Type BaseTemplateType { get; set; }
 
-#pragma warning disable 0618 // Backwards Compat.
-        /// <summary>
-        /// Gets the set of code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        IEnumerable<ICodeInspector> ITemplateServiceConfiguration.CodeInspectors { get { return CodeInspectors; } }
-        
-        /// <summary>
-        /// Gets the set of code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IList<ICodeInspector> CodeInspectors { get; private set; }
-#pragma warning restore 0618 // Backwards Compat.
-        
         /// <summary>
         /// Gets or sets the reference resolver
         /// </summary>
@@ -134,24 +110,7 @@
         public ISet<string> Namespaces { get; set; }
 
         /// <summary>
-        /// Gets or sets the template resolver.
-        /// </summary>
-        [Obsolete("Please use the TemplateManager property instead")]
-        public ITemplateResolver Resolver { 
-            get { 
-                return resolver;
-            } 
-            set { 
-                resolver = value;
-                if (value != null)
-                {
-                    TemplateManager = new WrapperTemplateManager(value);
-                }
-            } 
-        }
-
-        /// <summary>
-        /// Gets or sets the template resolver.
+        /// Gets or sets the template manager.
         /// </summary>
         public ITemplateManager TemplateManager { get; set; }
         #endregion

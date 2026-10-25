@@ -126,7 +126,7 @@
 
         #region Constructor
         /// <summary>
-        /// Initializes a new instance of <see cref="IsolatedTemplateService"/>.
+        /// Initializes a new instance of <see cref="IsolatedRazorEngineService"/>.
         /// </summary>
         /// <param name="configCreator">The instance to provide the configuration in the new <see cref="AppDomain"/>.</param>
         /// <param name="appDomainFactory">The application domain factory.</param>

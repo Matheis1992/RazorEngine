@@ -4,7 +4,6 @@
     using System.Diagnostics.Contracts;
 
     using Compilation;
-    using Compilation.Inspectors;
     using Templating;
     using Text;
 
@@ -69,32 +68,6 @@
             return this;
         }
         
-        /// <summary>
-        /// Adds the specified code inspector.
-        /// </summary>
-        /// <typeparam name="TInspector">The code inspector type.</typeparam>
-        /// <returns>The current configuration builder.</returns>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IConfigurationBuilder AddInspector<TInspector>() where TInspector : ICodeInspector, new()
-        {
-            return AddInspector(new TInspector());
-        }
-
-        /// <summary>
-        /// Adds the specified code inspector.
-        /// </summary>
-        /// <param name="inspector">The code inspector.</param>
-        /// <returns>The current configuration builder.</returns>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IConfigurationBuilder AddInspector(ICodeInspector inspector)
-        {
-            if (inspector == null)
-                throw new ArgumentNullException("inspector");
-
-            _config.CodeInspectors.Add(inspector);
-            return this;
-        }
-
         /// <summary>
         /// Sets that dynamic models should be fault tollerant in accepting missing properties.
         /// </summary>
@@ -177,35 +150,9 @@
         /// </summary>
         /// <typeparam name="TResolver">The resolve type.</typeparam>
         /// <returns>The current configuration builder.</returns>
-        [Obsolete("Please use the ManageUsing method instead.")]
-        public IConfigurationBuilder ResolveUsing<TResolver>() where TResolver : ITemplateResolver, new()
-        {
-            _config.Resolver = new TResolver();
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the resolve used to locate unknown templates.
-        /// </summary>
-        /// <typeparam name="TResolver">The resolve type.</typeparam>
-        /// <returns>The current configuration builder.</returns>
         public IConfigurationBuilder ManageUsing<TResolver>() where TResolver : ITemplateManager, new()
         {
             _config.TemplateManager = new TResolver();
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the resolver used to locate unknown templates.
-        /// </summary>
-        /// <param name="resolver">The resolver instance to use.</param>
-        /// <returns>The current configuration builder.</returns>
-        [Obsolete("Please use the ManageUsing method instead.")]
-        public IConfigurationBuilder ResolveUsing(ITemplateResolver resolver)
-        {
-            Contract.Requires(resolver != null);
-
-            _config.Resolver = resolver;
             return this;
         }
 

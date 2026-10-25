@@ -11,7 +11,6 @@
     using System.Web.Razor.Parser;
     using System.CodeDom.Compiler;
 
-    using Inspectors;
     using Templating;
     using RazorEngine.Compilation.ReferenceResolver;
     using System.Security;
@@ -76,12 +75,6 @@
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets or sets the set of code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IEnumerable<ICodeInspector> CodeInspectors { get; set; }
-
         /// <summary>
         /// Gets or sets the assembly resolver.
         /// </summary>
@@ -343,16 +336,6 @@
         }
 
         /// <summary>
-        /// Returns a set of assemblies that must be referenced by the compiled template.
-        /// </summary>
-        /// <returns>The set of assemblies.</returns>
-        [Obsolete("Use IncludeReferences instead")]
-        public virtual IEnumerable<string> IncludeAssemblies()
-        {
-            return Enumerable.Empty<string>();
-        }
-
-        /// <summary>
         /// Returns a set of references that must be referenced by the compiled template.
         /// </summary>
         /// <returns>The set of references.</returns>
@@ -368,40 +351,17 @@
         /// <returns></returns>
         protected IEnumerable<CompilerReference> GetAllReferences(TypeContext context)
         {
-#pragma warning disable 0618 // Backwards Compat.
             var references =
-                ReferenceResolver.GetReferences(
-                    context,
-                    IncludeAssemblies()
-                        .Select(RazorEngine.Compilation.ReferenceResolver.CompilerReference.From)
-                        .Concat(IncludeReferences()))
-#pragma warning restore 0618 // Backwards Compat.
+                ReferenceResolver.GetReferences(context, IncludeReferences())
                 .ToList();
             context.AddReferences(references);
             return references;
         }
 
         /// <summary>
-        /// Inspects the generated code compile unit.
-        /// </summary>
-        /// <param name="unit">The code compile unit.</param>
-        [Obsolete("Will be removed in 4.x")]
-        protected virtual void Inspect(CodeCompileUnit unit)
-        {
-            Contract.Requires(unit != null);
-
-            var ns = unit.Namespaces[0];
-            var type = ns.Types[0];
-            var executeMethod = type.Members.OfType<CodeMemberMethod>().Where(m => m.Name.Equals("Execute")).Single();
-
-            foreach (var inspector in CodeInspectors)
-                inspector.Inspect(unit, ns, type, executeMethod);
-        }
-
-        /// <summary>
         /// Prepares the generated code before it is turned into source code, so that the CodeDom and the
         /// Roslyn compiler services produce the same template class: makes the template debuggable,
-        /// marks dynamic models, adds the constructors required by the base template type and runs the code inspectors.
+        /// marks dynamic models and adds the constructors required by the base template type.
         /// </summary>
         /// <param name="results">The results of the Razor code generator.</param>
         /// <param name="context">The type context.</param>
@@ -434,11 +394,6 @@
 
             // Generate any constructors required by the base template type.
             GenerateConstructors(CompilerServicesUtility.GetConstructors(context.TemplateType), generatedType);
-
-#pragma warning disable 0618 // Backwards Compat.
-            // Despatch any inspectors
-            Inspect(results.GeneratedCode);
-#pragma warning restore 0618 // Backwards Compat.
         }
 
         /// <summary>

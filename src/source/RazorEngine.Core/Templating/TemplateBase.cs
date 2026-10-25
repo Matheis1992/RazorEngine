@@ -60,11 +60,6 @@ namespace RazorEngine.Templating
         public IInternalTemplateService InternalTemplateService { internal get; set; }
 
         /// <summary>
-        /// Gets or sets the template service.
-        /// </summary>
-        [Obsolete("Only provided for backwards compatibility, use RazorEngine instead.")]
-        public ITemplateService TemplateService { get; set; }
-        /// <summary>
         /// Gets or sets the current <see cref="IRazorEngineService"/> instance.
         /// </summary>
         [Obsolete("Use the Razor property instead, this is obsolete as it makes it difficult to use the RazorEngine namespace within templates.")]
