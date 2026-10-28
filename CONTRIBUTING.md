@@ -35,8 +35,9 @@ You can find licenses of the programs this project depends on on their nuget pag
 1. Add a heading for the new version at the top of `doc/ReleaseNotes.md` (CI fails if it does not match `<Version>`).
 2. Update `<Version>` in `src/source/RazorEngine.Core/RazorEngine.Core.csproj` and increase the last number of `<FileVersion>` (for every release, previews included).
 3. Previews (e.g. `4.0.0-preview.1`) are released from `develop`, stable versions from `master` (merge `develop` into `master` first).
-4. Create the tag `v<version>` (e.g. `v4.0.0`) on that commit and push it: `git tag v<version>` and `git push origin v<version>`. The package's release notes link points to this tag.
+4. Create the tag `v<version>` (e.g. `v4.0.0`) on that commit and push it: `git tag v<version>` and `git push origin v<version>`.
 5. The tag starts the release workflow (`.github/workflows/release.yml`). It checks that the tag matches `<Version>`, the release notes and the branch, then builds, tests and packs, pushes the package to nuget.org and creates the GitHub release with the packages and the newest release notes section.
+   The package's release notes link points to this GitHub release. To correct the notes of a published version, fix `doc/ReleaseNotes.md` and edit the text of the GitHub release (`gh release edit v<version> --notes-file <file>`); the package itself cannot be changed.
 
 The workflow publishes with [NuGet trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing), so no API key is stored in GitHub. One-time setup:
 

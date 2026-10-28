@@ -31,8 +31,8 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/Matheis1992/RazorEngine</PackageProjectUrl>
-    <!-- Points at the release tag (see Releasing in CONTRIBUTING.md), so the link shows the notes as of this version. -->
-    <PackageReleaseNotes>https://github.com/Matheis1992/RazorEngine/blob/v$(Version)/doc/ReleaseNotes.md</PackageReleaseNotes>
+    <!-- Points at the GitHub release of this version (created by .github/workflows/release.yml). Its text can still be corrected after publishing, unlike the package. -->
+    <PackageReleaseNotes>https://github.com/Matheis1992/RazorEngine/releases/tag/v$(Version)</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Matheis1992/RazorEngine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <IncludeSymbols>true</IncludeSymbols>
