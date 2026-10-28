@@ -10,9 +10,9 @@
 
   <!-- Version and shared assembly attributes. Title and description stay in Properties\AssemblyInfo.cs. -->
   <PropertyGroup>
-    <Version>4.0.0</Version>
+    <Version>4.1.0</Version>
     <!-- Increase the last number with every release (previews too), so installers see a newer file. -->
-    <FileVersion>4.0.0.1</FileVersion>
+    <FileVersion>4.1.0.1</FileVersion>
     <Company>RazorEngine</Company>
     <Product>RazorEngine</Product>
     <Copyright>RazorEngine Copyright © RazorEngine Project 2011-2017</Copyright>
@@ -51,14 +51,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Razor" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-    <!-- Explicit so consumers get the tested versions instead of the lowest versions Roslyn allows. -->
-    <PackageReference Include="System.Collections.Immutable" />
-    <PackageReference Include="System.Reflection.Metadata" />
-    <!-- Roslyn 1.3.2 pulls in 4.1.0, which NuGet audit flags for CVE-2017-11770 (GHSA-7mfr-774f-w5r9).
-         That CVE only affects .NET Core; on .NET Framework the built-in implementation is used anyway.
-         Pinning a patched version keeps the audit warning away from this package and its consumers.
-         Can be removed once Roslyn is updated. -->
-    <PackageReference Include="System.Security.Cryptography.X509Certificates" />
   </ItemGroup>
 
 </Project>

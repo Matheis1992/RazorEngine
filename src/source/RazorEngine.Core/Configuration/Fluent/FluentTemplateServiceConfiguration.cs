@@ -5,7 +5,6 @@
     using System.Diagnostics.Contracts;
 
     using Compilation;
-    using Compilation.Inspectors;
     using Templating;
     using Text;
     using RazorEngine.Compilation.ReferenceResolver;
@@ -73,15 +72,6 @@
         }
         
         /// <summary>
-        /// Gets the set of code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IEnumerable<ICodeInspector> CodeInspectors
-        {
-            get { return _innerConfig.CodeInspectors; }
-        }
-        
-        /// <summary>
         /// Gets the reference resolver.
         /// </summary>
         public IReferenceResolver ReferenceResolver
@@ -136,15 +126,6 @@
         public ISet<string> Namespaces
         {
             get { return _innerConfig.Namespaces; }
-        }
-
-        /// <summary>
-        /// Gets the resolver.
-        /// </summary>
-        [Obsolete("Please use the TemplateManager property instead")]
-        public ITemplateResolver Resolver
-        {
-            get { return _innerConfig.Resolver; }
         }
 
         /// <summary>

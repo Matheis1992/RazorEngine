@@ -3,12 +3,13 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    using CSharp;
-    using VisualBasic;
     using System.Security;
+    using RazorEngine.Roslyn.CSharp;
 
     /// <summary>
-    /// Provides a default implementation of a <see cref="ICompilerServiceFactory"/>.
+    /// Provides a default implementation of a <see cref="ICompilerServiceFactory"/>:
+    /// templates are compiled in-process with Roslyn (modern C#).
+    /// Use <see cref="CodeDomCompilerServiceFactory"/> to compile templates with CodeDom (C# 5) instead.
     /// </summary>
     [Serializable]
     public class DefaultCompilerServiceFactory : ICompilerServiceFactory
@@ -26,10 +27,7 @@
             switch (language)
             {
                 case Language.CSharp:
-                    return new CSharpDirectCompilerService();
-
-                case Language.VisualBasic:
-                    return new VBDirectCompilerService();
+                    return new CSharpRoslynCompilerService();
 
                 default:
                     throw new ArgumentException("Unsupported language: " + language);

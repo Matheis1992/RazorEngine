@@ -84,13 +84,6 @@ namespace RazorEngine.Templating
                 {
                     return csPath;
                 }
-
-                //Check if a file with the visual basic extension exists
-                var vbPath = path + ".vbhtml";
-                if (File.Exists(vbPath))
-                {
-                    return vbPath;
-                }
             }
 
             throw new InvalidOperationException(string.Format("Could not resolve template {0}", name));

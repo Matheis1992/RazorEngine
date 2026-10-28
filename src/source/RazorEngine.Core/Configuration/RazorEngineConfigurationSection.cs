@@ -17,7 +17,6 @@
         private const string DefaultLanguageAttribute = "defaultLanguage";
         private const string NamespacesElement = "namespaces";
         private const string SectionPath = "razorEngine";
-        private const string TemplateResolverAttribute = "templateResolverType";
         private const string TemplateManagerAttribute = "templateManagerType";
         private const string CachingProviderAttribute = "cachingProviderType";
         private const string ReferenceResolverAttribute = "referenceResolverType";
@@ -90,17 +89,7 @@
         }
 
         /// <summary>
-        /// Gets the template resolver type.
-        /// </summary>
-        [Obsolete("Please use the TemplateManagerType property instead")]
-        [ConfigurationProperty(TemplateResolverAttribute, IsRequired = false)]
-        public string TemplateResolverType
-        {
-            get { return (string)this[TemplateResolverAttribute]; }
-        }
-
-        /// <summary>
-        /// Gets the template resolver type.
+        /// Gets the template manager type.
         /// </summary>
         [ConfigurationProperty(TemplateManagerAttribute, IsRequired = false)]
         public string TemplateManagerType

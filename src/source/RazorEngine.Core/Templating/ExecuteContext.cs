@@ -20,15 +20,6 @@
         {
             _currentSectionStack.Push(new HashSet<string>());
         }
-        /// <summary>
-        /// DO NOT USE, throws NotSupportedException.
-        /// </summary>
-        /// <param name="viewbag">DO NOT USE, throws NotSupportedException.</param>
-        [Obsolete("RUNTIME FAILURE: This kind of usage is no longer supported.")]
-        public ExecuteContext(DynamicViewBag viewbag)
-        {
-            throw new NotSupportedException("This kind of usage is no longer supported!");
-        }
         #endregion
 
         #region Fields

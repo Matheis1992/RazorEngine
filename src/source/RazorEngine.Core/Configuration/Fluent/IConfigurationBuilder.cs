@@ -3,7 +3,6 @@
     using System;
 
     using Compilation;
-    using Compilation.Inspectors;
     using Templating;
     using Text;
 
@@ -33,22 +32,6 @@
         /// <param name="activator">The activator delegate.</param>
         /// <returns>The current configuration builder.</returns>
         IConfigurationBuilder ActivateUsing(Func<InstanceContext, ITemplate> activator);
-        
-        /// <summary>
-        /// Adds the specified code inspector.
-        /// </summary>
-        /// <typeparam name="TInspector">The code inspector type.</typeparam>
-        /// <returns>The current configuration builder.</returns>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        IConfigurationBuilder AddInspector<TInspector>() where TInspector : ICodeInspector, new();
-
-        /// <summary>
-        /// Adds the specified code inspector.
-        /// </summary>
-        /// <param name="inspector">The code inspector.</param>
-        /// <returns>The current configuration builder.</returns>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        IConfigurationBuilder AddInspector(ICodeInspector inspector);
 
         /// <summary>
         /// Sets the compiler service factory.
@@ -80,28 +63,12 @@
         IConfigurationBuilder EncodeUsing<TEncodedStringFactory>() where TEncodedStringFactory : IEncodedStringFactory, new();
 
         /// <summary>
-        /// Sets the resolve used to locate unknown templates.
-        /// </summary>
-        /// <typeparam name="TResolver">The resolve type.</typeparam>
-        /// <returns>The current configuration builder.</returns>
-        [Obsolete("Please use ManageUsing instead")]
-        IConfigurationBuilder ResolveUsing<TResolver>() where TResolver : ITemplateResolver, new();
-
-        /// <summary>
         /// Sets the manager used to locate unknown templates.
         /// </summary>
         /// <typeparam name="TManager">The manager type.</typeparam>
         /// <returns>The current configuration builder.</returns>
         IConfigurationBuilder ManageUsing<TManager>() where TManager : ITemplateManager, new();
 
-        /// <summary>
-        /// Sets the resolver used to locate unknown templates.
-        /// </summary>
-        /// <param name="resolver">The resolver instance to use.</param>
-        /// <returns>The current configuration builder.</returns>
-        [Obsolete("Please use ManageUsing instead")]
-        IConfigurationBuilder ResolveUsing(ITemplateResolver resolver);
-        
         /// <summary>
         /// Sets the manager used to locate unknown templates.
         /// </summary>

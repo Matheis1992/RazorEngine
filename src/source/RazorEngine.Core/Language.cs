@@ -8,11 +8,6 @@
         /// <summary>
         /// C# Language
         /// </summary>
-        CSharp,
-
-        /// <summary>
-        /// Visual Basic Language
-        /// </summary>
-        VisualBasic
+        CSharp
     }
 }

@@ -105,38 +105,6 @@
         }
 
         /// <summary>
-        /// A viewbag property should not persist through using @Include as this will create a new <see cref="ExecuteContext" />, which
-        /// initialises a new viewbag property.
-        /// 
-        /// Issue 7: https://github.com/Antaris/RazorEngine/issues/7
-        /// </summary>
-        /// <remarks>
-        /// This test no longer pass as we have changed the ViewBag property to be a fault tollerant dynamic dictionary.
-        /// </remarks>
-        [Test]
-        public void Issue7_ViewBagShouldNotPersistThroughInclude_UsingVB()
-        {
-//            var config = new TemplateServiceConfiguration() { Language = Language.VisualBasic };
-//            using (var service = new TemplateService(config))
-//            {
-//                const string parentTemplate = @"
-//@Code 
-//    ViewBag.Title = ""Test"" 
-//End Code
-//@Include(""Child"")";
-//                const string childTemplate = "@ViewBag.Title";
-//
-//                service.Compile(childTemplate, "Child");
-//
-//                // The VB runtime binder will through a MissingMemberException...
-//                Assert.Throws<MissingMemberException>(() =>
-//                {
-//                    string result = service.Parse(parentTemplate);
-//                });
-//            }
-        }
-
-        /// <summary>
         /// The template service should have the ability to compile a template with out a model.
         /// 
         /// Issue 11: https://github.com/Antaris/RazorEngine/issues/11

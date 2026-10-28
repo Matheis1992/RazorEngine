@@ -1,20 +1,31 @@
 ﻿# Upgrading RazorEngine.
 
 
-## Upgrading to 4.x.
+## Upgrading to 4.1.
 
-While Razor 4 is still beta we do not recommend upgrading to 4.x on production systems.
-4.x releases will have the same features/API of 3.x releases but will use Razor-4 instead of Razor-2 and Razor-3.
-Some obsolete APIs will be removed so see the `Upgrading to 3.5.0` guide.
+4.1 removes old APIs and changes the default compiler. The template syntax is unchanged.
+See [ReleaseNotes](ReleaseNotes.md) for the complete list of breaking changes; the most important ones:
 
-Razor 4 changed quite a bit of its internals,
-see https://github.com/aspnet/Razor/releases for a complete list of changes.
+ - The APIs that were obsolete since 3.5 are removed: the static `Razor` class (`Razor.Parse`, ...), `TemplateService`,
+   `ITemplateService`, `IsolatedTemplateService`, `ITemplateResolver` (and `templateResolverType` in the configuration)
+   and the code inspectors. Follow the `Upgrading to 3.5.0` guide below to move to `Engine.Razor`/`RazorEngineService`
+   and `ITemplateManager`.
+ - Templates are compiled with Roslyn by default (modern C#). Roslyn's dependencies need binding redirects,
+   see [Roslyn](Roslyn.md). `CodeDomCompilerServiceFactory` brings back the old compiler (C# 5, `csc.exe`).
+ - VB.NET templates are no longer supported.
 
-Some important changes hitting RazorEngine users:
 
- - `@helper` is no longer available (https://github.com/aspnet/Razor/issues/281)
- - Urls like `~/index.html` are no longer resolved.
-   See https://github.com/aspnet/Razor/issues/427 and https://github.com/aspnet/Mvc/issues/2807
+## Upgrading to 4.0 (RazorEngine.NetFramework).
+
+Version 4.0 is the first release of the fork, published as the package `RazorEngine.NetFramework`
+(not to be confused with the 4.x Razor4 previews of the original `RazorEngine` package).
+It still uses Razor 3 (Microsoft.AspNet.Razor 3.x), so the template syntax is unchanged.
+See [ReleaseNotes](ReleaseNotes.md) for the complete list of breaking changes; the most important one:
+
+ - Replace the `RazorEngine` package with `RazorEngine.NetFramework` (.NET Framework 4.8) and update assembly names
+   in `app.config`/`web.config` (`RazorEngine` -> `RazorEngine.NetFramework`).
+
+The APIs that are obsolete since 3.5 still exist in 4.0 but are removed in 4.1, so move away from them now.
 
 
 ## Upgrading to 3.5.0.

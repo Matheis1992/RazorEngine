@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    using Inspectors;
     using RazorEngine.Compilation.ReferenceResolver;
     using System.Security;
 
@@ -14,12 +13,6 @@
     public interface ICompilerService : IDisposable
     {
         #region Properties
-        /// <summary>
-        /// Gets or sets the set of code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        IEnumerable<ICodeInspector> CodeInspectors { get; set; }
-
         /// <summary>
         /// Gets or sets the reference resolver.
         /// </summary>
@@ -46,12 +39,6 @@
         /// <returns>The compiled type.</returns>
         [SecurityCritical]
         Tuple<Type, CompilationData> CompileType(TypeContext context);
-
-        /// <summary>
-        /// Returns a set of assemblies that must be referenced by the compiled template.
-        /// </summary>
-        /// <returns>The set of assemblies.</returns>
-        IEnumerable<string> IncludeAssemblies();
         #endregion
     }
 }

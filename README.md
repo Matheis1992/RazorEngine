@@ -90,9 +90,22 @@ This supports the majority of users but with some configuration changes you can 
 which is better suited for templates that generate things like javascript, php, C# and others.
 
 ```csharp
-config.Language = Language.VisualBasic; // VB.NET as template language.
 config.EncodedStringFactory = new RawStringFactory(); // Raw string encoding.
 config.EncodedStringFactory = new HtmlEncodedStringFactory(); // Html encoding.
+```
+
+### Compiler
+
+Templates are compiled in-process with Roslyn, so they can use modern C# (up to C# 14),
+for example string interpolation, `?.`, tuples and switch expressions.
+On .NET Framework, Roslyn's dependencies need binding redirects; SDK-style projects generate them automatically.
+See [Roslyn](doc/Roslyn.md) for details.
+
+To use the old CodeDom compiler (`csc.exe`, C# 5) instead, for example to step into templates with the debugger:
+
+```csharp
+// using RazorEngine.Compilation;
+config.CompilerServiceFactory = new CodeDomCompilerServiceFactory();
 ```
 
 ### Debugging
@@ -101,6 +114,7 @@ One thing you might want to enable is the debugging feature:
 
 ```csharp
 config.Debug = true;
+config.CompilerServiceFactory = new CodeDomCompilerServiceFactory(); // Roslyn templates cannot be stepped into yet.
 ```
 
 When `Debug` is true you can straight up debug into the generated code. 

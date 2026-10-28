@@ -100,16 +100,5 @@ namespace Test.RazorEngine
             var result = CompilerServicesUtility.ResolveCSharpTypeName(typeof(HostingClass.GenericNestedClass<string>));
             Assert.That(result, Is.EqualTo("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.GenericNestedClass<System.String>"));
         }
-
-        /// <summary>
-        /// Check that we can generate the type name from a iterator type
-        /// </summary>
-        [Test]
-        public void CompilerServiceUtility_CheckVBNetIteratorType()
-        {
-            var type = IteratorHelper().GetType();
-            var result = CompilerServicesUtility.ResolveVBTypeName(type);
-            Assert.That(result, Is.EqualTo("System.Collections.Generic.IEnumerable(Of System.String)"));
-        }
     }
 }

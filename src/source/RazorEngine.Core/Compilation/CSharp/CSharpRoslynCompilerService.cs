@@ -56,14 +56,7 @@ namespace RazorEngine.Roslyn.CSharp
         [SecurityCritical]
         public override string InspectSource(GeneratorResults results, TypeContext context)
         {
-            string generatedCode;
-            var builder = new StringBuilder();
-            using (var writer = new StringWriter(builder, CultureInfo.InvariantCulture))
-            {
-                _codeDomProvider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, new CodeGeneratorOptions());
-                generatedCode = builder.ToString();
-            }
-            return generatedCode;
+            return GenerateSourceCode(_codeDomProvider, results);
         }
 
         /// <summary>
@@ -91,7 +84,9 @@ namespace RazorEngine.Roslyn.CSharp
         [SecurityCritical]
         public override Microsoft.CodeAnalysis.SyntaxTree GetSyntaxTree(string sourceCode, string sourceCodePath)
         {
-            return CSharpSyntaxTree.ParseText(sourceCode, path: sourceCodePath, encoding: System.Text.Encoding.UTF8);
+            // Same symbol as the CodeDom compiler service (/define:RAZORENGINE), so templates can use #if RAZORENGINE.
+            var options = CSharpParseOptions.Default.WithPreprocessorSymbols("RAZORENGINE");
+            return CSharpSyntaxTree.ParseText(sourceCode, options, sourceCodePath, System.Text.Encoding.UTF8);
         }
 
         /// <summary>
@@ -112,8 +107,10 @@ namespace RazorEngine.Roslyn.CSharp
         [SecurityCritical]
         public override CompilationOptions CreateOptions(TypeContext context)
         {
-            return 
+            return
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                // Optimized like the CodeDom compiler service (/optimize), also when Debug is set.
+                .WithOptimizationLevel(OptimizationLevel.Release)
                 .WithUsings(context.Namespaces);
         }
 

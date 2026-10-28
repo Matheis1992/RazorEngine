@@ -18,6 +18,22 @@ using (var service = IsolatedRazorEngineService.Create())
 
 You can provide your own `IAppDomainFactory` or use the `Func<AppDomain>` overloads of `IsolatedRazorEngineService.Create`
 to control how the `AppDomain` is created, as long as it is fully trusted.
+Pass your application's configuration file to the new `AppDomain`, so the binding redirects for Roslyn's dependencies apply there too:
+
+```csharp
+var setup = new AppDomainSetup
+{
+    ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+    ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile
+};
+using (var service = IsolatedRazorEngineService.Create(() => AppDomain.CreateDomain("Templates", null, setup)))
+{
+    ...
+}
+```
+
+Without it, compiling fails with a `FileLoadException` for `System.Collections.Immutable` or a similar assembly.
+The default `IsolatedRazorEngineService.Create()` already does this.
 
 ## Isolation is no security boundary
 
@@ -27,7 +43,7 @@ Templates are C# code and run with the full rights of your application.
 Earlier versions supported running templates in a partially trusted `AppDomain` (a Code Access Security sandbox).
 This is not supported anymore: CAS is obsolete and no security boundary, and templates can escape such a sandbox
 ([CVE-2021-46703](https://github.com/advisories/GHSA-ph3v-2hq5-5qfq)).
-`IsolatedRazorEngineService` and `IsolatedTemplateService` throw a `NotSupportedException` when the
+`IsolatedRazorEngineService` throws a `NotSupportedException` when the
 application domain factory returns a partially trusted `AppDomain`.
 
 If you have to run templates written by untrusted users, isolate them outside of RazorEngine,

@@ -6,7 +6,6 @@
     using System.Reflection;
 
     using Compilation;
-    using Compilation.Inspectors;
     using Configuration;
     using System.Security;
     using System.Threading.Tasks;
@@ -84,9 +83,6 @@
             var context = CreateInstanceContext(template.TemplateType);
             ITemplate instance = _config.Activator.CreateInstance(context);
             instance.InternalTemplateService = new InternalTemplateService(this, template.Key);
-#pragma warning disable 0618 // Backwards Compat.
-            instance.TemplateService = new TemplateService(_cached);
-#pragma warning restore 0618 // Backwards Compat.
             instance.Razor = _cached;
             instance.SetData(model, viewbag);
             return instance;
@@ -115,9 +111,6 @@
             {
                 service.Debug = _config.Debug;
                 service.DisableTempFileLocking = _config.DisableTempFileLocking;
-#pragma warning disable 0618 // Backwards Compat.
-                service.CodeInspectors = _config.CodeInspectors ?? Enumerable.Empty<ICodeInspector>();
-#pragma warning restore 0618 // Backwards Compat.
                 service.ReferenceResolver = _config.ReferenceResolver ?? new UseCurrentAssembliesReferenceResolver();
                 
                 var result = service.CompileType(context);
