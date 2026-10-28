@@ -21,9 +21,9 @@ The documentation of the original project is available on https://antaris.github
 
 ## Quickstart
 
-First install the nuget package (currently a preview).
+First install the nuget package.
 
-	Install-Package RazorEngine.NetFramework -Prerelease
+	Install-Package RazorEngine.NetFramework
 
 A templating engine built on Microsoft's Razor parsing engine, RazorEngine allows you to use Razor syntax to build dynamic templates.
 You can find an introduction [here](http://www.asp.net/web-pages/overview/getting-started/introducing-razor-syntax-%28c%29).

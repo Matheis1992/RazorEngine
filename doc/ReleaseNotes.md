@@ -1,4 +1,4 @@
-﻿### 4.0.0-preview.1 (RazorEngine.NetFramework)
+﻿### 4.0.0 (RazorEngine.NetFramework)
 
  * (BREAKING) First release of the fork, published as the new package `RazorEngine.NetFramework`.
  * (SECURITY, BREAKING) Fix CVE-2021-46703 (sandbox escape in `IsolatedRazorEngineService`): `IsolatedRazorEngineService` and `IsolatedTemplateService` now refuse partially trusted (sandboxed) `AppDomain`s with a `NotSupportedException`, because Code Access Security is no security boundary. Isolation with fully trusted `AppDomain`s (to unload templates) works as before. Templates must come from trusted sources; see doc/Isolation.md.

@@ -18,6 +18,7 @@ The package version is the `<Version>` property in `src/source/RazorEngine.Core/
 
 Every push to `master` and `develop` and every pull request is built and tested by GitHub Actions (`.github/workflows/ci.yml`).
 The test results and the packages are available as artifacts of each run.
+Pushing a version tag (`v*`) runs `.github/workflows/release.yml`, which publishes the package to nuget.org and creates the GitHub release (see [Releasing](../CONTRIBUTING.md#releasing)).
 
 ## General overview:
 
@@ -63,7 +64,7 @@ Z version changes are bug-fixes and are highly backwards compatible.
 
 - /.github/workflows/
 
-	The GitHub Actions workflow that builds, tests and packs the solution.
+	The GitHub Actions workflows: `ci.yml` builds, tests and packs the solution, `release.yml` publishes a tagged version.
 
 - /doc/
 
