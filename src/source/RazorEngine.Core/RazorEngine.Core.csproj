@@ -15,7 +15,8 @@
     <FileVersion>4.1.0.1</FileVersion>
     <Company>RazorEngine</Company>
     <Product>RazorEngine</Product>
-    <Copyright>RazorEngine Copyright © RazorEngine Project 2011-2017</Copyright>
+    <!-- Keep the original project's notice (Apache-2.0) and add the fork's. -->
+    <Copyright>Copyright © 2011-2017 RazorEngine Project, © 2026 RazorEngine.NetFramework contributors</Copyright>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
