@@ -10,9 +10,9 @@
 
   <!-- Version and shared assembly attributes. Title and description stay in Properties\AssemblyInfo.cs. -->
   <PropertyGroup>
-    <Version>4.0.0-preview.1</Version>
+    <Version>4.1.0</Version>
     <!-- Increase the last number with every release (previews too), so installers see a newer file. -->
-    <FileVersion>4.0.0.1</FileVersion>
+    <FileVersion>4.1.0.1</FileVersion>
     <Company>RazorEngine</Company>
     <Product>RazorEngine</Product>
     <Copyright>RazorEngine Copyright © RazorEngine Project 2011-2017</Copyright>

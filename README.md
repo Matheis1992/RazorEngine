@@ -21,9 +21,9 @@ The documentation of the original project is available on https://antaris.github
 
 ## Quickstart
 
-First install the nuget package (currently a preview).
+First install the nuget package.
 
-	Install-Package RazorEngine.NetFramework -Prerelease
+	Install-Package RazorEngine.NetFramework
 
 A templating engine built on Microsoft's Razor parsing engine, RazorEngine allows you to use Razor syntax to build dynamic templates.
 You can find an introduction [here](http://www.asp.net/web-pages/overview/getting-started/introducing-razor-syntax-%28c%29).
@@ -94,12 +94,27 @@ config.EncodedStringFactory = new RawStringFactory(); // Raw string encoding.
 config.EncodedStringFactory = new HtmlEncodedStringFactory(); // Html encoding.
 ```
 
+### Compiler
+
+Templates are compiled in-process with Roslyn, so they can use modern C# (up to C# 14),
+for example string interpolation, `?.`, tuples and switch expressions.
+On .NET Framework, Roslyn's dependencies need binding redirects; SDK-style projects generate them automatically.
+See [Roslyn](doc/Roslyn.md) for details.
+
+To use the old CodeDom compiler (`csc.exe`, C# 5) instead, for example to step into templates with the debugger:
+
+```csharp
+// using RazorEngine.Compilation;
+config.CompilerServiceFactory = new CodeDomCompilerServiceFactory();
+```
+
 ### Debugging
 
 One thing you might want to enable is the debugging feature:
 
 ```csharp
 config.Debug = true;
+config.CompilerServiceFactory = new CodeDomCompilerServiceFactory(); // Roslyn templates cannot be stepped into yet.
 ```
 
 When `Debug` is true you can straight up debug into the generated code. 

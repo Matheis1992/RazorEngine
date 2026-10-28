@@ -1,0 +1,100 @@
+name: Release
+
+# Runs when a version tag (e.g. v4.0.0) is pushed: builds, tests and packs that commit,
+# pushes the package to nuget.org and creates the GitHub release with the packages attached.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write   # create the GitHub release
+  id-token: write   # NuGet trusted publishing (OIDC), no stored API key
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # .NET Framework 4.8 tests need a Windows runner.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # All branches, to check where the tagged commit comes from.
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      # No NuGet cache here: a release is built from freshly restored packages only.
+      - name: Restore
+        run: dotnet restore src/RazorEngine.sln
+
+      - name: Check tag, version, release notes and branch
+        id: version
+        shell: pwsh
+        run: |
+          $version = dotnet msbuild src/source/RazorEngine.Core/RazorEngine.Core.csproj -getProperty:Version
+          if ($env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Tag '$env:GITHUB_REF_NAME' does not match version $version from RazorEngine.Core.csproj (expected 'v$version')."
+          }
+          $heading = Get-Content doc/ReleaseNotes.md | Where-Object { $_ -match '^###\s' } | Select-Object -First 1
+          if ($heading -notmatch [regex]::Escape($version)) {
+            throw "The newest heading in doc/ReleaseNotes.md ('$heading') does not mention version $version."
+          }
+          # Previews may be released from develop or master, stable versions only from master.
+          $prerelease = $version.Contains('-')
+          $allowed = if ($prerelease) { @('origin/develop', 'origin/master') } else { @('origin/master') }
+          $branches = git branch -r --contains $env:GITHUB_SHA | ForEach-Object { $_.Trim() }
+          if (-not ($branches | Where-Object { $allowed -contains $_ })) {
+            throw "Commit $env:GITHUB_SHA is not on $($allowed -join ' or '); it is on: $($branches -join ', ')."
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "prerelease=$($prerelease.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+
+      - name: Build
+        run: dotnet build src/RazorEngine.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test src/RazorEngine.sln --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack src/RazorEngine.sln --configuration Release --no-build --output artifacts
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages
+          path: artifacts
+
+      - name: NuGet login
+        id: nuget
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      # Also pushes the .snupkg next to the .nupkg. --skip-duplicate lets a failed run be re-run after the push succeeded.
+      - name: Push to nuget.org
+        run: dotnet nuget push artifacts/RazorEngine.NetFramework.${{ steps.version.outputs.version }}.nupkg --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+        run: |
+          # The release text is the newest section of doc/ReleaseNotes.md (up to the next ### heading).
+          $lines = Get-Content doc/ReleaseNotes.md
+          $start = [Array]::FindIndex($lines, [Predicate[string]]{ param($l) $l -match '^###\s' })
+          $next = [Array]::FindIndex($lines, $start + 1, [Predicate[string]]{ param($l) $l -match '^###\s' })
+          if ($next -lt 0) { $next = $lines.Length }
+          $notes = @($lines[($start + 1)..($next - 1)]) + @('', "NuGet: https://www.nuget.org/packages/RazorEngine.NetFramework/$env:VERSION")
+          $notes | Set-Content -Encoding utf8 release-notes.md
+          $flags = @('--verify-tag', '--title', "RazorEngine.NetFramework $env:VERSION", '--notes-file', 'release-notes.md')
+          if ($env:PRERELEASE -eq 'true') { $flags += '--prerelease' }
+          gh release create $env:GITHUB_REF_NAME (Get-ChildItem artifacts -File).FullName @flags
+          if ($LASTEXITCODE -ne 0) { throw "gh release create failed with exit code $LASTEXITCODE." }

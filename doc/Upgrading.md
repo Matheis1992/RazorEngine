@@ -1,20 +1,31 @@
 ﻿# Upgrading RazorEngine.
 
 
+## Upgrading to 4.1.
+
+4.1 removes old APIs and changes the default compiler. The template syntax is unchanged.
+See [ReleaseNotes](ReleaseNotes.md) for the complete list of breaking changes; the most important ones:
+
+ - The APIs that were obsolete since 3.5 are removed: the static `Razor` class (`Razor.Parse`, ...), `TemplateService`,
+   `ITemplateService`, `IsolatedTemplateService`, `ITemplateResolver` (and `templateResolverType` in the configuration)
+   and the code inspectors. Follow the `Upgrading to 3.5.0` guide below to move to `Engine.Razor`/`RazorEngineService`
+   and `ITemplateManager`.
+ - Templates are compiled with Roslyn by default (modern C#). Roslyn's dependencies need binding redirects,
+   see [Roslyn](Roslyn.md). `CodeDomCompilerServiceFactory` brings back the old compiler (C# 5, `csc.exe`).
+ - VB.NET templates are no longer supported.
+
+
 ## Upgrading to 4.0 (RazorEngine.NetFramework).
 
 Version 4.0 is the first release of the fork, published as the package `RazorEngine.NetFramework`
 (not to be confused with the 4.x Razor4 previews of the original `RazorEngine` package).
 It still uses Razor 3 (Microsoft.AspNet.Razor 3.x), so the template syntax is unchanged.
-See [ReleaseNotes](ReleaseNotes.md) for the complete list of breaking changes; the most important ones:
+See [ReleaseNotes](ReleaseNotes.md) for the complete list of breaking changes; the most important one:
 
  - Replace the `RazorEngine` package with `RazorEngine.NetFramework` (.NET Framework 4.8) and update assembly names
    in `app.config`/`web.config` (`RazorEngine` -> `RazorEngine.NetFramework`).
- - The APIs that were obsolete since 3.5 are removed: the static `Razor` class (`Razor.Parse`, ...), `TemplateService`,
-   `ITemplateService`, `IsolatedTemplateService`, `ITemplateResolver` (and `templateResolverType` in the configuration)
-   and the code inspectors. Follow the `Upgrading to 3.5.0` guide below to move to `Engine.Razor`/`RazorEngineService`
-   and `ITemplateManager`.
- - Templates are compiled with Roslyn by default (modern C#); VB.NET templates are no longer supported.
+
+The APIs that are obsolete since 3.5 still exist in 4.0 but are removed in 4.1, so move away from them now.
 
 
 ## Upgrading to 3.5.0.
