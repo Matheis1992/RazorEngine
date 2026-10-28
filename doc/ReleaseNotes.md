@@ -95,6 +95,7 @@ Read the breaking changes below before updating; [doc/Upgrading.md](https://gith
 
  * (BUILD) New tests check that both compilers optimize and define `RAZORENGINE`, compile modern C# (C# 6 to 8 samples) with Roslyn, and keep the CodeDom fallback tested.
  * (BUILD) The release workflow publishes tagged versions to nuget.org with trusted publishing (introduced for 4.0.0).
+ * (PACKAGING) The copyright notice of the package and the assembly keeps the original project's notice and adds the fork's: `Copyright © 2011-2017 RazorEngine Project, © 2026 RazorEngine.NetFramework contributors`.
 
 ### 4.0.0 (RazorEngine.NetFramework)
 
