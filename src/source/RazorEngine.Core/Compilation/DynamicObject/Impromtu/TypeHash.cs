@@ -134,8 +134,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// Initializes a new instance of the <see cref="TypeHash"/> class.
         /// </summary>
         /// <param name="moreTypes">The more types.</param>
-        [Obsolete("Use TypeHash.Create instead.")]
-        public TypeHash(IEnumerable<Type> moreTypes)
+        private TypeHash(IEnumerable<Type> moreTypes)
             : this(false, moreTypes.ToArray())
         {
 
@@ -152,8 +151,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// </summary>
         /// <param name="type1">The type1.</param>
         /// <param name="moreTypes">The more types.</param>
-        [Obsolete("Use TypeHash.Create instead.")]
-        public TypeHash(Type type1, params Type[] moreTypes)
+        private TypeHash(Type type1, params Type[] moreTypes)
             : this()
         {
             Types = new[] { type1 }.Concat(moreTypes.OrderBy(it => it.Name)).ToArray();
@@ -167,8 +165,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// </summary>
         /// <param name="type1">The type1.</param>
         /// <param name="informalInterface">The informal interface.</param>
-        [Obsolete("Use TypeHash.Create instead.")]
-        public TypeHash(Type type1, IDictionary<string, Type> informalInterface)
+        private TypeHash(Type type1, IDictionary<string, Type> informalInterface)
             : this()
         {
             Types = new[] { type1 };
@@ -180,8 +177,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// </summary>
         /// <param name="strictOrder">if set to <c>true</c> [strict order].</param>
         /// <param name="moreTypes">types.</param>
-        [Obsolete("Use TypeHash.Create instead.")]
-        public TypeHash(bool strictOrder, params MemberInfo[] moreTypes)
+        private TypeHash(bool strictOrder, params MemberInfo[] moreTypes)
             : this()
         {
             Types = strictOrder
@@ -196,9 +192,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// <returns></returns>
         public static TypeHash Create(IEnumerable<Type> moreTypes)
         {
-#pragma warning disable 612,618
             return new TypeHash(moreTypes);
-#pragma warning restore 612,618
         }
         /// <summary>
         /// Creates the TypeHash
@@ -208,9 +202,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// <returns></returns>
         public static TypeHash Create(Type type1, params Type[] moreTypes)
         {
-#pragma warning disable 612,618
             return new TypeHash(type1, moreTypes);
-#pragma warning restore 612,618
         }
         /// <summary>
         /// Creates the TypeHash
@@ -220,9 +212,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// <returns></returns>
         public static TypeHash Create(Type type1, IDictionary<string, Type> informalInterface)
         {
-#pragma warning disable 612,618
             return new TypeHash(type1, informalInterface);
-#pragma warning restore 612,618
         }
         /// <summary>
         /// Creates the TypeHash
@@ -232,9 +222,7 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         /// <returns></returns>
         public static TypeHash Create(bool strictOrder, params MemberInfo[] moreTypes)
         {
-#pragma warning disable 612,618
             return new TypeHash(strictOrder, moreTypes);
-#pragma warning restore 612,618
         }
     }
 }

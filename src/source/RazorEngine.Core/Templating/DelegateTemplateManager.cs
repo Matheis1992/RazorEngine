@@ -22,7 +22,7 @@
         /// </summary>
         public DelegateTemplateManager() : this(null) { }
         /// <summary>
-        /// Initialises a new instance of <see cref="DelegateTemplateResolver"/>.
+        /// Initialises a new instance of <see cref="DelegateTemplateManager"/>.
         /// </summary>
         /// <param name="resolver">The resolver delegate.</param>
         public DelegateTemplateManager(Func<string, string> resolver)

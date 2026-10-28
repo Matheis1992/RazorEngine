@@ -26,8 +26,9 @@ namespace TestRunnerHelper
 
         static void Main(string[] args)
         {
+            // CodeDom, because stepping into templates with the debugger does not work with Roslyn.
             using (var service = RazorEngineService.Create
-                (new TemplateServiceConfiguration() { Debug = true }))
+                (new TemplateServiceConfiguration() { Debug = true, CompilerServiceFactory = new CodeDomCompilerServiceFactory() }))
             {
                 const string template = @"
 @{ Layout = ""extractLayouts""; }

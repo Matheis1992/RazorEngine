@@ -11,7 +11,6 @@
     using System.Web.Razor.Parser;
     using System.CodeDom.Compiler;
 
-    using Inspectors;
     using Templating;
     using RazorEngine.Compilation.ReferenceResolver;
     using System.Security;
@@ -76,12 +75,6 @@
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets or sets the set of code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IEnumerable<ICodeInspector> CodeInspectors { get; set; }
-
         /// <summary>
         /// Gets or sets the assembly resolver.
         /// </summary>
@@ -303,7 +296,26 @@
             GeneratorResults result;
             using (var reader = context.TemplateContent.GetTemplateReader())
                 result = engine.GenerateCode(reader, null, null, context.TemplateContent.TemplateFile);
+            // Prepared here (not in InspectSource), so every compiler service gets the same template class.
+            PrepareGeneratedCode(result, context);
             return InspectSource(result, context);
+        }
+
+        /// <summary>
+        /// Turns the generated code into source code with the given CodeDom provider.
+        /// </summary>
+        /// <param name="provider">The provider that writes the source code.</param>
+        /// <param name="results">The results of the Razor code generator.</param>
+        /// <returns>The source code.</returns>
+        [SecurityCritical]
+        protected static string GenerateSourceCode(CodeDomProvider provider, GeneratorResults results)
+        {
+            var builder = new System.Text.StringBuilder();
+            using (var writer = new StringWriter(builder, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                provider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, new CodeGeneratorOptions());
+            }
+            return builder.ToString();
         }
 
         /// <summary>
@@ -324,16 +336,6 @@
         }
 
         /// <summary>
-        /// Returns a set of assemblies that must be referenced by the compiled template.
-        /// </summary>
-        /// <returns>The set of assemblies.</returns>
-        [Obsolete("Use IncludeReferences instead")]
-        public virtual IEnumerable<string> IncludeAssemblies()
-        {
-            return Enumerable.Empty<string>();
-        }
-
-        /// <summary>
         /// Returns a set of references that must be referenced by the compiled template.
         /// </summary>
         /// <returns>The set of references.</returns>
@@ -349,34 +351,79 @@
         /// <returns></returns>
         protected IEnumerable<CompilerReference> GetAllReferences(TypeContext context)
         {
-#pragma warning disable 0618 // Backwards Compat.
             var references =
-                ReferenceResolver.GetReferences(
-                    context,
-                    IncludeAssemblies()
-                        .Select(RazorEngine.Compilation.ReferenceResolver.CompilerReference.From)
-                        .Concat(IncludeReferences()))
-#pragma warning restore 0618 // Backwards Compat.
+                ReferenceResolver.GetReferences(context, IncludeReferences())
                 .ToList();
             context.AddReferences(references);
             return references;
         }
 
         /// <summary>
-        /// Inspects the generated code compile unit.
+        /// Prepares the generated code before it is turned into source code, so that the CodeDom and the
+        /// Roslyn compiler services produce the same template class: makes the template debuggable,
+        /// marks dynamic models and adds the constructors required by the base template type.
         /// </summary>
-        /// <param name="unit">The code compile unit.</param>
-        [Obsolete("Will be removed in 4.x")]
-        protected virtual void Inspect(CodeCompileUnit unit)
+        /// <param name="results">The results of the Razor code generator.</param>
+        /// <param name="context">The type context.</param>
+        [SecurityCritical]
+        private void PrepareGeneratedCode(GeneratorResults results, TypeContext context)
         {
-            Contract.Requires(unit != null);
+            if (context.TemplateContent.TemplateFile == null)
+            {
+                // Allow to step into the template code by removing the "#line hidden" pragmas
+                foreach (CodeNamespace @namespace in results.GeneratedCode.Namespaces.Cast<CodeNamespace>().ToList())
+                {
+                    foreach (CodeTypeDeclaration @type in @namespace.Types.Cast<CodeTypeDeclaration>().ToList())
+                    {
+                        foreach (CodeTypeMember member in @type.Members.Cast<CodeTypeMember>().ToList())
+                        {
+                            var snippet = member as CodeSnippetTypeMember;
+                            if (snippet != null && snippet.Text.Contains("#line hidden"))
+                            {
+                                snippet.Text = snippet.Text.Replace("#line hidden", "");
+                            }
+                        }
+                    }
+                }
+            }
 
-            var ns = unit.Namespaces[0];
-            var type = ns.Types[0];
-            var executeMethod = type.Members.OfType<CodeMemberMethod>().Where(m => m.Name.Equals("Execute")).Single();
+            // Add the dynamic model attribute if the type is an anonymous type.
+            var generatedType = results.GeneratedCode.Namespaces[0].Types[0];
+            if (context.ModelType != null && CompilerServicesUtility.IsDynamicType(context.ModelType))
+                generatedType.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(HasDynamicModelAttribute))));
 
-            foreach (var inspector in CodeInspectors)
-                inspector.Inspect(unit, ns, type, executeMethod);
+            // Generate any constructors required by the base template type.
+            GenerateConstructors(CompilerServicesUtility.GetConstructors(context.TemplateType), generatedType);
+        }
+
+        /// <summary>
+        /// Generates any required contructors for the specified type.
+        /// </summary>
+        /// <param name="constructors">The set of constructors.</param>
+        /// <param name="codeType">The code type declaration.</param>
+        [Pure]
+        private static void GenerateConstructors(IEnumerable<System.Reflection.ConstructorInfo> constructors, CodeTypeDeclaration codeType)
+        {
+            if (constructors == null || !constructors.Any())
+                return;
+
+            var existingConstructors = codeType.Members.OfType<CodeConstructor>().ToArray();
+            foreach (var existingConstructor in existingConstructors)
+                codeType.Members.Remove(existingConstructor);
+
+            foreach (var constructor in constructors)
+            {
+                var ctor = new CodeConstructor();
+                ctor.Attributes = MemberAttributes.Public;
+
+                foreach (var param in constructor.GetParameters())
+                {
+                    ctor.Parameters.Add(new CodeParameterDeclarationExpression(param.ParameterType, param.Name));
+                    ctor.BaseConstructorArgs.Add(new CodeSnippetExpression(param.Name));
+                }
+
+                codeType.Members.Add(ctor);
+            }
         }
 
         /// <summary>

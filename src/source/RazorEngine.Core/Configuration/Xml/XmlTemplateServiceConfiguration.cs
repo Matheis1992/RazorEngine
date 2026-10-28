@@ -6,7 +6,6 @@
     using System.Linq;
 
     using Compilation;
-    using Compilation.Inspectors;
     using Templating;
     using Text;
     using RazorEngine.Compilation.ReferenceResolver;
@@ -61,12 +60,6 @@
         public Type BaseTemplateType { get; private set; }
 
         /// <summary>
-        /// Gets the code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IEnumerable<ICodeInspector> CodeInspectors { get; private set; }
-
-        /// <summary>
         /// Gets the reference resolver.
         /// </summary>
         public IReferenceResolver ReferenceResolver { get; private set; }
@@ -100,12 +93,6 @@
         /// Gets the namespaces.
         /// </summary>
         public ISet<string> Namespaces { get; private set; }
-
-        /// <summary>
-        /// Gets the template resolver.
-        /// </summary>
-        [Obsolete("Please use the TemplateManager property instead")]
-        public ITemplateResolver Resolver { get; private set; }
 
         /// <summary>
         /// Gets the template resolver.
@@ -217,16 +204,6 @@
             // Sets the reference resolver.
             SetReferenceResolver(config.ReferenceResolverType);
 
-#pragma warning disable 0618 // Backwards Compat.
-            // Sets the template resolver.
-            SetTemplateResolver(config.TemplateResolverType);
-
-            if (Resolver != null)
-            {
-                TemplateManager = new WrapperTemplateManager(Resolver);
-            }
-#pragma warning restore 0618 // Backwards Compat.
-
             // Sets the template manager.
             SetTemplateManager(config.TemplateManagerType);
 
@@ -238,11 +215,6 @@
 
             // Sets the compiler service factory.
             SetCompilerServiceFactory(config.CompilerServiceFactoryType);
-
-#pragma warning disable 0618 // Backwards Compat.
-            // Sets the template resolver.
-            SetTemplateResolver(config.TemplateResolverType);
-#pragma warning restore 0618 // Backwards Compat.
         }
 
         /// <summary>
@@ -299,19 +271,6 @@
             var type = GetType(encodedStringFactoryType);
             if (type != null)
                 EncodedStringFactory = GetInstance<IEncodedStringFactory>(type);
-        }
-
-        /// <summary>
-        /// Sets the template resolver.
-        /// </summary>
-        /// <param name="templateResolverType">The template resolver type.</param>
-        private void SetTemplateResolver(string templateResolverType)
-        {
-            var type = GetType(templateResolverType);
-#pragma warning disable 0618 // Backwards Compat.
-            if (type != null)
-                Resolver = GetInstance<ITemplateResolver>(type);
-#pragma warning restore 0618 // Backwards Compat.
         }
 
         /// <summary>

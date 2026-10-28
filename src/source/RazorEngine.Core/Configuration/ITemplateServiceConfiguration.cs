@@ -4,7 +4,6 @@
     using System.Collections.Generic;
 
     using Compilation;
-    using Compilation.Inspectors;
     using Templating;
     using Text;
     using RazorEngine.Compilation.ReferenceResolver;
@@ -29,12 +28,6 @@
         /// Gets the base template type.
         /// </summary>
         Type BaseTemplateType { get; }
-        
-        /// <summary>
-        /// Gets the code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        IEnumerable<ICodeInspector> CodeInspectors { get; }
 
         /// <summary>
         /// Gets the reference resolver.
@@ -84,13 +77,7 @@
         ISet<string> Namespaces { get; }
 
         /// <summary>
-        /// Gets the template resolver.
-        /// </summary>
-        [Obsolete("Please use the TemplateManager property instead")]
-        ITemplateResolver Resolver { get; }
-        
-        /// <summary>
-        /// Gets the template resolver.
+        /// Gets the template manager.
         /// </summary>
         ITemplateManager TemplateManager { get; }
         #endregion

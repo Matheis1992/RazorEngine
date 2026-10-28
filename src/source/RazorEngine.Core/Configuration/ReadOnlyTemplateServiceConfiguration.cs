@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RazorEngine.Compilation;
-using RazorEngine.Compilation.Inspectors;
 using RazorEngine.Compilation.ReferenceResolver;
 using RazorEngine.Templating;
 using RazorEngine.Text;
@@ -20,8 +19,6 @@ namespace RazorEngine.Configuration
         private readonly bool _allowMissingPropertiesOnDynamic;
         private readonly Type _baseTemplateType;
         private readonly ICachingProvider _cachingProvider;
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        private readonly IEnumerable<ICodeInspector> _codeInspectors;
         private readonly ICompilerServiceFactory _compilerServiceFactory;
         private readonly bool _debug;
         private readonly bool _disableTempFileLocking;
@@ -29,8 +26,6 @@ namespace RazorEngine.Configuration
         private readonly Language _language;
         private readonly ISet<string> _namespaces;
         private readonly IReferenceResolver _referenceResolver;
-        [Obsolete("Use TemplateManager instead")]
-        private readonly ITemplateResolver _resolver;
         private readonly ITemplateManager _templateManager;
 
         /// <summary>
@@ -65,15 +60,6 @@ namespace RazorEngine.Configuration
                 throw new ArgumentNullException("config", "the configured CachingProvider cannot be null!");
             }
 
-#pragma warning disable 0618 // Backwards Compat.
-            _codeInspectors = config.CodeInspectors;
-            if (_codeInspectors == null)
-            {
-                throw new ArgumentNullException("config", "the configured CodeInspectos cannot be null!");
-            }
-            _codeInspectors = new List<ICodeInspector>(_codeInspectors);
-#pragma warning restore 0618 // Backwards Compat.
-
             _compilerServiceFactory = config.CompilerServiceFactory;
             if (_compilerServiceFactory == null)
             {
@@ -102,22 +88,11 @@ namespace RazorEngine.Configuration
                 throw new ArgumentNullException("config", "the configured ReferenceResolver cannot be null!");
             }
 
-#pragma warning disable 0618 // Backwards Compat.
-            _resolver = config.Resolver;
             _templateManager = config.TemplateManager;
             if (_templateManager == null)
             {
-                if (_resolver != null)
-                {
-                    _templateManager = new Xml.WrapperTemplateManager(_resolver);
-                }
-                else
-                {
-                    throw new ArgumentNullException("config", "the configured TemplateManager and Resolver cannot be null!");
-                }
+                throw new ArgumentNullException("config", "the configured TemplateManager cannot be null!");
             }
-#pragma warning restore 0618 // Backwards Compat.
-
         }
 
         /// <summary>
@@ -161,18 +136,6 @@ namespace RazorEngine.Configuration
             get
             {
                 return _cachingProvider;
-            }
-        }
-
-        /// <summary>
-        /// Gets the code inspectors.
-        /// </summary>
-        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
-        public IEnumerable<ICodeInspector> CodeInspectors
-        {
-            get
-            {
-                return _codeInspectors;
             }
         }
 
@@ -261,19 +224,7 @@ namespace RazorEngine.Configuration
         }
 
         /// <summary>
-        /// Gets the template resolver.
-        /// </summary>
-        [Obsolete("use TemplateManager instead")]
-        public ITemplateResolver Resolver
-        {
-            get
-            {
-                return _resolver;
-            }
-        }
-
-        /// <summary>
-        /// Gets the template resolver.
+        /// Gets the template manager.
         /// </summary>
         public ITemplateManager TemplateManager
         {

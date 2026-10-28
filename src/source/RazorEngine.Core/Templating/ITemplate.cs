@@ -15,11 +15,6 @@ namespace RazorEngine.Templating
         IInternalTemplateService InternalTemplateService { set; }
 
         /// <summary>
-        /// OBSOLETE: Sets the template service.
-        /// </summary>
-        [Obsolete("Only provided for backwards compatibility, use RazorEngine instead.")]
-        ITemplateService TemplateService { set; }
-        /// <summary>
         /// Sets the cached template service.
         /// </summary>
         [Obsolete("Use the Razor property instead, this is obsolete as it makes it difficult to use the RazorEngine namespace within templates.")]
