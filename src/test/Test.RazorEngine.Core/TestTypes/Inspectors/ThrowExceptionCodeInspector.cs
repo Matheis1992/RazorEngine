@@ -2,7 +2,6 @@
 {
     using System.CodeDom;
 
-#if !RAZOR4
     using Compilation.Inspectors;
 
     /// <summary>
@@ -30,5 +29,4 @@
         }
         #endregion
     }
-#endif
 }

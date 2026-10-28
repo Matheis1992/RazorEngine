@@ -34,13 +34,12 @@
         /// <returns>The current configuration builder.</returns>
         IConfigurationBuilder ActivateUsing(Func<InstanceContext, ITemplate> activator);
         
-#if !RAZOR4
         /// <summary>
         /// Adds the specified code inspector.
         /// </summary>
         /// <typeparam name="TInspector">The code inspector type.</typeparam>
         /// <returns>The current configuration builder.</returns>
-        [Obsolete("This API is obsolete and will be removed in the next version (Razor4 doesn't use CodeDom for code-generation)!")]
+        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
         IConfigurationBuilder AddInspector<TInspector>() where TInspector : ICodeInspector, new();
 
         /// <summary>
@@ -48,9 +47,8 @@
         /// </summary>
         /// <param name="inspector">The code inspector.</param>
         /// <returns>The current configuration builder.</returns>
-        [Obsolete("This API is obsolete and will be removed in the next version (Razor4 doesn't use CodeDom for code-generation)!")]
+        [Obsolete("This API is obsolete and will be removed in the next version (code inspection relies on CodeDom code generation, which newer Razor versions no longer use)!")]
         IConfigurationBuilder AddInspector(ICodeInspector inspector);
-#endif
 
         /// <summary>
         /// Sets the compiler service factory.

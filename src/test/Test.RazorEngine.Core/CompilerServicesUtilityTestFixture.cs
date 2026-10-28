@@ -22,7 +22,7 @@ namespace Test.RazorEngine
         public void CompilerServiceUtility_CheckNestedBaseClass()
         {
             var result = CompilerServicesUtility.CSharpGetRawTypeName(typeof(HostingClass.NestedBaseClass<>));
-            Assert.AreEqual("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.NestedBaseClass", result);
+            Assert.That(result, Is.EqualTo("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.NestedBaseClass"));
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Test.RazorEngine
         public void CompilerServiceUtility_CheckNestedNonGenericBaseClass()
         {
             var result = CompilerServicesUtility.CSharpGetRawTypeName(typeof(HostingClass.NonGenericNestedBaseClass));
-            Assert.AreEqual("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.NonGenericNestedBaseClass", result);
+            Assert.That(result, Is.EqualTo("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.NonGenericNestedBaseClass"));
         }
         
         /// <summary>
@@ -42,7 +42,7 @@ namespace Test.RazorEngine
         public void CompilerServiceUtility_CheckNormalGenericBaseClass()
         {
             var result = CompilerServicesUtility.CSharpGetRawTypeName(typeof(AddLanguageInfo_Viewbag<>));
-            Assert.AreEqual("Test.RazorEngine.TestTypes.BaseTypes.AddLanguageInfo_Viewbag", result);
+            Assert.That(result, Is.EqualTo("Test.RazorEngine.TestTypes.BaseTypes.AddLanguageInfo_Viewbag"));
         }
 
         private IEnumerable<string> IteratorHelper()
@@ -58,7 +58,7 @@ namespace Test.RazorEngine
         {
             var type = IteratorHelper().GetType();
             var result = CompilerServicesUtility.ResolveCSharpTypeName(type);
-            Assert.AreEqual("System.Collections.Generic.IEnumerable<System.String>", result);
+            Assert.That(result, Is.EqualTo("System.Collections.Generic.IEnumerable<System.String>"));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Test.RazorEngine
         public void CompilerServiceUtility_CheckDynamicType()
         {
             var result = CompilerServicesUtility.ResolveCSharpTypeName(typeof(System.Dynamic.DynamicObject));
-            Assert.AreEqual("dynamic", result);
+            Assert.That(result, Is.EqualTo("dynamic"));
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Test.RazorEngine
         public void CompilerServiceUtility_CheckNonGenericType()
         {
             var result = CompilerServicesUtility.ResolveCSharpTypeName(typeof(System.String));
-            Assert.AreEqual("System.String", result);
+            Assert.That(result, Is.EqualTo("System.String"));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Test.RazorEngine
         public void CompilerServiceUtility_CheckNonGenericNestedType()
         {
             var result = CompilerServicesUtility.ResolveCSharpTypeName(typeof(HostingClass.NestedClass));
-            Assert.AreEqual("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.NestedClass", result);
+            Assert.That(result, Is.EqualTo("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.NestedClass"));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Test.RazorEngine
         public void CompilerServiceUtility_CheckGenericNestedType()
         {
             var result = CompilerServicesUtility.ResolveCSharpTypeName(typeof(HostingClass.GenericNestedClass<string>));
-            Assert.AreEqual("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.GenericNestedClass<System.String>", result);
+            Assert.That(result, Is.EqualTo("Test.RazorEngine.TestTypes.BaseTypes.HostingClass.GenericNestedClass<System.String>"));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Test.RazorEngine
         {
             var type = IteratorHelper().GetType();
             var result = CompilerServicesUtility.ResolveVBTypeName(type);
-            Assert.AreEqual("System.Collections.Generic.IEnumerable(Of System.String)", result);
+            Assert.That(result, Is.EqualTo("System.Collections.Generic.IEnumerable(Of System.String)"));
         }
     }
 }

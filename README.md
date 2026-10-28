@@ -1,30 +1,29 @@
 # RazorEngine
 
-[![Join the chat at https://gitter.im/Antaris/RazorEngine](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Antaris/RazorEngine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![CI](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml)
 
-This project is searching for new maintainers, so if you want to help write on gitter or start sending PRs :)
+This is a maintained fork of [Antaris/RazorEngine](https://github.com/Antaris/RazorEngine), which has not been updated since 2018.
+It targets .NET Framework 4.8 and is published as the NuGet package `RazorEngine.NetFramework`.
+The original package `RazorEngine` (3.10.x) stays on nuget.org but is no longer maintained.
 
-*latest* documentation available on https://antaris.github.io/RazorEngine/.
+The assembly is `RazorEngine.NetFramework.dll` with its own signing key, so it never overwrites or replaces the original `RazorEngine.dll`.
+The namespaces are unchanged (`RazorEngine`, `RazorEngine.Templating`, ...), so switching from the original package usually only means replacing the package
+and updating assembly names in `app.config`/`web.config` (see the [release notes](doc/ReleaseNotes.md)).
 
+If another library still pulls in the original package, both can be loaded in the same application, with these limits:
 
-## Build status
+ * Templates compiled by this fork ignore the original assembly, so they keep working.
+ * A project that references both packages directly sees the same type names twice and needs an [`extern alias`](https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/extern-alias).
+ * Both read the `razorEngine` configuration section, so only the one whose type is registered there gets configured; the other uses its defaults.
 
-Develop Branch (`master`)
-
-[![Build Status](https://travis-ci.org/Antaris/RazorEngine.svg?branch=master)](https://travis-ci.org/Antaris/RazorEngine)
-[![Build status](https://ci.appveyor.com/api/projects/status/39bi38wonhwolrgy/branch/master?svg=true)](https://ci.appveyor.com/project/Antaris/razorengine/branch/master)
-
-Release Branch (`releases`)
-
-[![Build Status](https://travis-ci.org/Antaris/RazorEngine.svg?branch=releases)](https://travis-ci.org/Antaris/RazorEngine)
-[![Build status](https://ci.appveyor.com/api/projects/status/39bi38wonhwolrgy/branch/releases?svg=true)](https://ci.appveyor.com/project/Antaris/razorengine/branch/releases)
+The documentation of the original project is available on https://antaris.github.io/RazorEngine/.
 
 
 ## Quickstart
 
-First install the nuget package (>=3.5.0).
+First install the nuget package.
 
-	Install-Package RazorEngine
+	Install-Package RazorEngine.NetFramework
 
 A templating engine built on Microsoft's Razor parsing engine, RazorEngine allows you to use Razor syntax to build dynamic templates.
 You can find an introduction [here](http://www.asp.net/web-pages/overview/getting-started/introducing-razor-syntax-%28c%29).
@@ -175,6 +174,15 @@ To remove the RazorEngine warnings you can additionally use `config.CachingProvi
 
 See also https://github.com/Antaris/RazorEngine/issues/244 for more details.
 
+
+## Security
+
+Templates are C# code and run with the full rights of your application.
+Only use templates from trusted sources, and never build templates by concatenating user input (pass it as model data instead).
+
+`IsolatedRazorEngineService` is meant for unloading templates, not as a sandbox. Partially trusted (sandboxed) `AppDomain`s
+are refused, because templates can escape them ([CVE-2021-46703](https://github.com/advisories/GHSA-ph3v-2hq5-5qfq)).
+See [Isolation](doc/Isolation.md) for details.
 
 ## More
 

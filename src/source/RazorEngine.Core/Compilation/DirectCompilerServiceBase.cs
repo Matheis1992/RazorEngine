@@ -12,14 +12,8 @@
     using System.Security;
     using System.Security.Permissions;
     using System.Text;
-#if RAZOR4
-    using Microsoft.AspNetCore.Razor;
-    using Microsoft.AspNetCore.Razor.CodeGenerators;
-    using Microsoft.AspNetCore.Razor.Parser;
-#else
     using System.Web.Razor;
     using System.Web.Razor.Parser;
-#endif
     using Templating;
     using System.Security.Principal;
 
@@ -49,12 +43,10 @@
         #endregion
 
         #region Properties
-#if !RAZOR4
         /// <summary>
         /// The underlaying CodeDomProvider instance.
         /// </summary>
         public virtual CodeDomProvider CodeDomProvider { get { return _codeDomProvider; } }
-#endif
         #endregion
 
         #region Methods
@@ -140,17 +132,6 @@
         [SecurityCritical]
         public override string InspectSource(GeneratorResults results, TypeContext context)
         {
-#if RAZOR4
-            string generatedCode = results.GeneratedCode;
-            if (context.TemplateContent.TemplateFile == null)
-            {
-                generatedCode = generatedCode.Replace("#line hidden", "");
-            }
-
-            // TODO: add attributes and constructor to the source code.
-            
-            return generatedCode;
-#else
             if (context.TemplateContent.TemplateFile == null) 
             {
                 // Allow to step into the template code by removing the "#line hidden" pragmas
@@ -192,7 +173,6 @@
                 generatedCode = builder.ToString();
             }
             return generatedCode;
-#endif
         }
 
         /// <summary>

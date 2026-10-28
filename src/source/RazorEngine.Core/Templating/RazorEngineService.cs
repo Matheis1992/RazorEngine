@@ -4,9 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-#if RAZOR4
-using System.Runtime.ExceptionServices;
-#endif
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
@@ -239,18 +236,7 @@ namespace RazorEngine.Templating
         public void Run(ITemplateKey key, System.IO.TextWriter writer, Type modelType = null, object model = null, DynamicViewBag viewBag = null)
         {
             var template = GetCompiledTemplate(key, modelType, false);
-#if RAZOR4
-            try
-            {
-                _core_with_cache.RunTemplate(template, writer, model, viewBag).Wait();
-            }
-            catch (AggregateException ex)
-            {
-                ExceptionDispatchInfo.Capture(ex.Flatten().InnerExceptions.First()).Throw();
-            }
-#else
             _core_with_cache.RunTemplate(template, writer, model, viewBag);
-#endif
         }
 
         /// <summary>

@@ -28,8 +28,7 @@ namespace Test.RazorEngine.Templating
             var result = Render(rootType, template, null);
 
             // Assert
-            Assert.IsNotEmpty(result);
-            Assert.IsTrue(result.Contains("Template without Model"));
+            Assert.That(result, Does.Contain("Template without Model"));
         }
 
         /// <summary>
@@ -46,8 +45,7 @@ namespace Test.RazorEngine.Templating
             var result = Render(rootType, template, new Model { Name = "Arthur", Answer = 42 });
 
             // Assert
-            Assert.IsNotEmpty(result);
-            Assert.IsTrue(result.Contains("Hello Arthur! Your answer is 42."));
+            Assert.That(result, Does.Contain("Hello Arthur! Your answer is 42."));
         }
 
         /// <summary>
@@ -64,9 +62,8 @@ namespace Test.RazorEngine.Templating
             var result = Render(rootType, template, new Model { Name = "Arthur", Answer = 42 });
 
             // Assert
-            Assert.IsNotEmpty(result);
-            Assert.IsTrue(result.Contains("This is a Layout"));
-            Assert.IsTrue(result.Contains("Hello Arthur! Your answer is 42."));
+            Assert.That(result, Does.Contain("This is a Layout"));
+            Assert.That(result, Does.Contain("Hello Arthur! Your answer is 42."));
         }
 
         /// <summary>
@@ -83,9 +80,8 @@ namespace Test.RazorEngine.Templating
             var result = Render(rootType, template, new Model { Name = "Arthur", Answer = 42 });
 
             // Assert
-            Assert.IsNotEmpty(result);
-            Assert.IsTrue(result.Contains("Hello Arthur!"));
-            Assert.IsTrue(result.Contains("Your answer is 42."));
+            Assert.That(result, Does.Contain("Hello Arthur!"));
+            Assert.That(result, Does.Contain("Your answer is 42."));
         }
         #endregion
 

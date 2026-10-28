@@ -470,7 +470,6 @@ namespace RazorEngine.Tests
             }
         }
 
-#if !RAZOR4 // @helper was removed from Razor 4
         /// <summary>
         /// Tests that a simple helper template with html-encoding can be parsed.
         /// </summary>
@@ -511,7 +510,6 @@ namespace RazorEngine.Tests
                 Assert.That(result == expected, "Result does not match expected: " + result);
             }
         }
-#endif
 
         /// <summary>
         /// Check that we can cast the template to its interface type 
@@ -627,7 +625,6 @@ namespace RazorEngine.Tests
             }
         }
 
-#if NET45 // this test seems to fail on the old (net40) razor parser
         /// <summary>
         /// When template uses layout but that layout is not specified in cache or by resolver, fail with a meaningful exception
         /// </summary>
@@ -640,7 +637,6 @@ namespace RazorEngine.Tests
                 Assert.Throws<ArgumentException>(() => service.Parse(template, null, null, null));
             }
         }
-#endif
         #endregion
     }
 }

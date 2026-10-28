@@ -154,24 +154,15 @@ namespace Test.RazorEngine.Core.Roslyn
                 });
                 exn.CompilationData.DeleteAll();
                 var msg = exn.Message;
-                var errorMessage =
-                    string.Format(
-                        "An expected substring ({{0}}) was not found in: {0}",
-                        msg.Replace("{", "{{").Replace("}", "}}"));
 
                 // Compiler error
-                Assert.IsTrue(
-                    msg.Contains("does not contain a definition for"),
-                    string.Format(errorMessage, "compiler error"));
+                Assert.That(msg, Does.Contain("does not contain a definition for"), "compiler error");
                 // Template
-                Assert.IsTrue(msg.Contains(template),
-                    string.Format(errorMessage, "template"));
+                Assert.That(msg, Does.Contain(template), "template");
                 // Temp files
-                Assert.IsTrue(msg.Contains("Temporary files of the compilation can be found"),
-                    string.Format(errorMessage, "temp files"));
+                Assert.That(msg, Does.Contain("Temporary files of the compilation can be found"), "temp files");
                 // C# source code
-                Assert.IsTrue(msg.Contains("namespace " + CompilerServiceBase.DynamicTemplateNamespace),
-                    string.Format(errorMessage, "C# source"));
+                Assert.That(msg, Does.Contain("namespace " + CompilerServiceBase.DynamicTemplateNamespace), "C# source");
             });
         }
 
@@ -196,7 +187,7 @@ namespace Test.RazorEngine.Core.Roslyn
                     // We now have a reference to our template in the stacktrace
                     var stack = exn.StackTrace.ToLowerInvariant();
                     var expected = file.ToLowerInvariant();
-                    Assert.IsTrue(
+                    Assert.That(
                         stack.Contains(expected),
                         "Could not find reference to template (" + expected + ") in stacktrace: \n" +
                         stack);
@@ -220,7 +211,7 @@ namespace Test.RazorEngine.Core.Roslyn
             {
                 var model = new { Property = 0 };
                 string result = service.RunCompile(template, "key", null, model);
-                Assert.AreEqual("0", result.Trim());
+                Assert.That(result.Trim(), Is.EqualTo("0"));
             }, config =>
             {
                 config.Debug = false;
@@ -228,12 +219,12 @@ namespace Test.RazorEngine.Core.Roslyn
                 config.DisableTempFileLocking = true;
             });
             ICompiledTemplate compiledTemplate;
-            Assert.IsTrue(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
+            Assert.That(cache.TryRetrieveTemplate(new NameOnlyTemplateKey("key", ResolveType.Global, null), null, out compiledTemplate));
             var data = compiledTemplate.CompilationData;
             var folder = data.TmpFolder;
-            Assert.IsTrue(Directory.Exists(folder));
+            Assert.That(new DirectoryInfo(folder), Does.Exist);
             data.DeleteAll();
-            Assert.IsFalse(Directory.Exists(folder));
+            Assert.That(new DirectoryInfo(folder), Does.Not.Exist);
         }
     }
 }

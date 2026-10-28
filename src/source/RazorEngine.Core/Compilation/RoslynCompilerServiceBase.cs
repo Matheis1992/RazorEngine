@@ -6,13 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-#if RAZOR4
-using Microsoft.AspNetCore.Razor.Parser;
-using Microsoft.AspNetCore.Razor;
-#else
 using System.Web.Razor.Parser;
 using System.Web.Razor;
-#endif
 using Microsoft.CodeAnalysis.Text;
 using System.IO;
 using System.Reflection;

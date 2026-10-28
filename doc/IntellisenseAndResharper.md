@@ -27,11 +27,11 @@ To get full intellisense you should use the `@inherits` directive like this:
 
 Please make sure the following is true:
 
- - The project references `RazorEngine`.
+ - The project references `RazorEngine.NetFramework`.
 
  - Your project output path is set to `bin\` instead of `bin\Debug\` and `bin\Release\`.
    
-   > another possible solution is to copy `RazorEngine.dll` and `System.Web.Razor.dll` to `bin\`.
+   > another possible solution is to copy `RazorEngine.NetFramework.dll` and `System.Web.Razor.dll` to `bin\`.
 
 
 After this everything should work in the Visual Studio designer and you should have full intellisense for 

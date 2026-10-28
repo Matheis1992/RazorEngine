@@ -43,7 +43,7 @@
 
                 string result = writer.ToString();
 
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 
@@ -75,7 +75,7 @@
                 service.Run(key2, writer);
                 string result = writer.ToString();
 
-                Assert.AreEqual(expected, result);
+                Assert.That(result, Is.EqualTo(expected));
             }
         }
 

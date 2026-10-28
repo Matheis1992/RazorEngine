@@ -151,7 +151,7 @@
                 var key = service.GetKey(nameof(template));
                 var result = service.RunCompile(templateSource: template, key: key);
 
-                Assert.AreEqual(template, result);
+                Assert.That(result, Is.EqualTo(template));
             }
         }
 

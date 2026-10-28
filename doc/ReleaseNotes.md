@@ -1,4 +1,20 @@
-﻿### 3.10.1-alpha001 / 4.5.1-alpha001
+﻿### 4.0.0 (RazorEngine.NetFramework)
+
+ * (BREAKING) First release of the fork, published as the new package `RazorEngine.NetFramework`.
+ * (SECURITY, BREAKING) Fix CVE-2021-46703 (sandbox escape in `IsolatedRazorEngineService`): `IsolatedRazorEngineService` and `IsolatedTemplateService` now refuse partially trusted (sandboxed) `AppDomain`s with a `NotSupportedException`, because Code Access Security is no security boundary. Isolation with fully trusted `AppDomain`s (to unload templates) works as before. Templates must come from trusted sources; see doc/Isolation.md.
+ * (BREAKING) The assembly is now `RazorEngine.NetFramework.dll`, signed with a new key (public key token `58ad996d4f48e61f`), so it no longer collides with the original `RazorEngine.dll`. Namespaces stay `RazorEngine.*`. When migrating, update `app.config`/`web.config`:
+   - Change the assembly name of the section registration, e.g. `type="RazorEngine.Configuration.RazorEngineConfigurationSection, RazorEngine.NetFramework"`.
+   - Change every assembly-qualified type name inside `<razorEngine>` that names `, RazorEngine` (`activatorType`, `baseTemplateType`, `cachingProviderType`, `compilerServiceFactoryType`, `encodedStringFactoryType`, `referenceResolverType`, `templateManagerType`, `templateResolverType`).
+   - Remove `bindingRedirect` entries for the old `RazorEngine` assembly.
+ * (BUGFIX) The default reference resolver no longer passes the original `RazorEngine`/`RazorEngine.Roslyn` 3.x assemblies to the template compiler, so templates still compile when the original package is loaded in the same process.
+ * (BREAKING) Target .NET Framework 4.8 only. The net40 (Razor 2) and Razor4 (Microsoft.AspNetCore.Razor) builds are dropped.
+ * (BUILD) SDK-style projects with NuGet PackageReference replace Paket and FAKE. Build with `dotnet build`, test with `dotnet test`, pack with `dotnet pack`.
+ * (BUILD) GitHub Actions replace Travis CI and AppVeyor.
+ * (BREAKING) Requires Microsoft.AspNet.Razor 3.3.0 (3.x maintenance release, the parser is unchanged since 3.2.3, so template syntax is unchanged from the 3.x net45 build). ASP.NET MVC 5.2.x only allows Razor below 3.3.0: apps using MVC have to update to Microsoft.AspNet.Mvc 5.3.0 (and Microsoft.AspNet.WebPages 3.3.0) to install this package, otherwise NuGet reports a version conflict (NU1107).
+ * Depend on System.Security.Cryptography.X509Certificates 4.3.2 instead of the 4.1.0 pulled in by Roslyn. NuGet audit flags 4.1.0 for CVE-2017-11770, which only affects .NET Core, not .NET Framework; the pin keeps the audit warning away from consumers.
+ * (BUILD) Tests use NUnit 5 (constraint model asserts), Moq 4.21 and Autofac 9; RazorEngine.Mvc uses Microsoft.AspNet.Mvc 5.3.0. Package versions are managed centrally in `src/Directory.Packages.props`.
+
+### 3.10.1-alpha001 / 4.5.1-alpha001
 
  * (NEW) Merge RazorEngine.Roslyn into RazorEngine.Core, thanks conniey (https://github.com/Antaris/RazorEngine/pull/480)
 

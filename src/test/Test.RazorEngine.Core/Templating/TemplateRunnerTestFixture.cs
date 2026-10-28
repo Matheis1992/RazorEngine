@@ -26,7 +26,7 @@ namespace Test.RazorEngine.Templating
                 var runner = service.CompileRunner<Person>(template);
                 var output = runner.Run(new Person { Forename = "Max" });
 
-                Assert.AreEqual("Hello Max, welcome to RazorEngine!", output);
+                Assert.That(output, Is.EqualTo("Hello Max, welcome to RazorEngine!"));
             }
         }
 
@@ -45,7 +45,7 @@ namespace Test.RazorEngine.Templating
                 var runner = service.CompileRunner<Person>(template);
                 runner.Run(new Person { Forename = "Max" }, writer);
 
-                Assert.AreEqual("Hello Max, welcome to RazorEngine!", writer.ToString());
+                Assert.That(writer.ToString(), Is.EqualTo("Hello Max, welcome to RazorEngine!"));
             }
         }
     }

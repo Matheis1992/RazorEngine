@@ -115,11 +115,9 @@
             {
                 service.Debug = _config.Debug;
                 service.DisableTempFileLocking = _config.DisableTempFileLocking;
-#if !RAZOR4
 #pragma warning disable 0618 // Backwards Compat.
                 service.CodeInspectors = _config.CodeInspectors ?? Enumerable.Empty<ICodeInspector>();
 #pragma warning restore 0618 // Backwards Compat.
-#endif
                 service.ReferenceResolver = _config.ReferenceResolver ?? new UseCurrentAssembliesReferenceResolver();
                 
                 var result = service.CompileType(context);
@@ -138,22 +136,13 @@
         /// <param name="model"></param>
         /// <param name="viewBag">The ViewBag contents or NULL for an initially empty ViewBag.</param>
         /// <returns>The string result of the template.</returns>
-#if RAZOR4
-        public async Task RunTemplate(ICompiledTemplate template, System.IO.TextWriter writer, object model, DynamicViewBag viewBag)
-        
-#else
         public void RunTemplate(ICompiledTemplate template, System.IO.TextWriter writer, object model, DynamicViewBag viewBag)
-#endif
         {
             if (template == null)
                 throw new ArgumentNullException("template");
 
             var instance = CreateTemplate(template, model, viewBag);
-#if RAZOR4
-            await instance.Run(CreateExecuteContext(), writer);
-#else
             instance.Run(CreateExecuteContext(), writer);
-#endif
         }
 
         /// <summary>

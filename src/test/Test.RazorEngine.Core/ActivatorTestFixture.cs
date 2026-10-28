@@ -13,7 +13,6 @@
     using TestTypes;
     using TestTypes.Activation;
     using Text;
-#if NET45
     using Autofac;
     using Autofac.Features.ResolveAnything;
 
@@ -31,9 +30,6 @@
         [Test]
         public void TemplateService_CanSupportCustomActivator_WithAutofac()
         {
-#if RAZOR4
-            Assert.Ignore("We need to add roslyn to generate custom constructors!");
-#endif
 
             var container = new ContainerBuilder();
             container.RegisterType<ReverseTextFormatter>()
@@ -61,5 +57,4 @@
         }
         #endregion
     }
-#endif
 }

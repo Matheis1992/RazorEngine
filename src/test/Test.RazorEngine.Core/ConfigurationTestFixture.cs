@@ -27,7 +27,7 @@
         {
             var config = new FluentTemplateServiceConfiguration(c => c.IncludeNamespaces("RazorEngine.Templating"));
 
-            Assert.That(config.Namespaces.Contains("RazorEngine.Templating"));
+            Assert.That(config.Namespaces, Does.Contain("RazorEngine.Templating"));
         }
 
         /// <summary>
@@ -51,11 +51,10 @@
                 service.Compile(key);
                 service.Run(key, writer);
                 var result = writer.ToString();
-                Assert.AreEqual(expected.ToString(), result);
+                Assert.That(result, Is.EqualTo(expected.ToString()));
             }
         }
 
-#if !RAZOR4
         /// <summary>
         /// Tests that the fluent configuration can configure a template service with a specific code language.
         /// </summary>
@@ -88,7 +87,6 @@
                 Assert.That(result == expected, "Result does not match expected: " + result);
             }
         }
-#endif
 
         /// <summary>
         /// Tests that the fluent configuration can configure a template service with a specific encoding.
@@ -114,7 +112,7 @@
 
                 var contents = writer.ToString();
 
-                Assert.AreEqual(expected, contents);
+                Assert.That(contents, Is.EqualTo(expected));
             }
         }
 
