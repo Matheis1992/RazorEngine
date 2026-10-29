@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
 using RazorEngine.Compilation;
 using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Roslyn.CSharp;
 using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,35 @@ using System.Linq;
 namespace Test.RazorEngine.Core.Roslyn
 {
     /// <summary>
-    /// The Roslyn compiler service caches the metadata references of referenced files.
-    /// These tests check that a cached reference is reused and that a changed file is read again.
+    /// The Roslyn compiler service caches the metadata references of loaded assemblies.
+    /// These tests check that such a reference is reused, and that a reference given as a file path is read on every compile.
     /// </summary>
     [TestFixture]
     public class RoslynReferenceCacheTestFixture
     {
+        /// <summary>
+        /// A loaded assembly gets the same reference on every compile, so Roslyn can reuse what it read from it.
+        /// </summary>
+        [Test]
+        public void Roslyn_ReusesReferenceOfLoadedAssembly()
+        {
+            var first = RoslynCompilerServiceBase.ToMetadataReference(CompilerReference.From(typeof(Uri).Assembly));
+            var second = RoslynCompilerServiceBase.ToMetadataReference(CompilerReference.From(typeof(Uri).Assembly));
+            Assert.That(second, Is.SameAs(first));
+        }
+
+        /// <summary>
+        /// A reference given as a file path is read again on every compile, because the file can change.
+        /// </summary>
+        [Test]
+        public void Roslyn_ReadsFileReferenceOnEveryCompile()
+        {
+            var file = typeof(Uri).Assembly.Location;
+            var first = RoslynCompilerServiceBase.ToMetadataReference(CompilerReference.From(file));
+            var second = RoslynCompilerServiceBase.ToMetadataReference(CompilerReference.From(file));
+            Assert.That(second, Is.Not.SameAs(first));
+        }
+
         /// <summary>
         /// Adds one assembly file to the default references.
         /// </summary>
@@ -53,8 +77,9 @@ namespace Test.RazorEngine.Core.Roslyn
         }
 
         /// <summary>
-        /// A referenced file that changes between two compiles is read again,
-        /// so the second template sees the new API and not the cached old one.
+        /// A referenced file that is replaced between two compiles is read again, so the second template sees the new API.
+        /// This also holds when the new file has the same size and modification time (for example after File.Copy,
+        /// which keeps the modification time), because file references are not cached.
         /// </summary>
         [Test]
         public void Roslyn_ReadsChangedReferencedFileAgain()
@@ -68,15 +93,17 @@ namespace Test.RazorEngine.Core.Roslyn
 
                 RoslynCompilerTestFixture.RunTestHelper(service =>
                 {
-                    // Compile twice with the same file: the second compile uses the cached reference.
                     Assert.That(service.RunCompile("@(nameof(CacheTestLib.Greeter.Hello))", "first"), Is.EqualTo("Hello"));
                     Assert.That(service.RunCompile("@(nameof(CacheTestLib.Greeter.Hello)).", "second"), Is.EqualTo("Hello."));
 
-                    // Replace the file: Hello is gone, Bye is new. Move the timestamp on, so the change is visible
-                    // even when both writes fall into the same file system time tick.
-                    var before = File.GetLastWriteTimeUtc(file);
+                    // Replace the file: Hello is gone, Bye is new. Keep the old modification time and check the size
+                    // is the same, so the file looks unchanged to anything that only compares those.
+                    var before = new FileInfo(file);
+                    var lastWrite = before.LastWriteTimeUtc;
+                    var length = before.Length;
                     EmitLibrary(file, "Bye");
-                    File.SetLastWriteTimeUtc(file, before.AddMinutes(1));
+                    File.SetLastWriteTimeUtc(file, lastWrite);
+                    Assert.That(new FileInfo(file).Length, Is.EqualTo(length), "The test needs both library versions to have the same size.");
 
                     Assert.That(service.RunCompile("@(nameof(CacheTestLib.Greeter.Bye))", "third"), Is.EqualTo("Bye"));
                     Assert.Throws<TemplateCompilationException>(() =>
