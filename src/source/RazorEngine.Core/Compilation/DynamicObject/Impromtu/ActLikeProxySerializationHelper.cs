@@ -5,7 +5,6 @@ using System.Security;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Build
 {
-#if !SILVERLIGHT
 
 
 
@@ -51,5 +50,4 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         }
 
     }
-#endif
 }

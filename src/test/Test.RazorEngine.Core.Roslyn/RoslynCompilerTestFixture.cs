@@ -61,6 +61,26 @@ namespace Test.RazorEngine.Core.Roslyn
 
 
         /// <summary>
+        /// RoslynCompilerServiceFactory works when a configuration file names it (compilerServiceFactoryType),
+        /// where it is created from its type name.
+        /// </summary>
+        [Test]
+        public void Roslyn_FactoryLoadedByTypeName_CompilesWithRoslyn()
+        {
+            var factoryType = Type.GetType("RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework", throwOnError: true);
+            string result = null;
+            RunTestHelper(service =>
+            {
+                // String interpolation (C# 6) fails with the CodeDom compiler, so this proves Roslyn is used.
+                result = service.RunCompile("@($\"Hello {Model.Forename}!\")", "obsoleteFactory", typeof(Person), new Person { Forename = "Matt" });
+            }, config =>
+            {
+                config.CompilerServiceFactory = (ICompilerServiceFactory)Activator.CreateInstance(factoryType);
+            });
+            Assert.That(result, Is.EqualTo("Hello Matt!"));
+        }
+
+        /// <summary>
         /// Tests that a IEnumerable with anonymous objects works.
         /// </summary>
         [Test]

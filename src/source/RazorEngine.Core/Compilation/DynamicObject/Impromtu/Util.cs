@@ -114,48 +114,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Optimization
             return context;
         }
 
-#if DISABLED
-        internal static bool MassageResultBasedOnInterface(this ImpromptuObject target, string binderName, bool resultFound, ref object result)
-        {
-            if (result is ImpromptuForwarderAddRemove) //Don't massage AddRemove Proxies
-                return true;
-
-            Type tType;
-            var tTryType = target.TryTypeForName(binderName, out tType);
-            if (tTryType && tType == typeof(void))
-            {
-                return true;
-            }
-
-            if (resultFound)
-            {
-                if (result is IDictionary<string, object> && !(result is ImpromptuDictionaryBase)
-                      && (!tTryType || tType == typeof(object)))
-                {
-                    result = new ImpromptuDictionary((IDictionary<string, object>)result);
-                }
-                else if (tTryType)
-                {
-                    result = Impromptu.CoerceConvert(result, tType);
-                }
-            }
-            else
-            {
-                result = null;
-                if (!tTryType)
-                {
-
-                    return false;
-                }
-                if (tType.IsValueType)
-                {
-                    result = Impromptu.InvokeConstructor(tType);
-                }
-            }
-            return true;
-        }
-#endif
-
         /// <summary>
         /// Gets the value. Conveinence Ext method
         /// </summary>
