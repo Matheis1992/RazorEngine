@@ -1,19 +1,20 @@
-﻿using RazorEngine.Compilation;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
+using RazorEngine.Compilation;
 using RazorEngine.Compilation.ReferenceResolver;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using System.Web.Razor.Parser;
-using System.Web.Razor;
-using Microsoft.CodeAnalysis.Text;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
-using Microsoft.CodeAnalysis.Emit;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Razor;
+using System.Web.Razor.Parser;
 
 
 namespace RazorEngine.Roslyn.CSharp
@@ -24,6 +25,25 @@ namespace RazorEngine.Roslyn.CSharp
     [SecurityCritical]
     public abstract class RoslynCompilerServiceBase : CompilerServiceBase
     {
+        /// <summary>
+        /// A metadata reference of a file, with the file's state when it was read.
+        /// </summary>
+        private sealed class CachedFileReference
+        {
+            public DateTime LastWriteTimeUtc;
+            public long Length;
+            public MetadataReference Reference;
+        }
+
+        /// <summary>
+        /// Metadata references of files, shared by all compiles in this AppDomain.
+        /// Passing the same reference objects again lets Roslyn reuse the symbols it built for them,
+        /// instead of reading and analyzing every referenced assembly on each compile.
+        /// A file that changed on disk gets a new reference.
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, CachedFileReference> FileReferences =
+            new ConcurrentDictionary<string, CachedFileReference>(StringComparer.OrdinalIgnoreCase);
+
         [SecuritySafeCritical]
         private class SelectMetadataReference : CompilerReference.ICompilerReferenceVisitor<MetadataReference>
         {
@@ -36,7 +56,30 @@ namespace RazorEngine.Roslyn.CSharp
             [SecuritySafeCritical]
             public MetadataReference Visit(string file)
             {
-                return MetadataReference.CreateFromFile(file);
+                var fullPath = Path.GetFullPath(file);
+                var info = new FileInfo(fullPath);
+                if (!info.Exists)
+                {
+                    // Let Roslyn report the missing file, as before.
+                    return MetadataReference.CreateFromFile(fullPath);
+                }
+
+                CachedFileReference cached;
+                if (FileReferences.TryGetValue(fullPath, out cached)
+                    && cached.LastWriteTimeUtc == info.LastWriteTimeUtc
+                    && cached.Length == info.Length)
+                {
+                    return cached.Reference;
+                }
+
+                cached = new CachedFileReference
+                {
+                    LastWriteTimeUtc = info.LastWriteTimeUtc,
+                    Length = info.Length,
+                    Reference = MetadataReference.CreateFromFile(fullPath)
+                };
+                FileReferences[fullPath] = cached;
+                return cached.Reference;
             }
 
             [SecuritySafeCritical]
