@@ -24,7 +24,11 @@ Templates are always C#: VB.NET templates (`.vbhtml`, `Language.VisualBasic`) ar
 |---|---|---|
 | C# version in templates | C# 5 (the `csc.exe` of .NET Framework) | latest C# supported by Microsoft.CodeAnalysis.CSharp 5.6 (C# 14) |
 | Compilation | starts `csc.exe` as a separate process for each template | runs in-process; the first compilation in a process (or `AppDomain`) is slower because Roslyn has to be loaded |
-| Memory | the compiler runs in its own process | Roslyn stays loaded in your process |
+| First compile in a process (benchmark) | about 0.2 s | about 2 s |
+| Each further compile (benchmark) | about 85 ms | about 26 ms |
+| Memory | the compiler runs in its own process | Roslyn stays loaded in your process: about 55 MB more |
+
+From about 30 templates per process on, Roslyn is faster overall.
 
 With Roslyn, templates can use modern C#, for example:
 
@@ -37,6 +41,21 @@ With Roslyn, templates can use modern C#, for example:
 
 Language features that need newer runtime types (for example `Span<T>`-based features, `init`/records, ranges and indices)
 are not available on .NET Framework 4.8 unless those types are referenced or polyfilled.
+
+## C# language version
+
+Templates are compiled with the newest C# version the bundled Roslyn supports (C# 14).
+A newer C# version can change the meaning of existing code without a compile error. For example, since C# 14,
+`field` inside a property accessor is the property's backing field, not a member named `field`.
+Since 4.2 you can pin the language version (`LanguageVersion` is in `Microsoft.CodeAnalysis.CSharp`):
+
+```csharp
+config.CompilerServiceFactory = new DefaultCompilerServiceFactory { LanguageVersion = LanguageVersion.CSharp13 };
+```
+
+A pinned version also rejects newer syntax, so pick the newest version whose behaviour your templates rely on.
+
+## Binding redirects
 
 Roslyn 5.6 depends on newer System.* packages (System.Collections.Immutable, System.Reflection.Metadata, System.Memory, …).
 Your application needs binding redirects for them; SDK-style projects generate them automatically.

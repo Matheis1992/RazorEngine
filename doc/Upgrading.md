@@ -12,6 +12,9 @@ See [ReleaseNotes](ReleaseNotes.md) for the complete list of breaking changes; t
    and `ITemplateManager`.
  - Templates are compiled with Roslyn by default (modern C#). Roslyn's dependencies need binding redirects,
    see [Roslyn](Roslyn.md). `CodeDomCompilerServiceFactory` brings back the old compiler (C# 5, `csc.exe`).
+ - Templates are compiled with the newest C# version instead of C# 5. One known change does not cause a compile error:
+   since C# 14, `field` inside a property accessor is the property's backing field. Search your templates for members
+   named `field` (for example in `@functions`) and rename them, or pin C# 13 (from 4.2, see [Roslyn](Roslyn.md)).
  - VB.NET templates are no longer supported.
 
 

@@ -10,9 +10,9 @@
 
   <!-- Version and shared assembly attributes. Title and description stay in Properties\AssemblyInfo.cs. -->
   <PropertyGroup>
-    <Version>4.1.1</Version>
+    <Version>4.2.0</Version>
     <!-- Increase the last number with every release (previews too), so installers see a newer file. -->
-    <FileVersion>4.1.1.1</FileVersion>
+    <FileVersion>4.2.0.1</FileVersion>
     <Company>RazorEngine</Company>
     <Product>RazorEngine</Product>
     <!-- Keep the original project's notice (Apache-2.0) and add the fork's. -->
@@ -37,6 +37,10 @@
     <RepositoryType>git</RepositoryType>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- dotnet pack compares the public API with the last published version and fails on breaking changes.
+         Set the baseline to the new version after each release (see Releasing in CONTRIBUTING.md). -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>4.1.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>
