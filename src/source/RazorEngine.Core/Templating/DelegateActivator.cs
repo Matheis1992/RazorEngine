@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines an activator that supports delegated activation.
     /// </summary>

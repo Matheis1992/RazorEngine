@@ -1,12 +1,12 @@
+using RazorEngine.Text;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using SectionAction = System.Action;
+
 namespace RazorEngine.Templating
 {
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    using Text;
-    using SectionAction = System.Action;
-
     /// <summary>
     /// Provides a base implementation of a template.
     /// NOTE: This class is not serializable to prevent subtle errors 

@@ -1,18 +1,18 @@
-﻿namespace RazorEngine.Compilation
-{
-    using RazorEngine.Compilation.ReferenceResolver;
-    using System;
-    using System.CodeDom;
-    using System.CodeDom.Compiler;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Security;
-    using System.Web.Razor;
-    using System.Web.Razor.Generator;
-    using System.Web.Razor.Parser;
-    using Templating;
+﻿using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Templating;
+using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security;
+using System.Web.Razor;
+using System.Web.Razor.Generator;
+using System.Web.Razor.Parser;
 
+namespace RazorEngine.Compilation
+{
     /// <summary>
     /// Provides a base implementation of a compiler service.
     /// </summary>

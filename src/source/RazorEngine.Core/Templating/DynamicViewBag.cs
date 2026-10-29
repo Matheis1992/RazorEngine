@@ -1,10 +1,10 @@
-﻿namespace RazorEngine.Templating
-{
-    using RazorEngine.Common;
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
+﻿using RazorEngine.Common;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines a dynamic view bag.
     /// </summary>

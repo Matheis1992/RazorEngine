@@ -1,10 +1,10 @@
-﻿namespace RazorEngine.Compilation.CSharp
-{
-    using System.Security;
-    using System.Web.Razor;
-    using System.Web.Razor.Generator;
-    using OriginalCSharpRazorCodeLanguage = System.Web.Razor.CSharpRazorCodeLanguage;
+﻿using System.Security;
+using System.Web.Razor.Generator;
+using OriginalCSharpRazorCodeLanguage = System.Web.Razor.CSharpRazorCodeLanguage;
+using OriginalRazorEngineHost = System.Web.Razor.RazorEngineHost;
 
+namespace RazorEngine.Compilation.CSharp
+{
     /// <summary>
     /// Provides a razor code language that supports the C# language.
     /// </summary>
@@ -38,7 +38,7 @@
         /// <param name="sourceFileName">Name of the source file.</param>
         /// <param name="host">The host.</param>
         [SecurityCritical]
-        public override RazorCodeGenerator CreateCodeGenerator(string className, string rootNamespaceName, string sourceFileName, RazorEngineHost host)
+        public override RazorCodeGenerator CreateCodeGenerator(string className, string rootNamespaceName, string sourceFileName, OriginalRazorEngineHost host)
         {
             return new CSharpRazorCodeGenerator(className, rootNamespaceName, sourceFileName, host, StrictMode);
         }

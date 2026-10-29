@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Provides a default implementation of an <see cref="IActivator"/>.
     /// </summary>

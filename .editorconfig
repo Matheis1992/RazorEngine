@@ -5,3 +5,7 @@ root = true
 # Visual Studio and dotnet format follow this when sorting usings.
 dotnet_sort_system_directives_first = false
 dotnet_separate_import_directive_groups = false
+# Using directives go outside the namespace, with full namespace names. IDE0065 fails the build otherwise;
+# Visual Studio and dotnet format (dotnet format style --diagnostics IDE0065) move them automatically.
+csharp_using_directive_placement = outside_namespace
+dotnet_diagnostic.IDE0065.severity = error

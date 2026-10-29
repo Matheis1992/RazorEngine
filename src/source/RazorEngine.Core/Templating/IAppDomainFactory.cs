@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines the required contract for implementing an <see cref="AppDomain"/> factory.
     /// </summary>

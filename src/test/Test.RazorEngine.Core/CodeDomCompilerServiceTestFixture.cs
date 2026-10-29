@@ -1,16 +1,16 @@
+using Autofac;
+using Autofac.Features.ResolveAnything;
+using NUnit.Framework;
+using RazorEngine.Compilation;
+using RazorEngine.Configuration;
+using RazorEngine.Templating;
+using RazorEngine.Tests.TestTypes;
+using RazorEngine.Tests.TestTypes.Activation;
+using System;
+using System.Linq;
+
 namespace RazorEngine.Tests
 {
-    using Autofac;
-    using Autofac.Features.ResolveAnything;
-    using Compilation;
-    using Configuration;
-    using NUnit.Framework;
-    using System;
-    using System.Linq;
-    using Templating;
-    using TestTypes;
-    using TestTypes.Activation;
-
     /// <summary>
     /// Tests the CodeDom compiler service: <see cref="CodeDomCompilerServiceFactory"/>, <see cref="DefaultCompilerServiceFactory"/>
     /// (the default, also CodeDom) and their options. The core package compiles templates without Roslyn.

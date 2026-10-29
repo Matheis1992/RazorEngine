@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Text
-{
-    using System.Net;
+﻿using System.Net;
 
+namespace RazorEngine.Text
+{
     /// <summary>
     /// Represents a Html-encoded string.
     /// </summary>

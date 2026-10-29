@@ -1,8 +1,8 @@
-﻿namespace RazorEngine.Tests.TestTypes
-{
-    using System;
-    using System.Threading;
+﻿using System;
+using System.Threading;
 
+namespace RazorEngine.Tests.TestTypes
+{
     /// <summary>
     /// Defines a thread pool item.
     /// </summary>

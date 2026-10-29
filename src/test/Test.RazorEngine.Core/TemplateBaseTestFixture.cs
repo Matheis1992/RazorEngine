@@ -1,11 +1,11 @@
-﻿namespace RazorEngine.Tests
-{
-    using NUnit.Framework;
-    using System.IO;
-    using Templating;
-    using TestTypes;
-    using Text;
+﻿using NUnit.Framework;
+using RazorEngine.Templating;
+using RazorEngine.Tests.TestTypes;
+using RazorEngine.Text;
+using System.IO;
 
+namespace RazorEngine.Tests
+{
     /// <summary>
     /// Defines a test fixture that provides tests for the <see cref="TemplateBase"/> type.
     /// </summary>

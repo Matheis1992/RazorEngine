@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Compilation
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Compilation
+{
     /// <summary>
     /// Defines an attribute that marks the presence of a dynamic model in a template.
     /// </summary>

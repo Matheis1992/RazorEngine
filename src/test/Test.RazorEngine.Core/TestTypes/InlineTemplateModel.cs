@@ -1,8 +1,8 @@
-﻿namespace RazorEngine.Tests.TestTypes
-{
-    using RazorEngine.Templating;
-    using System;
+﻿using RazorEngine.Templating;
+using System;
 
+namespace RazorEngine.Tests.TestTypes
+{
     /// <summary>
     /// Test class.
     /// </summary>

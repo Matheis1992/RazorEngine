@@ -1,10 +1,10 @@
-﻿namespace RazorEngine.Compilation
-{
-    using RazorEngine.Templating;
-    using ReferenceResolver;
-    using System;
-    using System.Collections.Generic;
+﻿using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Templating;
+using System;
+using System.Collections.Generic;
 
+namespace RazorEngine.Compilation
+{
     /// <summary>
     /// Defines a type context that describes a template to compile.
     /// </summary>

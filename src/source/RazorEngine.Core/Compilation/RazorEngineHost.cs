@@ -1,11 +1,11 @@
-﻿namespace RazorEngine.Compilation
-{
-    using System;
-    using System.Security;
-    using System.Web.Razor;
-    using System.Web.Razor.Parser;
-    using OriginalRazorEngineHost = System.Web.Razor.RazorEngineHost;
+﻿using System;
+using System.Security;
+using System.Web.Razor;
+using System.Web.Razor.Parser;
+using OriginalRazorEngineHost = System.Web.Razor.RazorEngineHost;
 
+namespace RazorEngine.Compilation
+{
     /// <summary>
     /// Defines the custom razor engine host.
     /// </summary>

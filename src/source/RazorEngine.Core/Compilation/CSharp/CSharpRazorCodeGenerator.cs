@@ -1,11 +1,11 @@
-﻿namespace RazorEngine.Compilation.CSharp
-{
-    using System.Security;
-    using System.Web.Razor;
-    using System.Web.Razor.Parser.SyntaxTree;
-    using Templating;
-    using OriginalCSharpRazorCodeGenerator = System.Web.Razor.Generator.CSharpRazorCodeGenerator;
+﻿using RazorEngine.Templating;
+using System.Security;
+using System.Web.Razor.Parser.SyntaxTree;
+using OriginalCSharpRazorCodeGenerator = System.Web.Razor.Generator.CSharpRazorCodeGenerator;
+using OriginalRazorEngineHost = System.Web.Razor.RazorEngineHost;
 
+namespace RazorEngine.Compilation.CSharp
+{
     /// <summary>
     /// Defines a code generator that supports C# syntax.
     /// </summary>
@@ -21,7 +21,7 @@
         /// <param name="sourceFileName">Name of the source file.</param>
         /// <param name="host">The host.</param>
         /// <param name="strictMode">Flag to specify that this generator is running in struct mode.</param>
-        public CSharpRazorCodeGenerator(string className, string rootNamespaceName, string sourceFileName, RazorEngineHost host, bool strictMode)
+        public CSharpRazorCodeGenerator(string className, string rootNamespaceName, string sourceFileName, OriginalRazorEngineHost host, bool strictMode)
             : base(className, rootNamespaceName, sourceFileName, host)
         {
             StrictMode = strictMode;

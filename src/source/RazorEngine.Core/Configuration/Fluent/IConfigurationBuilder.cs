@@ -1,10 +1,10 @@
-﻿namespace RazorEngine.Configuration
-{
-    using Compilation;
-    using System;
-    using Templating;
-    using Text;
+﻿using RazorEngine.Compilation;
+using RazorEngine.Templating;
+using RazorEngine.Text;
+using System;
 
+namespace RazorEngine.Configuration
+{
     /// <summary>
     /// Defines the required contract for implementing a configuration builder.
     /// </summary>

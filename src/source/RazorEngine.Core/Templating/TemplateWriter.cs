@@ -1,9 +1,9 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
-    using System.Globalization;
-    using System.IO;
+﻿using System;
+using System.Globalization;
+using System.IO;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines a template writer used for helper templates.
     /// </summary>

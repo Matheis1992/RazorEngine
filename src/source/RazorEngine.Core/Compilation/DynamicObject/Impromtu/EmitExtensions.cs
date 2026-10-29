@@ -13,19 +13,18 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
+using Microsoft.CSharp.RuntimeBinder;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Build
 {
-    using Microsoft.CSharp.RuntimeBinder;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Reflection.Emit;
-    using System.Runtime.CompilerServices;
-    using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
-
     ///<summary>
     /// Extension Methods that make emiting code easier and easier to read
     ///</summary>

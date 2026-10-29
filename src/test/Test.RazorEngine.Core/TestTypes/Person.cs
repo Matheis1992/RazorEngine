@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Tests.TestTypes
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Tests.TestTypes
+{
     /// <summary>
     /// Defines a person.
     /// </summary>
