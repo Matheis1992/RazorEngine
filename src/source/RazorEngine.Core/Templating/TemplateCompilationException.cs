@@ -4,7 +4,6 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Security;
@@ -62,7 +61,7 @@
     /// <summary>
     /// Defines an exception that occurs during compilation of the template.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors"), Serializable]
+    [Serializable]
     public class TemplateCompilationException : Exception
     {
         internal static string Separate(string rawLines)

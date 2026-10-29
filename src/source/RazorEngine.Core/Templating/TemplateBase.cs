@@ -59,11 +59,6 @@ namespace RazorEngine.Templating
         /// <summary>
         /// Gets or sets the current <see cref="IRazorEngineService"/> instance.
         /// </summary>
-        [Obsolete("Use the Razor property instead, this is obsolete as it makes it difficult to use the RazorEngine namespace within templates.")]
-        public IRazorEngineService RazorEngine { get { return Razor; } set { Razor = value; } }
-        /// <summary>
-        /// Gets or sets the current <see cref="IRazorEngineService"/> instance.
-        /// </summary>
         public IRazorEngineService Razor { get; set; }
 
         /// <summary>

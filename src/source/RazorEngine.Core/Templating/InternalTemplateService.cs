@@ -1,7 +1,6 @@
 ﻿using RazorEngine.Configuration;
 using RazorEngine.Text;
 using System;
-using System.Diagnostics.Contracts;
 
 namespace RazorEngine.Templating
 {
@@ -11,8 +10,10 @@ namespace RazorEngine.Templating
         private readonly ITemplateKey _template;
         public InternalTemplateService(RazorEngineCore service, ITemplateKey template)
         {
-            Contract.Requires(service != null);
-            Contract.Requires(template != null);
+            if (service == null)
+                throw new ArgumentNullException("service");
+            if (template == null)
+                throw new ArgumentNullException("template");
 
             _service = service;
             _template = template;

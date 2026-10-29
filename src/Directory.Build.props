@@ -4,7 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <!-- Assembly attributes come from Properties\AssemblyInfo.cs. -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <!-- Only RazorEngine.Core is shipped as a NuGet package. -->
+    <!-- Only the projects in src\source are shipped as NuGet packages (see src\source\Directory.Build.props). -->
     <IsPackable>false</IsPackable>
     <!-- Shared strong-name key; projects opt in with <SignAssembly>true</SignAssembly>. -->
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)RazorEngine.NetFramework.snk</AssemblyOriginatorKeyFile>

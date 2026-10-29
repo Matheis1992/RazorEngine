@@ -60,6 +60,8 @@ namespace RazorEngine.Roslyn.CSharp
         [SecurityCritical]
         public override string InspectSource(GeneratorResults results, TypeContext context)
         {
+            if (_codeDomProvider == null)
+                throw new ObjectDisposedException(GetType().Name);
             return GenerateSourceCode(_codeDomProvider, results);
         }
 
@@ -129,6 +131,22 @@ namespace RazorEngine.Roslyn.CSharp
         {
             // Ensure the Microsoft.CSharp assembly is referenced to support dynamic typing.
             return new[] { CompilerReference.From(typeof(Microsoft.CSharp.RuntimeBinder.Binder).Assembly) };
+        }
+
+        /// <summary>
+        /// Releases the CodeDom provider used to generate the source code.
+        /// </summary>
+        /// <param name="disposing">true when Dispose() was called manually.</param>
+        [SecuritySafeCritical]
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _codeDomProvider != null)
+            {
+                _codeDomProvider.Dispose();
+                _codeDomProvider = null;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

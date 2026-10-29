@@ -67,7 +67,7 @@ namespace Test.RazorEngine.Core.Roslyn
         [Test]
         public void Roslyn_FactoryLoadedByTypeName_CompilesWithRoslyn()
         {
-            var factoryType = Type.GetType("RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework", throwOnError: true);
+            var factoryType = Type.GetType("RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework.Roslyn", throwOnError: true);
             string result = null;
             RunTestHelper(service =>
             {
@@ -242,6 +242,17 @@ namespace Test.RazorEngine.Core.Roslyn
             Assert.That(new DirectoryInfo(folder), Does.Exist);
             data.DeleteAll();
             Assert.That(new DirectoryInfo(folder), Does.Not.Exist);
+        }
+
+        /// <summary>
+        /// A disposed Roslyn compiler service reports that it is disposed, like the CodeDom service.
+        /// </summary>
+        [Test]
+        public void RoslynCompilerService_InspectSourceAfterDisposeThrows()
+        {
+            var service = new global::RazorEngine.Roslyn.CSharp.CSharpRoslynCompilerService();
+            service.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => service.InspectSource(null, null));
         }
     }
 }

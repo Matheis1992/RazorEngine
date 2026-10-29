@@ -4,7 +4,8 @@
 [![CI](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml)
 
 This is a maintained fork of [Antaris/RazorEngine](https://github.com/Antaris/RazorEngine), which has not been updated since 2018.
-It targets .NET Framework 4.8 and is published as the NuGet package `RazorEngine.NetFramework`.
+It targets .NET Framework 4.8 and is published as the NuGet package `RazorEngine.NetFramework`,
+with the optional `RazorEngine.NetFramework.Roslyn` for compiling templates with Roslyn (modern C#).
 The original package `RazorEngine` (3.10.x) stays on nuget.org but is no longer maintained.
 
 The assembly is `RazorEngine.NetFramework.dll` with its own signing key, so it never overwrites or replaces the original `RazorEngine.dll`.
@@ -97,25 +98,28 @@ config.EncodedStringFactory = new HtmlEncodedStringFactory(); // Html encoding.
 
 ### Compiler
 
-Templates are compiled in-process with Roslyn, so they can use modern C# (up to C# 14),
-for example string interpolation, `?.`, tuples and switch expressions.
-On .NET Framework, Roslyn's dependencies need binding redirects; SDK-style projects generate them automatically.
-See [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md) for details.
+By default, templates are compiled with CodeDom (the `csc.exe` of .NET Framework, C# 5), and the package depends only on Microsoft.AspNet.Razor.
 
-To use the old CodeDom compiler (`csc.exe`, C# 5) instead, for example to step into templates with the debugger:
+To use modern C# in templates (up to C# 14: string interpolation, `?.`, tuples, switch expressions, ...), install the Roslyn package
+and set its factory. Roslyn compiles in-process and is faster from about 30 templates per process on:
+
+	Install-Package RazorEngine.NetFramework.Roslyn
 
 ```csharp
-// using RazorEngine.Compilation;
-config.CompilerServiceFactory = new CodeDomCompilerServiceFactory();
+// using RazorEngine.Roslyn;
+config.CompilerServiceFactory = new RoslynCompilerServiceFactory();
 ```
+
+On .NET Framework, Roslyn's dependencies need binding redirects; SDK-style projects generate them automatically.
+CodeDom can also compile modern C# with another `CodeDomProvider`.
+See [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md) for both.
 
 ### Debugging
 
-One thing you might want to enable is the debugging feature:
+One thing you might want to enable is the debugging feature (it needs the default CodeDom compiler; Roslyn templates cannot be stepped into yet):
 
 ```csharp
 config.Debug = true;
-config.CompilerServiceFactory = new CodeDomCompilerServiceFactory(); // Roslyn templates cannot be stepped into yet.
 ```
 
 When `Debug` is true you can straight up debug into the generated code. 

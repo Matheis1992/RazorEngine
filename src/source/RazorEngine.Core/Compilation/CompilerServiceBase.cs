@@ -5,7 +5,6 @@
     using System.CodeDom;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Security;
@@ -65,7 +64,8 @@
         [SecurityCritical]
         protected CompilerServiceBase(RazorCodeLanguage codeLanguage, ParserBaseCreator markupParserFactory)
         {
-            Contract.Requires(codeLanguage != null);
+            if (codeLanguage == null)
+                throw new ArgumentNullException("codeLanguage");
 
             CodeLanguage = codeLanguage;
             MarkupParserFactory = markupParserFactory ?? new ParserBaseCreator(null);
@@ -163,7 +163,6 @@
         /// <param name="templateType">The template type.</param>
         /// <param name="modelType">The model type.</param>
         /// <returns>The string type name (including namespace).</returns>
-        [Pure]
         public abstract string BuildTypeName(Type templateType, Type modelType);
 
         /// <summary>
@@ -216,7 +215,7 @@
         /// <param name="templateType">The template type.</param>
         /// <param name="modelType">The model type.</param>
         /// <returns></returns>
-        [Pure][SecurityCritical]
+        [SecurityCritical]
         public string GetCodeCompileUnit(string className, ITemplateSource template, ISet<string> namespaceImports, Type templateType, Type modelType)
         {
             var typeContext =
@@ -253,7 +252,7 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns>A <see cref="CodeCompileUnit"/> used to compile a type.</returns>
-        [Pure][SecurityCritical]
+        [SecurityCritical]
         public string GetCodeCompileUnit(TypeContext context)
         {
             string className = context.ClassName;
@@ -400,7 +399,6 @@
         /// </summary>
         /// <param name="constructors">The set of constructors.</param>
         /// <param name="codeType">The code type declaration.</param>
-        [Pure]
         private static void GenerateConstructors(IEnumerable<System.Reflection.ConstructorInfo> constructors, CodeTypeDeclaration codeType)
         {
             if (constructors == null || !constructors.Any())

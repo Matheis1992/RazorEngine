@@ -1,7 +1,7 @@
 name: Release
 
 # Runs when a version tag (e.g. v4.0.0) is pushed: builds, tests and packs that commit,
-# pushes the package to nuget.org and creates the GitHub release with the packages attached.
+# pushes both packages to nuget.org and creates the GitHub release with the packages attached.
 on:
   push:
     tags: ['v*']
@@ -39,7 +39,7 @@ jobs:
         run: |
           $version = dotnet msbuild src/source/RazorEngine.Core/RazorEngine.Core.csproj -getProperty:Version
           if ($env:GITHUB_REF_NAME -ne "v$version") {
-            throw "Tag '$env:GITHUB_REF_NAME' does not match version $version from RazorEngine.Core.csproj (expected 'v$version')."
+            throw "Tag '$env:GITHUB_REF_NAME' does not match version $version from src/source/Directory.Build.props (expected 'v$version')."
           }
           $heading = Get-Content doc/ReleaseNotes.md | Where-Object { $_ -match '^###\s' } | Select-Object -First 1
           if ($heading -notmatch [regex]::Escape($version)) {
@@ -76,9 +76,18 @@ jobs:
         with:
           user: ${{ secrets.NUGET_USER }}
 
-      # Also pushes the .snupkg next to the .nupkg. --skip-duplicate lets a failed run be re-run after the push succeeded.
+      # Both packages, the core first because the Roslyn package depends on it. Also pushes each .snupkg next to its .nupkg.
+      # --skip-duplicate lets a failed run be re-run after a push succeeded.
       - name: Push to nuget.org
-        run: dotnet nuget push artifacts/RazorEngine.NetFramework.${{ steps.version.outputs.version }}.nupkg --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ steps.nuget.outputs.NUGET_API_KEY }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          foreach ($id in 'RazorEngine.NetFramework', 'RazorEngine.NetFramework.Roslyn') {
+            dotnet nuget push "artifacts/$id.$env:VERSION.nupkg" --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+            if ($LASTEXITCODE -ne 0) { throw "Pushing $id failed ($LASTEXITCODE)." }
+          }
 
       - name: Create GitHub release
         shell: pwsh
@@ -92,7 +101,7 @@ jobs:
           $start = [Array]::FindIndex($lines, [Predicate[string]]{ param($l) $l -match '^###\s' })
           $next = [Array]::FindIndex($lines, $start + 1, [Predicate[string]]{ param($l) $l -match '^###\s' })
           if ($next -lt 0) { $next = $lines.Length }
-          $notes = @($lines[($start + 1)..($next - 1)]) + @('', "NuGet: https://www.nuget.org/packages/RazorEngine.NetFramework/$env:VERSION")
+          $notes = @($lines[($start + 1)..($next - 1)]) + @('', "NuGet: https://www.nuget.org/packages/RazorEngine.NetFramework/$env:VERSION", "NuGet (Roslyn): https://www.nuget.org/packages/RazorEngine.NetFramework.Roslyn/$env:VERSION")
           $notes | Set-Content -Encoding utf8 release-notes.md
           $flags = @('--verify-tag', '--title', "RazorEngine.NetFramework $env:VERSION", '--notes-file', 'release-notes.md')
           if ($env:PRERELEASE -eq 'true') { $flags += '--prerelease' }

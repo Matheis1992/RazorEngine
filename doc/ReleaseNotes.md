@@ -1,4 +1,35 @@
-﻿### 4.3.0
+﻿### 5.0.0
+
+5.0.0 splits RazorEngine into two packages ([#22](https://github.com/Matheis1992/RazorEngine/issues/22)): the core package no longer depends on Roslyn, and Roslyn becomes opt-in. Read [Upgrading to 5.0](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Upgrading.md) before updating.
+
+| Package | Contents | Dependencies |
+|---|---|---|
+| `RazorEngine.NetFramework` | Razor integration, templating, caching, CodeDom compiler service | Microsoft.AspNet.Razor 3.3.0 |
+| `RazorEngine.NetFramework.Roslyn` (new) | `RoslynCompilerServiceFactory`, `CSharpRoslynCompilerService`, `RoslynCompilerServiceBase`, the metadata reference cache, `LanguageVersion` | `RazorEngine.NetFramework`, Microsoft.CodeAnalysis.CSharp 5.6.0 |
+
+#### Breaking changes
+
+ * (BREAKING) **CodeDom is the default compiler again.** `DefaultCompilerServiceFactory` (the default `CompilerServiceFactory`) compiles templates with CodeDom (the `csc.exe` of .NET Framework, C# 5), as before 4.1. Templates that use C# 6 or newer syntax fail to compile unless you install the Roslyn package and set `RoslynCompilerServiceFactory`. Installing the Roslyn package alone does not change the compiler; it is an explicit opt-in.
+ * (BREAKING) **Roslyn moved to `RazorEngine.NetFramework.Roslyn`** (assembly `RazorEngine.NetFramework.Roslyn.dll`, same signing key). The namespaces stay (`RazorEngine.Roslyn`, `RazorEngine.Roslyn.CSharp`); only the assembly part of assembly-qualified names changes, for example `compilerServiceFactoryType="RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework.Roslyn"`.
+ * (BREAKING) **`DefaultCompilerServiceFactory.LanguageVersion` removed.** Use `RoslynCompilerServiceFactory.LanguageVersion`. `RoslynCompilerServiceFactory` no longer derives from `DefaultCompilerServiceFactory`; it implements `ICompilerServiceFactory` directly.
+ * (BREAKING) Templates compiled with CodeDom are C# 5 again: code that relied on `field` as the C# 14 backing field changes meaning back (see the 4.1.0 notes).
+ * (BREAKING) Removed the types that are obsolete since 4.3.0: `CompilerServiceBuilder` (RazorEngine never used it; set `CompilerServiceFactory` on the `TemplateServiceConfiguration`) and `HtmlTemplateBase<T>` (use `TemplateBase<T>`).
+ * (BREAKING) Removed the members that are obsolete since 3.x:
+   - `TemplateBase.RazorEngine` and `ITemplate.RazorEngine`: use `Razor`. Templates can now use the `RazorEngine` namespace without it being hidden by this property.
+   - `DynamicViewBag.AddDictionaryValues`, `AddDictionaryValuesEx` and `AddListValues`: use `AddDictionary` or `AddValue`.
+ * (BREAKING) As announced in 4.3.0, the implementation details `IsolatedRazorEngineService.SanboxHelper`, `CrossAppDomainCleanUp.CleanupHelper` and `CleanupHelper.SubscribeHelper` are internal. They were hidden from IntelliSense since 4.3.0 and only meant for RazorEngine's own AppDomain communication.
+
+#### New
+
+ * (NEW) The Roslyn package depends on exactly the same version of the core package (`[5.0.0]`), because both are released together and the Roslyn compiler service builds on the core's compiler base classes.
+ * (NEW) **Modern C# with CodeDom, without Roslyn in your process.** `CodeDomCompilerServiceFactory` (and `DefaultCompilerServiceFactory`, which now derives from it) has `CodeDomProviderFactory` to compile with another `CodeDomProvider`, for example Microsoft.CodeDom.Providers.DotNetCompilerPlatform, and `CompilerOptions` for additional compiler switches such as `/langversion:7.3` (with a provider that supports it). `CSharpDirectCompilerService` has a constructor that takes the `CodeDomProvider`; the compiler service disposes it. `DirectCompilerServiceBase` has `CompilerOptions` and a `ConfigureCompilerParameters` hook, and a factory derived from `CodeDomCompilerServiceFactory` can create its own service by overriding `CreateCSharpCompilerService`. See [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md#modern-c-with-codedom).
+ * (PACKAGING) The core package depends only on Microsoft.AspNet.Razor 3.3.0, so applications without the Roslyn package need no binding redirects for Roslyn's System.* dependencies, and ASP.NET no longer loads Roslyn from `bin` at startup.
+ * (BUILD) Both packages are built, tested and released together with the same version. Package validation of the core package against 4.3.0 lists the intended breaking changes in `CompatibilitySuppressions.xml`.
+ * (BUILD) The core tests no longer use Roslyn, which also shows that the core works without it. The tests that compare CodeDom and Roslyn moved to the Roslyn tests.
+ * (FIX) Null arguments are rejected right away with an `ArgumentNullException`, for example in `FluentTemplateServiceConfiguration`, `ActivateUsing` and `TypeLoader`. The checks were Code Contracts calls (`Contract.Requires`), which the compiler removes unless `CONTRACTS_FULL` is defined, so they never ran and a `null` failed later with a less clear error.
+ * (BUILD) Removed leftovers of tools the build does not use: the FxCop suppressions (`SuppressMessage`, including `GlobalSuppressions.cs`) and the Code Contracts `[Pure]` attributes. They had no effect.
+
+### 4.3.0
 
 No breaking changes; package validation against 4.2.0 checks that in CI. Code that uses one of the newly obsolete types gets a compiler warning (CS0618), which fails the build if warnings are treated as errors.
 

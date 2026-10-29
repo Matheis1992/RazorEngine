@@ -33,7 +33,7 @@ jobs:
           $version = dotnet msbuild src/source/RazorEngine.Core/RazorEngine.Core.csproj -getProperty:Version
           $heading = Get-Content doc/ReleaseNotes.md | Where-Object { $_ -match '^###\s' } | Select-Object -First 1
           if ($heading -notmatch [regex]::Escape($version)) {
-            throw "The newest heading in doc/ReleaseNotes.md ('$heading') does not mention version $version from RazorEngine.Core.csproj."
+            throw "The newest heading in doc/ReleaseNotes.md ('$heading') does not mention version $version from src/source/Directory.Build.props."
           }
 
       - name: Build

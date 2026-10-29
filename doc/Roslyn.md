@@ -1,34 +1,35 @@
 
 # Roslyn compiler support
 
-Since version 4, C# templates are compiled with Roslyn (via the Microsoft.CodeAnalysis.CSharp nuget package) by default.
-Roslyn support is included in the `RazorEngine.NetFramework` package; no additional package and no configuration is needed.
+Since 5.0, Roslyn is in its own package. `RazorEngine.NetFramework` compiles templates with CodeDom (C# 5) by default
+and depends only on Microsoft.AspNet.Razor. To compile templates in-process with Roslyn (modern C#), install the Roslyn package:
 
-> Do not install the old `RazorEngine.Roslyn` package. It depends on the original `RazorEngine` package,
-> which ships an assembly with the same name and conflicts with `RazorEngine.NetFramework`.
+    Install-Package RazorEngine.NetFramework.Roslyn
 
-`DefaultCompilerServiceFactory` (the default `CompilerServiceFactory`) compiles templates with Roslyn.
-To compile templates with CodeDom (C# 5) as before version 4, set:
-
-```csharp
-config.CompilerServiceFactory = new RazorEngine.Compilation.CodeDomCompilerServiceFactory();
-```
-
-If your templates rely on Roslyn (modern C#, a pinned `LanguageVersion`), set it explicitly:
+and set its factory:
 
 ```csharp
 config.CompilerServiceFactory = new RazorEngine.Roslyn.RoslynCompilerServiceFactory();
 ```
 
-Today `RoslynCompilerServiceFactory` does the same as `DefaultCompilerServiceFactory`, but it will keep compiling with Roslyn
-if the default compiler changes in a future major version (planned for 5.0: CodeDom as default again, Roslyn in a separate package,
-see [#22](https://github.com/Matheis1992/RazorEngine/issues/22)).
+or in `app.config`/`web.config`:
+
+```xml
+<razorEngine compilerServiceFactoryType="RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework.Roslyn" />
+```
+
+Installing the package alone does not change how templates are compiled; you choose Roslyn explicitly.
+
+> Do not install the old `RazorEngine.Roslyn` package. It depends on the original `RazorEngine` package,
+> which ships an assembly with the same name and conflicts with `RazorEngine.NetFramework`.
+
+Without the Roslyn package, CodeDom can still compile modern C# with another `CodeDomProvider`, see [Modern C# with CodeDom](#modern-c-with-codedom).
 
 Templates are always C#: VB.NET templates (`.vbhtml`, `Language.VisualBasic`) are not supported since version 4.
 
 ## Roslyn compared to CodeDom
 
-| | CodeDom | Roslyn (default) |
+| | CodeDom (default) | Roslyn (`RazorEngine.NetFramework.Roslyn`) |
 |---|---|---|
 | C# version in templates | C# 5 (the `csc.exe` of .NET Framework) | latest C# supported by Microsoft.CodeAnalysis.CSharp 5.6 (C# 14) |
 | Compilation | starts `csc.exe` as a separate process for each template | runs in-process; the first compilation in a process (or `AppDomain`) is slower because Roslyn has to be loaded |
@@ -55,13 +56,11 @@ are not available on .NET Framework 4.8 unless those types are referenced or pol
 Templates are compiled with the newest C# version the bundled Roslyn supports (C# 14).
 A newer C# version can change the meaning of existing code without a compile error. For example, since C# 14,
 `field` inside a property accessor is the property's backing field, not a member named `field`.
-Since 4.2 you can pin the language version (`LanguageVersion` is in `Microsoft.CodeAnalysis.CSharp`):
+You can pin the language version (`LanguageVersion` is in `Microsoft.CodeAnalysis.CSharp`):
 
 ```csharp
 config.CompilerServiceFactory = new RoslynCompilerServiceFactory { LanguageVersion = LanguageVersion.CSharp13 };
 ```
-
-(`LanguageVersion` is also available on `DefaultCompilerServiceFactory`; `RoslynCompilerServiceFactory` makes sure Roslyn is used.)
 
 A pinned version also rejects newer syntax, so pick the newest version whose behaviour your templates rely on.
 
@@ -84,13 +83,62 @@ public class CSharp13CompilerServiceFactory : RoslynCompilerServiceFactory
 
 ## Binding redirects
 
-Roslyn 5.6 depends on newer System.* packages (System.Collections.Immutable, System.Reflection.Metadata, System.Memory, …).
+The Roslyn package depends on Roslyn 5.6, which depends on newer System.* packages (System.Collections.Immutable, System.Reflection.Metadata, System.Memory, …).
 Your application needs binding redirects for them; SDK-style projects generate them automatically.
 If you create your own `AppDomain` for `IsolatedRazorEngineService`, give it your configuration file
 (`AppDomainSetup.ConfigurationFile`), otherwise the binding redirects do not apply there (see [Isolation](Isolation.md)).
+Without the Roslyn package, none of this is needed.
+
+## Modern C# with CodeDom
+
+CodeDom uses the `csc.exe` of .NET Framework (C# 5) by default. `CodeDomCompilerServiceFactory` (and `DefaultCompilerServiceFactory`,
+which derives from it) can compile with another `CodeDomProvider` instead, for example
+[Microsoft.CodeDom.Providers.DotNetCompilerPlatform](https://www.nuget.org/packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform),
+which runs a newer `csc.exe` in a separate process, so Roslyn is not loaded into your process:
+
+```csharp
+config.CompilerServiceFactory = new CodeDomCompilerServiceFactory
+{
+    // A new provider for every compiler service; the service disposes it.
+    CodeDomProviderFactory = () => new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider(),
+    // Optional compiler switches, appended to RazorEngine's own.
+    CompilerOptions = "/langversion:7.3"
+};
+```
+
+`CodeDomProviderFactory` must return a new provider on every call (never `null`). With `IsolatedRazorEngineService`, create the factory
+in your `IConfigCreator.CreateConfiguration` (inside the new `AppDomain`): a lambda that captures variables cannot be serialized into it.
+
+`CodeDomProvider.CreateProvider("cs")` returns the C# provider configured in the `<system.codedom>` section of your configuration file.
+It does not apply the `compilerOptions` of that section, so set them in `CompilerOptions`.
+To adjust the `CompilerParameters` further, derive from `CSharpDirectCompilerService`, override `ConfigureCompilerParameters`,
+and create your service in a factory derived from `CodeDomCompilerServiceFactory`:
+
+```csharp
+public class MyCompilerService : CSharpDirectCompilerService
+{
+    public MyCompilerService(CodeDomProvider provider) : base(provider) { }
+
+    protected override void ConfigureCompilerParameters(CompilerParameters parameters)
+    {
+        parameters.WarningLevel = 0;
+    }
+}
+
+public class MyCompilerServiceFactory : CodeDomCompilerServiceFactory
+{
+    protected override DirectCompilerServiceBase CreateCSharpCompilerService(CodeDomProvider codeDomProvider)
+    {
+        // codeDomProvider is null unless CodeDomProviderFactory is set.
+        return new MyCompilerService(codeDomProvider ?? new Microsoft.CSharp.CSharpCodeProvider());
+    }
+}
+```
+
+`CodeDomProviderFactory` and `CompilerOptions` keep working with your factory.
 
 ## Known limitations
 
 - With Roslyn, `Debug = true` does not let you step into templates with the debugger.
-  If you need that, use `CodeDomCompilerServiceFactory`.
+  If you need that, use CodeDom (the default).
 - If you find more, please open an issue: https://github.com/Matheis1992/RazorEngine/issues

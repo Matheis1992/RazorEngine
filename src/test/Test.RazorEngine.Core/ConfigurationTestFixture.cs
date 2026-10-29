@@ -154,6 +154,21 @@
 
             Assert.That(delegateActivator.Activator == activator);
         }
+
+        /// <summary>
+        /// Missing arguments are rejected right away. The checks used to be Code Contracts calls,
+        /// which the compiler removes unless CONTRACTS_FULL is defined, so they never ran.
+        /// </summary>
+        [Test]
+        public void NullArguments_ThrowArgumentNullException()
+        {
+            Assert.That(() => new FluentTemplateServiceConfiguration(null),
+                Throws.TypeOf<ArgumentNullException>().With.Property("ParamName").EqualTo("config"));
+            Assert.That(() => new FluentTemplateServiceConfiguration(c => c.ActivateUsing((Func<InstanceContext, ITemplate>)null)),
+                Throws.TypeOf<ArgumentNullException>().With.Property("ParamName").EqualTo("activator"));
+            Assert.That(() => new TypeLoader(null, new System.Reflection.Assembly[0]),
+                Throws.TypeOf<ArgumentNullException>().With.Property("ParamName").EqualTo("appDomain"));
+        }
         #endregion
     }
 }

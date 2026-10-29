@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\source\RazorEngine.Core\RazorEngine.Core.csproj" />
+    <ProjectReference Include="..\..\source\RazorEngine.Roslyn\RazorEngine.Roslyn.csproj" />
     <ProjectReference Include="..\Test.RazorEngine.Core\Test.RazorEngine.Core.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,6 @@
 ﻿namespace RazorEngine.Templating
 {
     using System;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Defines contextual information for a template instance.
@@ -16,8 +15,10 @@
         /// <param name="templateType">The template type.</param>
         internal InstanceContext(TypeLoader loader, Type templateType)
         {
-            Contract.Requires(loader != null);
-            Contract.Requires(templateType != null);
+            if (loader == null)
+                throw new ArgumentNullException("loader");
+            if (templateType == null)
+                throw new ArgumentNullException("templateType");
 
             Loader = loader;
             TemplateType = templateType;

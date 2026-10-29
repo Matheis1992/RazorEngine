@@ -18,8 +18,8 @@ class MyIReferenceResolver : IReferenceResolver {
         // TypeContext gives you some context for the compilation (which templates, which namespaces and types)
         
         // You must make sure to include all libraries that are required, including mscorlib!
-        // The Roslyn compiler (the default) only gets the references returned here.
-        // The CodeDom compiler adds the standard libraries itself, unless mscorlib is in this list (then it uses /nostdlib).
+        // The Roslyn compiler (RazorEngine.NetFramework.Roslyn) only gets the references returned here.
+        // The CodeDom compiler (the default) adds the standard libraries itself, unless mscorlib is in this list (then it uses /nostdlib).
         IEnumerable<string> loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
             .GetReferences(context, includeAssemblies)
             .Select(r => r.GetFile())

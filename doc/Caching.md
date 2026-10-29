@@ -1,6 +1,6 @@
 # Caching of compiled templates
 
-Compiling a template is the expensive part: Razor turns it into C#, Roslyn compiles it into an assembly and the assembly is loaded.
+Compiling a template is the expensive part: Razor turns it into C#, the compiler (CodeDom or Roslyn) compiles it into an assembly and the assembly is loaded.
 Running an already compiled template is cheap. So `RazorEngineService` caches compiled templates, and you choose how with an `ICachingProvider`.
 
 ## How the cache works
@@ -83,7 +83,7 @@ Each compile loads a new assembly, and a .NET Framework assembly can only be unl
 Invalidating a template removes it from the cache, but its old assembly stays in memory.
 So a process that recompiles changed templates again and again grows with every recompile.
 
-Measured with a small template (600 recompiles, each with a new version of the template):
+Measured with a small template compiled with Roslyn (600 recompiles, each with a new version of the template). CodeDom also loads one new assembly per compile, so it grows the same way:
 
 | | After 100 recompiles | After 600 recompiles |
 |---|---|---|
@@ -108,7 +108,7 @@ see "Temporary files" in the [README](https://github.com/Matheis1992/RazorEngine
 
 ## Not to be confused with the reference cache
 
-Since 4.2.0, the Roslyn compiler also caches the loaded assemblies templates are compiled *against*
+Since 4.2.0, the Roslyn compiler (since 5.0 in the package RazorEngine.NetFramework.Roslyn) also caches the loaded assemblies templates are compiled *against*
 (the .NET Framework and your application's assemblies), so it does not read them again for every template.
 References a custom `IReferenceResolver` gives as a file path are read on every compile.
 That cache is internal, needs no configuration and does not cache templates: a changed template is always compiled again

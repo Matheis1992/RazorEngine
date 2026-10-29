@@ -2,7 +2,6 @@
 {
     using RazorEngine.Common;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
 
@@ -46,19 +45,6 @@
         #region Methods
 
         /// <summary>
-        /// Add the given dictionary to the current DynamicViewBag
-        /// </summary>
-        /// <param name="valueDictionary"></param>
-        [Obsolete("Use the generic AddDictionary overload instead")]
-        public void AddDictionaryValues(System.Collections.IDictionary valueDictionary)
-        {
-            foreach (DictionaryEntry item in valueDictionary)
-            {
-                _dict.Add(item.Key.ToString(), item.Value);
-            }
-        }
-
-        /// <summary>
         /// Adds the given dictionary to the current DynamicViewBag instance.
         /// </summary>
         /// <param name="dictionary"></param>
@@ -67,38 +53,6 @@
             foreach (var item in dictionary)
             {
                 _dict.Add(item.Key, item.Value);
-            }
-        }
-
-        /// <summary>
-        /// Add the given dictionary to the current DynamicViewBag
-        /// </summary>
-        /// <param name="valueDictionary"></param>
-        [Obsolete("Use the generic AddDictionary overload instead")]
-        public void AddDictionaryValuesEx(IDictionary<string, object> valueDictionary)
-        {
-            AddDictionary(valueDictionary);
-        }
-
-        /// <summary>
-        /// Adds the given list by evaluating the given property name.
-        /// </summary>
-        /// <param name="valueList"></param>
-        /// <param name="keyPropertyName"></param>
-        [Obsolete("Use the generic AddDictionary or AddValue overload instead")]
-        public void AddListValues(IList valueList, string keyPropertyName)
-        {
-            foreach (var item in valueList)
-            {
-                var t = item.GetType();
-                var prop = t.GetProperty(keyPropertyName);
-                if (prop == null)
-                {
-                    throw new InvalidOperationException(
-                        string.Format("Property {0} was not found in {1}", keyPropertyName, t));
-                }
-                var indx = prop.GetValue(item, null);
-                _dict.Add(indx.ToString(), item);
             }
         }
 
