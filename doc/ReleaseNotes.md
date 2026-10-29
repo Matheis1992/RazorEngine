@@ -1,4 +1,6 @@
-﻿### 5.0.0
+﻿### 5.0.0-rc.1
+
+Release candidate of 5.0.0: install it with prereleases enabled (`Install-Package RazorEngine.NetFramework -Prerelease`) and report problems in the [issues](https://github.com/Matheis1992/RazorEngine/issues) before the final 5.0.0.
 
 5.0.0 splits RazorEngine into two packages ([#22](https://github.com/Matheis1992/RazorEngine/issues/22)): the core package no longer depends on Roslyn, and Roslyn becomes opt-in. Read [Upgrading to 5.0](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Upgrading.md) before updating.
 
