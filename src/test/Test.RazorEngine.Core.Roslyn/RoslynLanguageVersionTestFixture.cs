@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
 using RazorEngine.Compilation;
+using RazorEngine.Roslyn;
 using RazorEngine.Templating;
 using RazorEngine.Tests.TestTypes;
 
@@ -65,7 +66,7 @@ namespace Test.RazorEngine.Core.Roslyn
         /// A factory that pins the version in its constructor, as needed when the factory is named in a configuration file
         /// (compilerServiceFactoryType), where it is created with its parameterless constructor.
         /// </summary>
-        public class CSharp13CompilerServiceFactory : DefaultCompilerServiceFactory
+        public class CSharp13CompilerServiceFactory : RoslynCompilerServiceFactory
         {
             public CSharp13CompilerServiceFactory()
             {

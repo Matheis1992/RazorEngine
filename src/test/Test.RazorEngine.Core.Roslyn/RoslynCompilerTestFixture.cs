@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using RazorEngine.Compilation;
 using RazorEngine.Configuration;
+using RazorEngine.Roslyn;
 using RazorEngine.Templating;
 using RazorEngine.Tests.TestTypes;
 using RazorEngine.Text;
@@ -25,7 +26,7 @@ namespace Test.RazorEngine.Core.Roslyn
         {
             var defaultConfig = new Action<TemplateServiceConfiguration>((config) => {
                     config.Debug = true;
-                    config.CompilerServiceFactory = new DefaultCompilerServiceFactory();
+                    config.CompilerServiceFactory = new RoslynCompilerServiceFactory();
                 });
             if (withConfig == null)
             {
@@ -60,11 +61,11 @@ namespace Test.RazorEngine.Core.Roslyn
 
 
         /// <summary>
-        /// The obsolete RoslynCompilerServiceFactory still works when a configuration file names it
-        /// (compilerServiceFactoryType), where it is created from its type name. Loading it by name also avoids the obsolete warning.
+        /// RoslynCompilerServiceFactory works when a configuration file names it (compilerServiceFactoryType),
+        /// where it is created from its type name.
         /// </summary>
         [Test]
-        public void Roslyn_ObsoleteFactoryLoadedByTypeName_StillCompilesWithRoslyn()
+        public void Roslyn_FactoryLoadedByTypeName_CompilesWithRoslyn()
         {
             var factoryType = Type.GetType("RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework", throwOnError: true);
             string result = null;

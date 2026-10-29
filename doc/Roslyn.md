@@ -14,7 +14,15 @@ To compile templates with CodeDom (C# 5) as before version 4, set:
 config.CompilerServiceFactory = new RazorEngine.Compilation.CodeDomCompilerServiceFactory();
 ```
 
-`RazorEngine.Roslyn.RoslynCompilerServiceFactory` does the same as `DefaultCompilerServiceFactory`. It is obsolete since 4.3 and will be removed in 5.0; use `DefaultCompilerServiceFactory`.
+If your templates rely on Roslyn (modern C#, a pinned `LanguageVersion`), set it explicitly:
+
+```csharp
+config.CompilerServiceFactory = new RazorEngine.Roslyn.RoslynCompilerServiceFactory();
+```
+
+Today `RoslynCompilerServiceFactory` does the same as `DefaultCompilerServiceFactory`, but it will keep compiling with Roslyn
+if the default compiler changes in a future major version (planned for 5.0: CodeDom as default again, Roslyn in a separate package,
+see [#22](https://github.com/Matheis1992/RazorEngine/issues/22)).
 
 Templates are always C#: VB.NET templates (`.vbhtml`, `Language.VisualBasic`) are not supported since version 4.
 
@@ -50,8 +58,10 @@ A newer C# version can change the meaning of existing code without a compile err
 Since 4.2 you can pin the language version (`LanguageVersion` is in `Microsoft.CodeAnalysis.CSharp`):
 
 ```csharp
-config.CompilerServiceFactory = new DefaultCompilerServiceFactory { LanguageVersion = LanguageVersion.CSharp13 };
+config.CompilerServiceFactory = new RoslynCompilerServiceFactory { LanguageVersion = LanguageVersion.CSharp13 };
 ```
+
+(`LanguageVersion` is also available on `DefaultCompilerServiceFactory`; `RoslynCompilerServiceFactory` makes sure Roslyn is used.)
 
 A pinned version also rejects newer syntax, so pick the newest version whose behaviour your templates rely on.
 
@@ -59,7 +69,7 @@ If you configure RazorEngine in `app.config`/`web.config`, the factory is create
 that sets the version and name that type:
 
 ```csharp
-public class CSharp13CompilerServiceFactory : DefaultCompilerServiceFactory
+public class CSharp13CompilerServiceFactory : RoslynCompilerServiceFactory
 {
     public CSharp13CompilerServiceFactory()
     {
