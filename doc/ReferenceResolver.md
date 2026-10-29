@@ -5,7 +5,6 @@ Because you can use source code within the template itself you are free to use a
 However the compiler needs to be able to resolve everything and the default strategy is to reference all currently loaded assemblies.
 This can lead to problems when you want to use a library (in the template) which is not referenced in the 
 hosting code or not loaded by the runtime (because it is unused).
-It is also possible that you run into problems on Mono because mcs behaves differently.
 To be able to resolve such issues you can control this behaviour and set your own `IReferenceResolver` implementation.
 
 ```csharp
@@ -18,10 +17,9 @@ class MyIReferenceResolver : IReferenceResolver {
     public IEnumerable<CompilerReference> GetReferences(TypeContext context, IEnumerable<CompilerReference> includeAssemblies) {
         // TypeContext gives you some context for the compilation (which templates, which namespaces and types)
         
-        // You must make sure to include all libraries that are required!
-        // Mono compiler does add more standard references than csc! 
-        // If you want mono compatibility include ALL references here, including mscorlib!
-        // If you include mscorlib here the compiler is called with /nostdlib.
+        // You must make sure to include all libraries that are required, including mscorlib!
+        // The Roslyn compiler (the default) only gets the references returned here.
+        // The CodeDom compiler adds the standard libraries itself, unless mscorlib is in this list (then it uses /nostdlib).
         IEnumerable<string> loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
             .GetReferences(context, includeAssemblies)
             .Select(r => r.GetFile())
@@ -46,5 +44,4 @@ class MyIReferenceResolver : IReferenceResolver {
 By default the `UseCurrentAssembliesReferenceResolver` class is used, which will always returns all currently loaded assemblies, 
 which can be resolved to a file (so this excludes dynamic assemblies).
 
-> Instead of trying to make it work without /nostdlib it is useful to just manually return
-> all assemblies (including mscorlib.dll) to stay compatible with mono.
+> Always return all assemblies the templates need, including mscorlib.dll, so the resolver works with both compilers.

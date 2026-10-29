@@ -199,7 +199,8 @@ The documentation is in the [doc](https://github.com/Matheis1992/RazorEngine/tre
  * [Template basics](https://github.com/Matheis1992/RazorEngine/blob/master/doc/TemplateBasics.md): typed, anonymous and dynamic models, the supported syntax and how to extend it.
  * [Layout and partial templates](https://github.com/Matheis1992/RazorEngine/blob/master/doc/LayoutAndPartial.md)
  * [Encoding](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Encoding.md): HTML and raw encoding of values.
- * [Template manager and caching](https://github.com/Matheis1992/RazorEngine/blob/master/doc/TemplateManager.md): where templates come from and how compiled templates are cached.
+ * [Template manager](https://github.com/Matheis1992/RazorEngine/blob/master/doc/TemplateManager.md): where templates come from.
+ * [Caching](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Caching.md): how compiled templates are cached and invalidated, and what that means for memory.
  * [Reference resolver](https://github.com/Matheis1992/RazorEngine/blob/master/doc/ReferenceResolver.md): which assemblies templates can use.
  * [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md): the compiler, the C# language version and binding redirects.
  * [Isolation](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Isolation.md): unloading templates with `IsolatedRazorEngineService`.
