@@ -22,7 +22,7 @@ namespace TestRunnerHelper
         static void Main(string[] args)
         {
             var service = Engine.Razor;
-            // In this example I'm using the default configuration, but you should choose a different template manager: http://antaris.github.io/RazorEngine/TemplateManager.html
+            // In this example I'm using the default configuration, but you should choose a different template manager, see TemplateManager.md in the doc folder.
             service.AddTemplate("layout", "<h1>@RenderBody()</h1>");
             service.AddTemplate("template", @"@{Layout = ""layout"";}my template");
             service.Compile("template");
@@ -35,7 +35,7 @@ namespace TestRunnerHelper
 
 > The code will print `<h1>my template</h1>`. 
 
-but other managers resolve template differently, please read http://antaris.github.io/RazorEngine/TemplateManager.html for details!
+but other managers resolve template differently, please read [TemplateManager](TemplateManager.md) for details!
 As you can see, all you need to do in the layout template is call `@RenderBody()` on the place you want your child template to appear.
 
 ## Partial templates
@@ -70,7 +70,7 @@ namespace TestRunnerHelper
         static void Main(string[] args)
         {
             var service = Engine.Razor;
-            // In this example I'm using the default configuration, but you should choose a different template manager: http://antaris.github.io/RazorEngine/TemplateManager.html
+            // In this example I'm using the default configuration, but you should choose a different template manager, see TemplateManager.md in the doc folder.
             service.AddTemplate("part", @"my template");
             // If you leave the second and third parameters out the current model will be used.
             // If you leave the third we assume the template can be used for multiple types and use "dynamic".
@@ -89,4 +89,4 @@ namespace TestRunnerHelper
 ## General considerations
 
 As the above code showed a way to fully type all the templates you should consider adding `@inherits`
-directives to the templates as explained in https://antaris.github.io/RazorEngine/IntellisenseAndResharper.html
+directives to the templates as explained in [Intellisense and ReSharper](IntellisenseAndResharper.md)

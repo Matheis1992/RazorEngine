@@ -62,13 +62,8 @@ Your application needs binding redirects for them; SDK-style projects generate t
 If you create your own `AppDomain` for `IsolatedRazorEngineService`, give it your configuration file
 (`AppDomainSetup.ConfigurationFile`), otherwise the binding redirects do not apply there (see [Isolation](Isolation.md)).
 
-## Known Limitation/Bugs
+## Known limitations
 
-- Debugging symbols do not work currently (If you know how Roslyn works please send a pull request!).
-  If you need to step into templates with the debugger, use `CodeDomCompilerServiceFactory`.
-- Debug symbols cannot be created on mono/unix:
-
-         error: (0, 0) Unexpected error writing debug information -- 'The requested feature is not implemented.'
-
-- If you find more please open a issue!
-- Running Roslyn on mono could lead to sigsegv crashes (mono bug): https://travis-ci.org/Antaris/RazorEngine/builds/45375847!
+- With Roslyn, `Debug = true` does not let you step into templates with the debugger.
+  If you need that, use `CodeDomCompilerServiceFactory`.
+- If you find more, please open an issue: https://github.com/Matheis1992/RazorEngine/issues
