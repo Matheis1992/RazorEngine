@@ -149,7 +149,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
             return ActLikeProxyOriginal.GetHashCode();
         }
 
-#if !SILVERLIGHT
 
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
@@ -181,7 +180,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
             info.AddValue("Original", (object)ActLikeProxyOriginal);
 
         }
-#endif
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

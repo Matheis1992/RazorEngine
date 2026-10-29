@@ -50,7 +50,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
             _interfaceTypes = types.ToList();
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the <see cref="ActLikeCaster"/> type.
         /// </summary>
@@ -61,6 +60,5 @@ namespace RazorEngine.Compilation.ImpromptuInterface
         {
         }
 
-#endif
     }
 }

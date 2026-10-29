@@ -58,7 +58,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic
             Target = target;
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the <see cref="ImpromptuForwarder"/> class.
         /// </summary>
@@ -85,7 +84,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic
             base.GetObjectData(info, context);
             info.AddValue("Target", Target);
         }
-#endif
 
         /// <summary>
         /// Returns the enumeration of all dynamic member names.

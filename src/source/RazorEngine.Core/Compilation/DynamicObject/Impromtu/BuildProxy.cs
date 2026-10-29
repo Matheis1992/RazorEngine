@@ -59,7 +59,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
         }
 
 
-#if !SILVERLIGHT
         internal class TempBuilder : IDisposable
         {
             private readonly string _name;
@@ -106,7 +105,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
             return new TempBuilder(name);
         }
 
-#endif
 
         /// <summary>
         /// Builds the type for the static proxy or returns from cache
@@ -1681,11 +1679,9 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Build
                     tName,
                     access);
 
-#if !SILVERLIGHT
             if (access == AssemblyBuilderAccess.RunAndSave || access == AssemblyBuilderAccess.Save)
                 mb = ab.DefineDynamicModule("MainModule", string.Format("{0}.dll", tName.Name));
             else
-#endif
                 mb = ab.DefineDynamicModule("MainModule");
         }
     }

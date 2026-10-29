@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.Remoting;
 using System.Security;
-using System.Threading.Tasks;
 
 namespace RazorEngine
 {

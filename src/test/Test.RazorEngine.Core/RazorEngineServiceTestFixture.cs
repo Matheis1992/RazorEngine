@@ -12,7 +12,6 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using Test.RazorEngine.TestTypes.BaseTypes;
 

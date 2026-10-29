@@ -5,7 +5,6 @@
     using Compilation;
     using Configuration;
     using NUnit.Framework;
-    using System.IO;
     using Templating;
     using TestTypes;
     using TestTypes.Activation;

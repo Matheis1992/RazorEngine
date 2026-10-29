@@ -1,11 +1,15 @@
 ﻿namespace RazorEngine.Compilation
 {
     using Configuration;
+    using System;
     using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Manages creation of <see cref="ICompilerService"/> instances.
+    /// RazorEngine does not use this class: templates are compiled with the
+    /// <see cref="RazorEngine.Configuration.ITemplateServiceConfiguration.CompilerServiceFactory"/> of the configuration.
     /// </summary>
+    [Obsolete("RazorEngine does not use CompilerServiceBuilder; setting its factory has no effect. Set CompilerServiceFactory on the TemplateServiceConfiguration instead. CompilerServiceBuilder will be removed in 5.0.")]
     public static class CompilerServiceBuilder
     {
         #region Fields

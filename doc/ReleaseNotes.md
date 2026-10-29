@@ -1,4 +1,17 @@
-﻿### 4.2.0
+﻿### 4.3.0
+
+No breaking changes; package validation against 4.2.0 checks that in CI. Code that uses one of the newly obsolete types gets a compiler warning (CS0618), which fails the build if warnings are treated as errors.
+
+ * (OBSOLETE) Public types without a real use are marked `[Obsolete]` and will be removed in 5.0:
+   - `CompilerServiceBuilder`: RazorEngine never used it, so setting its factory had no effect. Set `CompilerServiceFactory` on the `TemplateServiceConfiguration`.
+   - `HtmlTemplateBase<T>`: adds nothing to `TemplateBase<T>`; use `TemplateBase<T>`.
+ * (DOCS) Use `RoslynCompilerServiceFactory` if your templates rely on Roslyn (modern C#, a pinned `LanguageVersion`). It does the same as `DefaultCompilerServiceFactory` today, but 5.0 is planned to compile with CodeDom by default again and move Roslyn into a separate package ([#22](https://github.com/Matheis1992/RazorEngine/issues/22)); `RoslynCompilerServiceFactory` will keep selecting Roslyn. The examples in [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md) use it.
+ * Implementation details that are public by accident are hidden from IntelliSense (`[EditorBrowsable(Never)]`): `IsolatedRazorEngineService.SanboxHelper` (despite its name no sandbox), `CrossAppDomainCleanUp.CleanupHelper` and `CleanupHelper.SubscribeHelper`. They become internal in 5.0.
+ * (BUILD) Removed dead code that was never compiled or never ran: code disabled with `#if DISABLED` (about 400 lines of the embedded Impromptu code, and the unused `IRazorEngineCore` interface), a regular expression in the Impromptu code that only that code used, the never-compiled Silverlight variants (`#if SILVERLIGHT5`), a commented-out method, and the Mono code paths in RazorEngine's own code (the fork targets .NET Framework 4.8 on Windows; the Mono checks inside the embedded Impromptu code stay as third-party code).
+ * (BUILD) Removed the remaining unnecessary `using` directives (145).
+ * (BUILD) Package validation baseline moved to 4.2.0.
+
+### 4.2.0
 
  * (NEW) The C# language version of templates can be pinned with `DefaultCompilerServiceFactory.LanguageVersion` (also on `RoslynCompilerServiceFactory`, and `CSharpRoslynCompilerService.LanguageVersion`). The default stays the newest version the bundled Roslyn supports (C# 14). Pin an older version when a newer C# version changes the meaning of existing templates, see the `field` entry under 4.1.0:
 

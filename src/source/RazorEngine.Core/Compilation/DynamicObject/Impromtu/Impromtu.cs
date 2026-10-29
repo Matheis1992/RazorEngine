@@ -14,7 +14,6 @@
 //    limitations under the License.
 
 using RazorEngine.Compilation.ImpromptuInterface.Build;
-using RazorEngine.Compilation.ImpromptuInterface.Internal;
 using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
 using RazorEngine.Compilation.ImpromptuInterface.Optimization;
 using System.Collections.Generic;
@@ -22,7 +21,6 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 namespace RazorEngine.Compilation.ImpromptuInterface
 {
     using System;
@@ -119,28 +117,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
             return InvokeHelper.CreateCallSite<T>(binder.GetType(), InvokeHelper.Unknown, () => binder, name, context, argNames, staticContext,
                                                   isEvent);
         }
-
-#if DISABLED
-        public static dynamic DynamicLinq(object enumerable)
-        {
-            if (!enumerable.GetType().GetInterfaces().Where(it => it.IsGenericType)
-                .Any(it => it.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
-            {
-                var tEnum = enumerable as System.Collections.IEnumerable;
-                if (tEnum != null)
-                {
-                    enumerable = tEnum.Cast<object>();
-                }
-            }
-
-            return new LinqInstanceProxy(enumerable);
-        }
-
-        public static ILinq<T> Linq<T>(IEnumerable<T> enumerable)
-        {
-            return new LinqInstanceProxy(enumerable).ActLike<ILinq<T>>();
-        }
-#endif
 
         /// <summary>
         /// Dynamically Invokes a member method using the DLR
@@ -442,92 +418,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
             CallSite tCallSite = null;
             return InvokeHelper.InvokeSetCallSite(target, name, value, tContext, tStaticContext, ref tCallSite);
         }
-#if DISABLED
-        /// <summary>
-        /// Invokes the set on the end of a property chain.
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="propertyChain">The property chain.</param>
-        /// <param name="value">The value.</param>
-        public static object InvokeSetChain(object target, string propertyChain, object value)
-        {
-            var tProperties = _chainRegex.FluentMatches(propertyChain).ToList();
-            var tGetProperties = tProperties.Take(tProperties.Count - 1);
-
-
-            var tTarget = target;
-            foreach (var tProperty in tGetProperties)
-            {
-                var tGetter = tProperty.Getter;
-                var tIntIndexer = tProperty.IntIndexer;
-                var tStringIndexer = tProperty.StringIndexer;
-
-                if (tGetter != null)
-                    tTarget = InvokeGet(tTarget, tGetter);
-                else if (tIntIndexer != null)
-                    tTarget = InvokeGetIndex(tTarget, Impromptu.CoerceConvert(tIntIndexer, typeof(int)));
-                else if (tStringIndexer != null)
-                    tTarget = InvokeGetIndex(tTarget, tStringIndexer);
-                else
-                {
-                    throw new Exception(string.Format("Could Not Parse :'{0}'", propertyChain));
-                }
-            }
-
-            var tSetProperty = tProperties.Last();
-
-            var tSetGetter = tSetProperty.Getter;
-            var tSetIntIndexer = tSetProperty.IntIndexer;
-            var tSetStringIndexer = tSetProperty.StringIndexer;
-
-            if (tSetGetter != null)
-                return InvokeSet(tTarget, tSetGetter, value);
-            if (tSetIntIndexer != null)
-                return InvokeSetIndex(tTarget, Impromptu.CoerceConvert(tSetIntIndexer, typeof(int)), value);
-            if (tSetStringIndexer != null)
-                return InvokeSetIndex(tTarget, tSetStringIndexer, value);
-
-            throw new Exception(string.Format("Could Not Parse :'{0}'", propertyChain));
-        }
-
-
-
-
-
-
-        private static readonly dynamic _invokeSetAll = new InvokeSetters();
-        /// <summary>
-        /// Call Like method invokes set on target and a list of property/value. Invoke with dictionary, anonymous type or named arguments.
-        /// </summary>
-        /// <value>The invoke set all.</value>
-        public static dynamic InvokeSetAll
-        {
-            get { return _invokeSetAll; }
-        }
-
-        /// <summary>
-        /// Wraps a target to partial apply a method (or target if you can invoke target directly eg delegate).
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="totalArgCount">The total arg count.</param>
-        /// <returns></returns>
-        public static dynamic Curry(object target, int? totalArgCount = null)
-        {
-            if (target is Delegate && !totalArgCount.HasValue)
-                return Curry((Delegate)target);
-            return new Curry(target, totalArgCount);
-        }
-
-        /// <summary>
-        /// Wraps a delegate to partially apply it.
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <returns></returns>
-        public static dynamic Curry(Delegate target)
-        {
-            return new Curry(target, target.Method.GetParameters().Length);
-        }
-#endif
 
         /// <summary>
         /// Dynamically Invokes a get member using the DLR.
@@ -557,44 +447,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
             CallSite tSite = null;
             return InvokeHelper.InvokeGetCallSite(target, name, tContext, tStaticContext, ref tSite);
         }
-#if SILVERLIGHT
-  private static readonly Regex _chainRegex
-           = new Regex(@"((\.?(?<Getter>\w+))|(\[(?<IntIndexer>\d+)\])|(\['(?<StringIndexer>\w+)'\]))");
-#else
-        private static readonly Regex _chainRegex
-                 = new Regex(@"((\.?(?<Getter>\w+))|(\[(?<IntIndexer>\d+)\])|(\['(?<StringIndexer>\w+)'\]))", RegexOptions.Compiled);
-#endif
-#if DISABLED
-        /// <summary>
-        /// Invokes the getter property chain.
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="propertyChain">The property chain.</param>
-        /// <returns></returns>
-        public static dynamic InvokeGetChain(object target, string propertyChain)
-        {
-            var tProperties = _chainRegex.FluentMatches(propertyChain);
-            var tTarget = target;
-            foreach (var tProperty in tProperties)
-            {
-                var tGetter = tProperty.Getter;
-                var tIntIndexer = tProperty.IntIndexer;
-                var tStringIndexer = tProperty.StringIndexer;
-
-                if (tGetter != null)
-                    tTarget = InvokeGet(tTarget, tGetter);
-                else if (tIntIndexer != null)
-                    tTarget = InvokeGetIndex(tTarget, Impromptu.CoerceConvert(tIntIndexer, typeof(int)));
-                else if (tStringIndexer != null)
-                    tTarget = InvokeGetIndex(tTarget, tStringIndexer);
-                else
-                {
-                    throw new Exception(string.Format("Could Not Parse :'{0}'", propertyChain));
-                }
-            }
-            return tTarget;
-        }
-#endif
 
         /// <summary>
         /// Determines whether the specified name on target is event. This allows you to know whether to InvokeMemberAction
@@ -756,121 +608,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
             return tBaseDelegate;
 
         }
-
-#if DISABLED
-        public static dynamic CoerceConvert(object target, Type type)
-        {
-            if (target != null && !type.IsInstanceOfType(target) && DBNull.Value != target)
-            {
-
-                var delegateConversion = CoerceToDelegate(target, type);
-
-                if (delegateConversion != null)
-                    return delegateConversion;
-
-
-                if (type.IsInterface)
-                {
-                    if (target is IDictionary<string, object> && !(target is ImpromptuDictionaryBase))
-                    {
-                        target = new ImpromptuDictionary((IDictionary<string, object>)target);
-                    }
-                    else
-                    {
-                        target = new ImpromptuGet(target);
-                    }
-
-
-                    target = Impromptu.DynamicActLike(target, type);
-                }
-                else
-                {
-
-                    try
-                    {
-                        object tResult;
-
-                        tResult = Impromptu.InvokeConvert(target, type, @explicit: true);
-
-                        target = tResult;
-                    }
-                    catch (RuntimeBinderException)
-                    {
-                        Type tReducedType = type;
-                        if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
-                        {
-                            tReducedType = type.GetGenericArguments().First();
-                        }
-
-
-                        if (target is IConvertible && typeof(IConvertible).IsAssignableFrom(tReducedType) && !typeof(Enum).IsAssignableFrom(tReducedType))
-                        {
-
-                            target = Convert.ChangeType(target, tReducedType, Thread.CurrentThread.CurrentCulture);
-
-                        }
-                        else
-                        {  //finally check type converter since it's the slowest.
-
-#if !SILVERLIGHT
-                            var tConverter = TypeDescriptor.GetConverter(tReducedType);
-#else
-                                    
-                                    TypeConverter tConverter = null;
-                                    var tAttributes = tReducedType.GetCustomAttributes(typeof(TypeConverterAttribute), false);
-                                    var tAttribute  =tAttributes.OfType<TypeConverterAttribute>().FirstOrDefault();
-                                    if(tAttribute !=null)
-                                    {
-                                        tConverter =
-                                            Impromptu.InvokeConstructor(Type.GetType(tAttribute.ConverterTypeName));
-                                    }
-
-                                  
-#endif
-                            if (tConverter != null && tConverter.CanConvertFrom(target.GetType()))
-                            {
-                                target = tConverter.ConvertFrom(target);
-                            }
-
-#if SILVERLIGHT                                   
-                                    else if (target is string)
-                                    {
-
-                                        var tDC = new SilverConvertertDC(target as String);
-                                        var tFE = new SilverConverterFE
-                                        {
-                                            DataContext = tDC
-                                        };
-
-
-                                        var tProp = SilverConverterFE.GetProperty(tReducedType);
-
-                                        tFE.SetBinding(tProp, new System.Windows.Data.Binding("StringValue"));
-
-                                        var tResult = tFE.GetValue(tProp);
-
-                                        if(tResult != null)
-                                        {
-                                            target = tResult;
-                                        }
-                                    }
-
-#endif
-                        }
-                    }
-                }
-            }
-            else if (((target == null) || target == DBNull.Value) && type.IsValueType)
-            {
-                target = Impromptu.InvokeConstructor(type);
-            }
-            else if (!type.IsInstanceOfType(target) && DBNull.Value == target)
-            {
-                return null;
-            }
-            return target;
-        }
-#endif
 
         /// <summary>
         /// (Obsolete)Invokes the constructor. misspelling
@@ -1199,18 +936,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
         {
             return originalDynamic.Select(it => it.WithContext(caller).ActLike<TInterface>(otherInterfaces));
         }
-
-#if SILVERLIGHT5
-
-        /// <summary>
-        /// Gets the custom Type.
-        /// </summary>
-        /// <returns></returns>
-        public static Type GetDynamicCustomType(this object target)
-        {
-            return new ImpromptuRuntimeType(target.GetType(), target);
-        }
-#endif
 
     }
 

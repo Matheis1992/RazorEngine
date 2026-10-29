@@ -3,12 +3,8 @@
     using Compilation;
     using Configuration;
     using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
     using System.Runtime.Remoting;
     using System.Security;
-    using Text;
     
 
     /// <summary>
@@ -98,9 +94,11 @@
         }
 
         /// <summary>
-        /// A simple sandbox helper to create the <see cref="IRazorEngineService"/>
-        /// in the new <see cref="AppDomain"/>.
+        /// A helper to create the <see cref="IRazorEngineService"/> in the new <see cref="AppDomain"/>.
+        /// This is an implementation detail of <see cref="IsolatedRazorEngineService"/>; do not use it directly.
+        /// Despite its name it is no sandbox: the <see cref="AppDomain"/> must be fully trusted.
         /// </summary>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public class SanboxHelper : CrossAppDomainObject
         {
             /// <summary>

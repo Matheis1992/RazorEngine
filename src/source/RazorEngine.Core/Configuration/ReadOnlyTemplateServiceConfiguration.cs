@@ -4,8 +4,6 @@ using RazorEngine.Templating;
 using RazorEngine.Text;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RazorEngine.Configuration
 {

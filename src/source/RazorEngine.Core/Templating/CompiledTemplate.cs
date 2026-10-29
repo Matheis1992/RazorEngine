@@ -1,8 +1,6 @@
 ﻿using RazorEngine.Compilation;
 using System;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace RazorEngine.Templating
 {

@@ -83,10 +83,20 @@ Each compile loads a new assembly, and a .NET Framework assembly can only be unl
 Invalidating a template removes it from the cache, but its old assembly stays in memory.
 So a process that recompiles changed templates again and again grows with every recompile.
 
-That is fine when templates change rarely. If they change often:
+Measured with a small template (600 recompiles, each with a new version of the template):
+
+| | After 100 recompiles | After 600 recompiles |
+|---|---|---|
+| `RazorEngineService` in your `AppDomain` | +12 MB | +35 MB, and still growing by about 45 KB per recompile |
+| `IsolatedRazorEngineService`, recreated every 100 recompiles | +24 MB | +29 MB, stays between +24 and +33 MB |
+
+The isolated variant starts higher, because every new `AppDomain` loads its own Roslyn, but it stays in a narrow range (between +24 and +33 MB over all six measurements), because the template assemblies are unloaded with their `AppDomain`.
+
+That is fine when templates change rarely: 1,000 recompiles cost about 50 MB. If they change often:
 
 * Run the templates in an `IsolatedRazorEngineService` and create a new one from time to time.
   Disposing it unloads its `AppDomain` with all template assemblies (see [Isolation](Isolation.md)).
+  Models then cross the `AppDomain` boundary, so they must be `[Serializable]` (or be wrapped, see Isolation).
 * Or recycle the application (for example the IIS application pool) regularly.
 
 ## Temporary files

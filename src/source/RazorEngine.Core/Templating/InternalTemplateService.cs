@@ -2,8 +2,6 @@
 using RazorEngine.Text;
 using System;
 using System.Diagnostics.Contracts;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RazorEngine.Templating
 {
