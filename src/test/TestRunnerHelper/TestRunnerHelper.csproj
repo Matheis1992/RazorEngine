@@ -11,8 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\source\RazorEngine.Core\RazorEngine.Core.csproj" />
-    <ProjectReference Include="..\..\source\RazorEngine.Hosts.Console\RazorEngine.Hosts.Console.csproj" />
-    <ProjectReference Include="..\..\source\RazorEngine.Mvc\RazorEngine.Mvc.csproj" />
   </ItemGroup>
 
 </Project>

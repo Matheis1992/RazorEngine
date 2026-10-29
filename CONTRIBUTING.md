@@ -12,9 +12,7 @@ To build and run the tests you need the .NET 10 SDK (or Visual Studio 2026), see
 ## Contributing Documentation
 
 You can help improving the documentation by editing the files in the `/doc` folder.
-The documentation is read directly on GitHub; there is currently no generated documentation website.
-(`doc/templates` and `doc/content` belong to the old FSharp.Formatting doc site and are kept for a possible new one, but nothing uses them at the moment.)
-You can even edit a page directly on github by clicking the edit button ([for example this page](https://github.com/Matheis1992/RazorEngine/blob/develop/CONTRIBUTING.md)).
+The documentation is read directly on GitHub; there is currently no generated documentation website.You can even edit a page directly on github by clicking the edit button ([for example this page](https://github.com/Matheis1992/RazorEngine/blob/develop/CONTRIBUTING.md)).
 See also https://help.github.com/articles/editing-files-in-your-repository/ 
 (don't forget to send a pull request back after forking and changing something).
 
