@@ -80,12 +80,8 @@
             /// <returns></returns>
             public ITemplateServiceConfiguration CreateConfiguration()
             {
-                // We need to use the DefaultCompilerServiceFactory because we
-                // get conflicting TypeLoadExceptions in RazorEngineSourceReferenceResolver
-                // that cannot be resolved.
-                // ie) When not used inside the IsolatedRazorEngineService, we
-                // need [SecuritySafeCritical] for the methods. However, inside
-                // the Isolated service, it requires everything to be [SecurityCritical].
+                // The default compiler (CodeDom). To compile with Roslyn in the new AppDomain,
+                // pass an IConfigCreator that sets RoslynCompilerServiceFactory from RazorEngine.NetFramework.Roslyn.
                 return new TemplateServiceConfiguration()
                 {
                     CompilerServiceFactory = new DefaultCompilerServiceFactory()

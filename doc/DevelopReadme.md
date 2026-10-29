@@ -53,7 +53,9 @@ Z version changes are bug-fixes and are highly backwards compatible.
 
 ### High level documentation ordered by project.
 
-- `RazorEngine.Core`: The Core of the RazorEngine framework, basically all you need to get started (including Roslyn support). It is the only shipped project (package `RazorEngine.NetFramework`).
+- `RazorEngine.Core`: The Core of the RazorEngine framework, basically all you need to get started. Compiles templates with CodeDom and depends only on Microsoft.AspNet.Razor (package `RazorEngine.NetFramework`).
+
+- `RazorEngine.Roslyn`: The Roslyn compiler service (`RoslynCompilerServiceFactory`), for modern C# in templates (package `RazorEngine.NetFramework.Roslyn`). Both packages share version and package settings in `src/source/Directory.Build.props` and are released together.
 
 - `Test.RazorEngine.Core`, `Test.RazorEngine.Core.Roslyn`: The unit tests.
 

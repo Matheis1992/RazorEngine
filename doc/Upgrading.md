@@ -1,6 +1,29 @@
 ﻿# Upgrading RazorEngine.
 
 
+## Upgrading to 5.0.
+
+5.0 moves Roslyn into its own package and compiles templates with CodeDom by default again, as before 4.1.
+The template syntax is unchanged. Decide which compiler your templates need:
+
+ - **Keep Roslyn** (templates use modern C# such as `$"..."`, `?.`, tuples or switch expressions, or you pinned `LanguageVersion`):
+   1. Install `RazorEngine.NetFramework.Roslyn` (same version as `RazorEngine.NetFramework`).
+   2. Set `config.CompilerServiceFactory = new RazorEngine.Roslyn.RoslynCompilerServiceFactory();`, or in `app.config`/`web.config`
+      `compilerServiceFactoryType="RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework.Roslyn"`.
+      If you already used `RoslynCompilerServiceFactory` (recommended since 4.3), only the assembly name in the configuration file changes.
+   3. `LanguageVersion` is now only on `RoslynCompilerServiceFactory`: replace `new DefaultCompilerServiceFactory { LanguageVersion = ... }`
+      with `new RoslynCompilerServiceFactory { LanguageVersion = ... }`, and derive your own factories from `RoslynCompilerServiceFactory`.
+   4. Assembly-qualified names of `CSharpRoslynCompilerService` and `RoslynCompilerServiceBase` change to `, RazorEngine.NetFramework.Roslyn`;
+      the namespaces stay.
+ - **Use CodeDom** (the new default): nothing to do, but templates are compiled as C# 5 again.
+   Templates with C# 6 or newer syntax fail to compile, and code that relied on `field` as the C# 14 backing field changes meaning back.
+   To get modern C# without Roslyn in your process, use another `CodeDomProvider`, see [Roslyn](Roslyn.md#modern-c-with-codedom).
+ - The types obsolete since 4.3 are removed: replace `HtmlTemplateBase<T>` with `TemplateBase<T>`, and set
+   `CompilerServiceFactory` on the `TemplateServiceConfiguration` instead of using `CompilerServiceBuilder`.
+ - Without the Roslyn package, the binding redirects for Roslyn's dependencies (System.Collections.Immutable, System.Reflection.Metadata,
+   System.Memory, ...) are no longer needed. NuGet does not remove packages.config entries or hand-written redirects; remove them if nothing else needs them.
+
+
 ## Upgrading to 4.1.
 
 4.1 removes old APIs and changes the default compiler. The template syntax is unchanged.
@@ -176,4 +199,4 @@ If you need support on the mono platform you should provide a `IReferenceResolve
 
 ### Roslyn support (beta)
 
-See the Roslyn support page (on the right).
+See [Roslyn](Roslyn.md).

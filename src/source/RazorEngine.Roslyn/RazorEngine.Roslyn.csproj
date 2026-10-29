@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Version, signing and package metadata shared with RazorEngine.Core are in ..\Directory.Build.props. -->
+  <PropertyGroup>
+    <RootNamespace>RazorEngine.Roslyn</RootNamespace>
+    <AssemblyName>RazorEngine.NetFramework.Roslyn</AssemblyName>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AssemblyTitle>RazorEngine.Roslyn</AssemblyTitle>
+    <Description>RazorEngine - Roslyn compiler service: compiles templates in-process with Roslyn (Microsoft.CodeAnalysis.CSharp), so they can use modern C#.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>RazorEngine.NetFramework.Roslyn</PackageId>
+    <PackageTags>C# razor template engine roslyn</PackageTags>
+    <!-- First release of this package in 5.0.0: no baseline yet. Set it after the first release (see Releasing in CONTRIBUTING.md). -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RazorEngine.Core\RazorEngine.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <!-- Both packages are released together and this assembly builds on protected members of the core,
+       so depend on exactly the same core version ([5.0.0]) instead of NuGet's default open range (>= 5.0.0). -->
+  <Target Name="PinCoreDependencyVersion" AfterTargets="_GetProjectReferenceVersions">
+    <ItemGroup>
+      <_ProjectReferencesWithVersions>
+        <ProjectVersion>[%(ProjectVersion)]</ProjectVersion>
+      </_ProjectReferencesWithVersions>
+    </ItemGroup>
+  </Target>
+
+</Project>

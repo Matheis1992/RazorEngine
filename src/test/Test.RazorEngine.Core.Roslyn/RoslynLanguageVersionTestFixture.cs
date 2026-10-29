@@ -32,7 +32,7 @@ namespace Test.RazorEngine.Core.Roslyn
                 result = service.RunCompile(template, template.GetHashCode().ToString());
             }, config =>
             {
-                config.CompilerServiceFactory = new DefaultCompilerServiceFactory { LanguageVersion = languageVersion };
+                config.CompilerServiceFactory = new RoslynCompilerServiceFactory { LanguageVersion = languageVersion };
             });
             return result;
         }

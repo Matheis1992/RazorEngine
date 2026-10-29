@@ -103,7 +103,8 @@ namespace Test.RazorEngine
         {
             AppDomainSetup adSetup = new AppDomainSetup();
             adSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            // Use the same configuration file, so the binding redirects for Roslyn's dependencies apply in the new domain.
+            // Use the same configuration file, so the binding redirects apply in the new domain (as an application should do,
+            // for example for Roslyn's dependencies when it uses RazorEngine.NetFramework.Roslyn).
             adSetup.ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
             return AppDomain.CreateDomain("Isolated", null, adSetup);
         }

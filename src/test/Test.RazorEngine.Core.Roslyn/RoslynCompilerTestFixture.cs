@@ -67,7 +67,7 @@ namespace Test.RazorEngine.Core.Roslyn
         [Test]
         public void Roslyn_FactoryLoadedByTypeName_CompilesWithRoslyn()
         {
-            var factoryType = Type.GetType("RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework", throwOnError: true);
+            var factoryType = Type.GetType("RazorEngine.Roslyn.RoslynCompilerServiceFactory, RazorEngine.NetFramework.Roslyn", throwOnError: true);
             string result = null;
             RunTestHelper(service =>
             {

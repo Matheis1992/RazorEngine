@@ -1,10 +1,10 @@
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CSharp;
 using NUnit.Framework;
 using RazorEngine.Compilation.ReferenceResolver;
 using RazorEngine.Templating;
 using RazorEngine.Tests.TestTypes;
 using System;
+using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,17 +25,17 @@ namespace Test.RazorEngine
         /// </summary>
         private static Assembly LoadOriginalRazorEngineStandIn()
         {
-            var compilation = CSharpCompilation.Create(
-                "RazorEngine",
-                new[] { CSharpSyntaxTree.ParseText("namespace RazorEngine.Templating { public class TemplateBase<T> { } }") },
-                new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) },
-                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
             var directory = Path.Combine(Path.GetTempPath(), "RazorEngineStandIn_" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(directory);
             var file = Path.Combine(directory, "RazorEngine.dll");
-            var result = compilation.Emit(file);
-            Assert.That(result.Success, string.Join(Environment.NewLine, result.Diagnostics));
+
+            // CodeDom, so the core tests do not need Roslyn.
+            using (var provider = new CSharpCodeProvider())
+            {
+                var parameters = new CompilerParameters { GenerateExecutable = false, OutputAssembly = file };
+                var result = provider.CompileAssemblyFromSource(parameters, "namespace RazorEngine.Templating { public class TemplateBase<T> { } }");
+                Assert.That(result.Errors.HasErrors, Is.False, string.Join(Environment.NewLine, result.Errors.Cast<CompilerError>()));
+            }
             return Assembly.LoadFrom(file);
         }
 

@@ -4,6 +4,7 @@
     using Microsoft.CSharp.RuntimeBinder;
     using RazorEngine.Compilation.ReferenceResolver;
     using System;
+    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -27,6 +28,23 @@
             : base(
                 new CSharpRazorCodeLanguage(strictMode),
                 new CSharpCodeProvider(),
+                markupParserFactory) { }
+
+        /// <summary>
+        /// Initialises a new instance of <see cref="CSharpDirectCompilerService"/> that compiles with the given <see cref="CodeDomProvider"/>
+        /// instead of the C# 5 compiler of .NET Framework. For example, <c>CodeDomProvider.CreateProvider("cs")</c> uses the provider
+        /// configured in <c>&lt;system.codedom&gt;</c>, such as Microsoft.CodeDom.Providers.DotNetCompilerPlatform for modern C#.
+        /// The compiler service owns the provider and disposes it when the service is disposed.
+        /// </summary>
+        /// <param name="codeDomProvider">The C# <see cref="CodeDomProvider"/> to compile with.</param>
+        /// <param name="strictMode">Specifies whether the strict mode parsing is enabled.</param>
+        /// <param name="markupParserFactory">The markup parser factory to use.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SecurityCritical]
+        public CSharpDirectCompilerService(CodeDomProvider codeDomProvider, bool strictMode = true, Func<ParserBase> markupParserFactory = null)
+            : base(
+                new CSharpRazorCodeLanguage(strictMode),
+                codeDomProvider,
                 markupParserFactory) { }
         #endregion
 
