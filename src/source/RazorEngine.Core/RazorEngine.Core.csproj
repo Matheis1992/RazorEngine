@@ -40,7 +40,7 @@
     <!-- dotnet pack compares the public API with the last published version and fails on breaking changes.
          Set the baseline to the new version after each release (see Releasing in CONTRIBUTING.md). -->
     <EnablePackageValidation>true</EnablePackageValidation>
-    <PackageValidationBaselineVersion>4.2.0</PackageValidationBaselineVersion>
+    <PackageValidationBaselineVersion>4.3.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>
