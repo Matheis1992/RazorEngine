@@ -14,6 +14,10 @@
  * (BREAKING) **`DefaultCompilerServiceFactory.LanguageVersion` removed.** Use `RoslynCompilerServiceFactory.LanguageVersion`. `RoslynCompilerServiceFactory` no longer derives from `DefaultCompilerServiceFactory`; it implements `ICompilerServiceFactory` directly.
  * (BREAKING) Templates compiled with CodeDom are C# 5 again: code that relied on `field` as the C# 14 backing field changes meaning back (see the 4.1.0 notes).
  * (BREAKING) Removed the types that are obsolete since 4.3.0: `CompilerServiceBuilder` (RazorEngine never used it; set `CompilerServiceFactory` on the `TemplateServiceConfiguration`) and `HtmlTemplateBase<T>` (use `TemplateBase<T>`).
+ * (BREAKING) Removed the members that are obsolete since 3.x:
+   - `TemplateBase.RazorEngine` and `ITemplate.RazorEngine`: use `Razor`. Templates can now use the `RazorEngine` namespace without it being hidden by this property.
+   - `DynamicViewBag.AddDictionaryValues`, `AddDictionaryValuesEx` and `AddListValues`: use `AddDictionary` or `AddValue`.
+ * (BREAKING) As announced in 4.3.0, the implementation details `IsolatedRazorEngineService.SanboxHelper`, `CrossAppDomainCleanUp.CleanupHelper` and `CleanupHelper.SubscribeHelper` are internal. They were hidden from IntelliSense since 4.3.0 and only meant for RazorEngine's own AppDomain communication.
 
 #### New
 

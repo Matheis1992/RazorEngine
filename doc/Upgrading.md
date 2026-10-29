@@ -20,6 +20,9 @@ The template syntax is unchanged. Decide which compiler your templates need:
    To get modern C# without Roslyn in your process, use another `CodeDomProvider`, see [Roslyn](Roslyn.md#modern-c-with-codedom).
  - The types obsolete since 4.3 are removed: replace `HtmlTemplateBase<T>` with `TemplateBase<T>`, and set
    `CompilerServiceFactory` on the `TemplateServiceConfiguration` instead of using `CompilerServiceBuilder`.
+ - The members obsolete since 3.x are removed: use `Razor` instead of `RazorEngine` on templates (`TemplateBase`, `ITemplate`),
+   and `DynamicViewBag.AddDictionary` or `AddValue` instead of `AddDictionaryValues`, `AddDictionaryValuesEx` and `AddListValues`.
+   Code that still used them got a compiler warning (CS0618) since 3.5.
  - Without the Roslyn package, the binding redirects for Roslyn's dependencies (System.Collections.Immutable, System.Reflection.Metadata,
    System.Memory, ...) are no longer needed. NuGet does not remove packages.config entries or hand-written redirects; remove them if nothing else needs them.
 

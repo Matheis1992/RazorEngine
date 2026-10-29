@@ -4,8 +4,24 @@
      - The Roslyn compiler service moved to the package RazorEngine.NetFramework.Roslyn (same namespaces, issue #22).
      - DefaultCompilerServiceFactory compiles with CodeDom again; LanguageVersion is on RoslynCompilerServiceFactory (issue #22).
      - CompilerServiceBuilder and HtmlTemplateBase<T>, obsolete since 4.3.0, are removed.
+     - The cross-AppDomain helpers SanboxHelper and CleanupHelper (with SubscribeHelper) are internal, as announced in 4.3.0.
+     - The members obsolete since 3.x are removed: TemplateBase/ITemplate.RazorEngine and three DynamicViewBag methods.
      Remove these entries when the baseline moves to 5.0.0. -->
 <Suppressions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Suppression>
+    <DiagnosticId>CP0001</DiagnosticId>
+    <Target>T:RazorEngine.Compilation.CrossAppDomainCleanUp.CleanupHelper</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0001</DiagnosticId>
+    <Target>T:RazorEngine.Templating.IsolatedRazorEngineService.SanboxHelper</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
   <Suppression>
     <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:RazorEngine.Compilation.CompilerServiceBuilder</Target>
@@ -51,6 +67,48 @@
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:RazorEngine.Compilation.DefaultCompilerServiceFactory.set_LanguageVersion(Microsoft.CodeAnalysis.CSharp.LanguageVersion)</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:RazorEngine.Templating.DynamicViewBag.AddDictionaryValues(System.Collections.IDictionary)</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:RazorEngine.Templating.DynamicViewBag.AddDictionaryValuesEx(System.Collections.Generic.IDictionary{System.String,System.Object})</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:RazorEngine.Templating.DynamicViewBag.AddListValues(System.Collections.IList,System.String)</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:RazorEngine.Templating.ITemplate.set_RazorEngine(RazorEngine.Templating.IRazorEngineService)</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:RazorEngine.Templating.TemplateBase.get_RazorEngine</Target>
+    <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
+    <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:RazorEngine.Templating.TemplateBase.set_RazorEngine(RazorEngine.Templating.IRazorEngineService)</Target>
     <Left>lib/net48/RazorEngine.NetFramework.dll</Left>
     <Right>lib/net48/RazorEngine.NetFramework.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
