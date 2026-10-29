@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -33,8 +32,10 @@
         [SecuritySafeCritical]
         public TypeLoader(AppDomain appDomain, IEnumerable<Assembly> assemblies)
         {
-            Contract.Requires(appDomain != null);
-            Contract.Requires(assemblies != null);
+            if (appDomain == null)
+                throw new ArgumentNullException("appDomain");
+            if (assemblies == null)
+                throw new ArgumentNullException("assemblies");
 
             _appDomain = appDomain;
             _assemblies = assemblies;
@@ -53,7 +54,8 @@
         /// <returns>An instance of the type.</returns>
         public ITemplate CreateInstance(Type type)
         {
-            Contract.Requires(type != null);
+            if (type == null)
+                throw new ArgumentNullException("type");
 
             if (disposed)
                 throw new ObjectDisposedException("TypeLoader");

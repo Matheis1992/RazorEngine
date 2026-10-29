@@ -1,7 +1,6 @@
 ﻿namespace RazorEngine.Templating
 {
     using System;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Provides an <see cref="AppDomain"/> factory that supports delegated <see cref="AppDomain"/> creation.
@@ -19,7 +18,8 @@
         /// <param name="factory">The factory delegate.</param>
         public DelegateAppDomainFactory(Func<AppDomain> factory)
         {
-            Contract.Requires(factory != null);
+            if (factory == null)
+                throw new ArgumentNullException("factory");
 
             _factory = factory;
         }

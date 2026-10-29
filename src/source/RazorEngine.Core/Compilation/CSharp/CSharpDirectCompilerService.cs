@@ -6,7 +6,6 @@
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Security;
     using System.Web.Razor.Parser;
 
@@ -74,7 +73,6 @@
         /// <param name="templateType">The template type.</param>
         /// <param name="modelType">The model type.</param>
         /// <returns>The string type name (including namespace).</returns>
-        [Pure]
         public override string BuildTypeName(Type templateType, Type modelType)
         {
             if (templateType == null)

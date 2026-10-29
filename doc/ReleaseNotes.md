@@ -26,6 +26,8 @@
  * (PACKAGING) The core package depends only on Microsoft.AspNet.Razor 3.3.0, so applications without the Roslyn package need no binding redirects for Roslyn's System.* dependencies, and ASP.NET no longer loads Roslyn from `bin` at startup.
  * (BUILD) Both packages are built, tested and released together with the same version. Package validation of the core package against 4.3.0 lists the intended breaking changes in `CompatibilitySuppressions.xml`.
  * (BUILD) The core tests no longer use Roslyn, which also shows that the core works without it. The tests that compare CodeDom and Roslyn moved to the Roslyn tests.
+ * (FIX) Null arguments are rejected right away with an `ArgumentNullException`, for example in `FluentTemplateServiceConfiguration`, `ActivateUsing` and `TypeLoader`. The checks were Code Contracts calls (`Contract.Requires`), which the compiler removes unless `CONTRACTS_FULL` is defined, so they never ran and a `null` failed later with a less clear error.
+ * (BUILD) Removed leftovers of tools the build does not use: the FxCop suppressions (`SuppressMessage`, including `GlobalSuppressions.cs`) and the Code Contracts `[Pure]` attributes. They had no effect.
 
 ### 4.3.0
 

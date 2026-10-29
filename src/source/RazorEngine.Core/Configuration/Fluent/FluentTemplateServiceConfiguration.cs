@@ -4,7 +4,6 @@
     using RazorEngine.Compilation.ReferenceResolver;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using Templating;
     using Text;
 
@@ -24,7 +23,8 @@
         /// <param name="config">The delegate used to create the configuration.</param>
         public FluentTemplateServiceConfiguration(Action<IConfigurationBuilder> config)
         {
-            Contract.Requires(config != null);
+            if (config == null)
+                throw new ArgumentNullException("config");
 
             config(new FluentConfigurationBuilder(_innerConfig));
         }

@@ -2,7 +2,6 @@
 {
     using System;
     using System.CodeDom.Compiler;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -74,7 +73,6 @@
         /// </summary>
         /// <param name="context">The type context.</param>
         /// <returns>The compiler results.</returns>
-        [Pure]
         [SecurityCritical]
         private Tuple<CompilerResults, string> Compile(TypeContext context)
         {
@@ -155,7 +153,7 @@
             return GenerateSourceCode(CodeDomProvider, results);
         }
 
-        [Pure, SecurityCritical]
+        [SecurityCritical]
         private Tuple<Type, CompilationData> CompileTypeImpl(TypeContext context)
         {
             var result = Compile(context);
@@ -219,7 +217,7 @@
         /// </summary>
         /// <param name="context">The type context which defines the type to compile.</param>
         /// <returns>The compiled type.</returns>
-        [Pure, SecurityCritical]
+        [SecurityCritical]
         public override Tuple<Type, CompilationData> CompileType(TypeContext context)
         {
             if (context == null)
