@@ -1,7 +1,6 @@
 ﻿using RazorEngine.Compilation.ImpromptuInterface.Optimization;
 using System;
 using System.Dynamic;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic

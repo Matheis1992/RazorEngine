@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-namespace RazorEngine.Templating
+﻿namespace RazorEngine.Templating
 {
 #if DISABLED
     /// <summary>

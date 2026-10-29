@@ -15,8 +15,6 @@
 
 
 using System;
-using System.Linq;
-using System.Text;
 //using RazorEngine.Compilation.ImpromptuInterface.Internal.Support;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Build

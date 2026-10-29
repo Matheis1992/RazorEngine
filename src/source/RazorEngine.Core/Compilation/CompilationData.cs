@@ -2,7 +2,6 @@
 using System.IO;
 using System.Security;
 using System.Security.Permissions;
-using System.Threading.Tasks;
 
 namespace RazorEngine.Compilation
 {

@@ -2,7 +2,6 @@
 {
     using RazorEngine.Compilation.ReferenceResolver;
     using System;
-    using System.Reflection;
     using System.Security;
 
     /// <summary>

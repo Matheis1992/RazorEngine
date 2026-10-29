@@ -1,6 +1,5 @@
 ﻿namespace RazorEngine.Tests.TestTypes.Issues
 {
-    using Microsoft.CSharp.RuntimeBinder;
     using NUnit.Framework;
     using System.IO;
     using Templating;
