@@ -21,7 +21,6 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 namespace RazorEngine.Compilation.ImpromptuInterface
 {
     using System;
@@ -448,13 +447,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
             CallSite tSite = null;
             return InvokeHelper.InvokeGetCallSite(target, name, tContext, tStaticContext, ref tSite);
         }
-#if SILVERLIGHT
-  private static readonly Regex _chainRegex
-           = new Regex(@"((\.?(?<Getter>\w+))|(\[(?<IntIndexer>\d+)\])|(\['(?<StringIndexer>\w+)'\]))");
-#else
-        private static readonly Regex _chainRegex
-                 = new Regex(@"((\.?(?<Getter>\w+))|(\[(?<IntIndexer>\d+)\])|(\['(?<StringIndexer>\w+)'\]))", RegexOptions.Compiled);
-#endif
 
         /// <summary>
         /// Determines whether the specified name on target is event. This allows you to know whether to InvokeMemberAction

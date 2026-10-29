@@ -190,24 +190,6 @@
             return Tuple.Create(type, tmpDir);
         }
 
-        
-        [Pure, SecurityCritical]
-        private Tuple<Type, CompilationData> CompileType_Windows(TypeContext context)
-        {
-            // NOTE: The static constructor of WindowsImpersonationContext can fail, 
-            // that's why we need to do that in a seperate method
-            // -> Static constructor will not run
-            WindowsImpersonationContext wic = WindowsIdentity.Impersonate(IntPtr.Zero);
-            try
-            {
-                return CompileTypeImpl(context);
-            }
-            finally
-            {
-                wic.Undo();
-            }
-        }
-
         /// <summary>
         /// Compiles the type defined in the specified type context.
         /// </summary>
@@ -220,7 +202,17 @@
                 throw new ArgumentNullException("context");
 
             (new PermissionSet(PermissionState.Unrestricted)).Assert();
-            return CompileType_Windows(context);
+            // Compile as the process identity, not as an impersonated user of the calling thread
+            // (csc.exe runs with the process token). Undo restores the impersonation afterwards.
+            WindowsImpersonationContext wic = WindowsIdentity.Impersonate(IntPtr.Zero);
+            try
+            {
+                return CompileTypeImpl(context);
+            }
+            finally
+            {
+                wic.Undo();
+            }
         }
 
         /// <summary>

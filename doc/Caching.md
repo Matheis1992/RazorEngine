@@ -88,11 +88,11 @@ Measured with a small template (600 recompiles, each with a new version of the t
 | | After 100 recompiles | After 600 recompiles |
 |---|---|---|
 | `RazorEngineService` in your `AppDomain` | +12 MB | +35 MB, and still growing by about 45 KB per recompile |
-| `IsolatedRazorEngineService`, recreated every 100 recompiles | +24 MB | +29 MB, stays flat |
+| `IsolatedRazorEngineService`, recreated every 100 recompiles | +24 MB | +29 MB, stays between +24 and +33 MB |
 
-The isolated variant starts higher, because every new `AppDomain` loads its own Roslyn, but it does not grow.
+The isolated variant starts higher, because every new `AppDomain` loads its own Roslyn, but it stays in a narrow range (between +24 and +33 MB over all six measurements), because the template assemblies are unloaded with their `AppDomain`.
 
-That is fine when templates change rarely: 1,000 recompiles cost about 45 MB. If they change often:
+That is fine when templates change rarely: 1,000 recompiles cost about 50 MB. If they change often:
 
 * Run the templates in an `IsolatedRazorEngineService` and create a new one from time to time.
   Disposing it unloads its `AppDomain` with all template assemblies (see [Isolation](Isolation.md)).

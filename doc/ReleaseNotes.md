@@ -1,13 +1,13 @@
 ﻿### 4.3.0
 
-No breaking changes. Package validation against 4.2.0 checks that in CI.
+No breaking changes; package validation against 4.2.0 checks that in CI. Code that uses one of the newly obsolete types gets a compiler warning (CS0618), which fails the build if warnings are treated as errors.
 
  * (OBSOLETE) Public types without a real use are marked `[Obsolete]` and will be removed in 5.0:
    - `CompilerServiceBuilder`: RazorEngine never used it, so setting its factory had no effect. Set `CompilerServiceFactory` on the `TemplateServiceConfiguration`.
    - `HtmlTemplateBase<T>`: adds nothing to `TemplateBase<T>`; use `TemplateBase<T>`.
    - `RoslynCompilerServiceFactory`: the same as `DefaultCompilerServiceFactory` since Roslyn is the default; use `DefaultCompilerServiceFactory` (also in `compilerServiceFactoryType` in configuration files).
  * Implementation details that are public by accident are hidden from IntelliSense (`[EditorBrowsable(Never)]`): `IsolatedRazorEngineService.SanboxHelper` (despite its name no sandbox), `CrossAppDomainCleanUp.CleanupHelper` and `CleanupHelper.SubscribeHelper`. They become internal in 5.0.
- * (BUILD) Removed dead code that was never compiled or never ran: code disabled with `#if DISABLED` (about 300 lines of the embedded Impromptu code, and the unused `IRazorEngineCore` interface), a commented-out method, and the Mono code paths (the fork targets .NET Framework 4.8 on Windows).
+ * (BUILD) Removed dead code that was never compiled or never ran: code disabled with `#if DISABLED` (about 400 lines of the embedded Impromptu code, and the unused `IRazorEngineCore` interface), a regular expression in the Impromptu code that only that code used, a commented-out method, and the Mono code paths in RazorEngine's own code (the fork targets .NET Framework 4.8 on Windows; the Mono checks inside the embedded Impromptu code stay as third-party code).
  * (BUILD) Removed the remaining unnecessary `using` directives (145).
  * (BUILD) Package validation baseline moved to 4.2.0.
 
