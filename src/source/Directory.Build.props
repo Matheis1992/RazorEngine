@@ -5,7 +5,7 @@
   <!-- Shared by the shipped packages RazorEngine.NetFramework (RazorEngine.Core) and RazorEngine.NetFramework.Roslyn.
        Both are always released together with the same version. -->
   <PropertyGroup>
-    <Version>5.0.0</Version>
+    <Version>5.0.0-rc.1</Version>
     <!-- Increase the last number with every release (previews too), so installers see a newer file. -->
     <FileVersion>5.0.0.1</FileVersion>
     <Company>RazorEngine</Company>
