@@ -1,12 +1,6 @@
 ﻿using RazorEngine.Configuration;
 using RazorEngine.Text;
 using System;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Security;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RazorEngine.Templating
 {

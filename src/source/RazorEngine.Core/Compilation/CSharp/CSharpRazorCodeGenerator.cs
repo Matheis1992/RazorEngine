@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace RazorEngine.Compilation.CSharp
+﻿namespace RazorEngine.Compilation.CSharp
 {
     using System.Security;
     using System.Web.Razor;

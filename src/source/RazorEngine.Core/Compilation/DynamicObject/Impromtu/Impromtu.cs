@@ -14,7 +14,6 @@
 //    limitations under the License.
 
 using RazorEngine.Compilation.ImpromptuInterface.Build;
-using RazorEngine.Compilation.ImpromptuInterface.Internal;
 using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
 using RazorEngine.Compilation.ImpromptuInterface.Optimization;
 using System.Collections.Generic;

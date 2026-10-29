@@ -4,7 +4,6 @@ using RazorEngine.Compilation;
 using RazorEngine.Compilation.ReferenceResolver;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Security;
 using System.Web.Razor;
 using System.Web.Razor.Parser;

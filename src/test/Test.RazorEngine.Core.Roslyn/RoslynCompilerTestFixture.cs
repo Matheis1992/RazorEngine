@@ -8,7 +8,6 @@ using RazorEngine.Text;
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Test.RazorEngine.Core.Roslyn
 {

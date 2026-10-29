@@ -1,7 +1,5 @@
 namespace RazorEngine.Templating
 {
-    using System.IO;
-
     /// <summary>
     /// Provides a base implementation of an html template with a model.
     /// </summary>

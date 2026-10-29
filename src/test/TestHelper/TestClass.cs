@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TestHelper
+﻿namespace TestHelper
 {
     /// <summary>
     /// A helper library to test the case that a assembly is only referenced by the template.

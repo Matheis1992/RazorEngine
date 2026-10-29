@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using RazorEngine.Compilation;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Test.RazorEngine.TestTypes.BaseTypes;
 
 namespace Test.RazorEngine
