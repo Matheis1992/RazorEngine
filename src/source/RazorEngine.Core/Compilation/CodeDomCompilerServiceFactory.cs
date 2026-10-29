@@ -45,17 +45,25 @@ namespace RazorEngine.Compilation
             switch (language)
             {
                 case Language.CSharp:
-                    CSharpDirectCompilerService service;
-                    if (CodeDomProviderFactory == null)
+                    CodeDomProvider provider = null;
+                    if (CodeDomProviderFactory != null)
                     {
-                        service = new CSharpDirectCompilerService();
-                    }
-                    else
-                    {
-                        var provider = CodeDomProviderFactory();
+                        provider = CodeDomProviderFactory();
                         if (provider == null)
                             throw new InvalidOperationException("CodeDomProviderFactory returned null; it must return a new CodeDomProvider on every call.");
-                        service = new CSharpDirectCompilerService(provider);
+                    }
+
+                    DirectCompilerServiceBase service;
+                    try
+                    {
+                        service = CreateCSharpCompilerService(provider);
+                    }
+                    catch
+                    {
+                        // The service owns the provider, but there is no service.
+                        if (provider != null)
+                            provider.Dispose();
+                        throw;
                     }
                     service.CompilerOptions = CompilerOptions;
                     return service;
@@ -63,6 +71,24 @@ namespace RazorEngine.Compilation
                 default:
                     throw new ArgumentException("Unsupported language: " + language);
             }
+        }
+
+        /// <summary>
+        /// Creates the C# compiler service. Override it to use your own service, for example a subclass of
+        /// <see cref="CSharpDirectCompilerService"/> that overrides <see cref="DirectCompilerServiceBase.ConfigureCompilerParameters"/>.
+        /// <see cref="CompilerOptions"/> is set on the returned service afterwards.
+        /// </summary>
+        /// <param name="codeDomProvider">
+        /// The provider from <see cref="CodeDomProviderFactory"/>, or <c>null</c> for the C# 5 compiler of .NET Framework.
+        /// The returned service must own it and dispose it.
+        /// </param>
+        /// <returns>A new compiler service.</returns>
+        [SecurityCritical]
+        protected virtual DirectCompilerServiceBase CreateCSharpCompilerService(CodeDomProvider codeDomProvider)
+        {
+            return codeDomProvider == null
+                ? new CSharpDirectCompilerService()
+                : new CSharpDirectCompilerService(codeDomProvider);
         }
         #endregion
     }

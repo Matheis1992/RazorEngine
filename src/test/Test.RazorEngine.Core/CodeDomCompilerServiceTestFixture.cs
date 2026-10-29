@@ -180,5 +180,76 @@ namespace RazorEngine.Tests
             var factory = new CodeDomCompilerServiceFactory { CodeDomProviderFactory = () => null };
             Assert.Throws<InvalidOperationException>(() => factory.CreateCompilerService(Language.CSharp));
         }
+
+        /// <summary>
+        /// A compiler service that adjusts the compiler parameters and records the output assembly it saw.
+        /// </summary>
+        private sealed class HookCompilerService : Compilation.CSharp.CSharpDirectCompilerService
+        {
+            public static string SeenOutputAssembly;
+
+            public HookCompilerService(System.CodeDom.Compiler.CodeDomProvider provider) : base(provider) { }
+
+            protected override void ConfigureCompilerParameters(System.CodeDom.Compiler.CompilerParameters parameters)
+            {
+                SeenOutputAssembly = parameters.OutputAssembly;
+                parameters.CompilerOptions += " /define:FROMHOOK";
+            }
+        }
+
+        /// <summary>
+        /// A factory that creates <see cref="HookCompilerService"/>.
+        /// </summary>
+        private sealed class HookCompilerServiceFactory : CodeDomCompilerServiceFactory
+        {
+            protected override DirectCompilerServiceBase CreateCSharpCompilerService(System.CodeDom.Compiler.CodeDomProvider codeDomProvider)
+            {
+                return new HookCompilerService(codeDomProvider ?? new Microsoft.CSharp.CSharpCodeProvider());
+            }
+        }
+
+        /// <summary>
+        /// A factory derived from <see cref="CodeDomCompilerServiceFactory"/> can create its own service, whose
+        /// <see cref="DirectCompilerServiceBase.ConfigureCompilerParameters"/> runs after RazorEngine has set up the parameters
+        /// (including the output assembly), and <see cref="CodeDomCompilerServiceFactory.CompilerOptions"/> still applies.
+        /// </summary>
+        [Test]
+        public void CodeDom_FactoryCreatesOwnServiceWithParameterHook()
+        {
+            const string template = "@{\n#if FROMHOOK && MYSYMBOL\n    var symbol = \"both\";\n#else\n    var symbol = \"missing\";\n#endif\n}@symbol";
+
+            HookCompilerService.SeenOutputAssembly = null;
+            var config = new TemplateServiceConfiguration { CompilerServiceFactory = new HookCompilerServiceFactory { CompilerOptions = "/define:MYSYMBOL" } };
+            using (var service = RazorEngineService.Create(config))
+            {
+                Assert.That(service.RunCompile(template, "codedom-hook"), Is.EqualTo("both"));
+            }
+
+            Assert.That(HookCompilerService.SeenOutputAssembly, Does.EndWith(".dll"));
+        }
+
+        /// <summary>
+        /// A factory whose service creation fails.
+        /// </summary>
+        private sealed class FailingCompilerServiceFactory : CodeDomCompilerServiceFactory
+        {
+            protected override DirectCompilerServiceBase CreateCSharpCompilerService(System.CodeDom.Compiler.CodeDomProvider codeDomProvider)
+            {
+                throw new NotSupportedException("no service");
+            }
+        }
+
+        /// <summary>
+        /// The provider from <see cref="CodeDomCompilerServiceFactory.CodeDomProviderFactory"/> is disposed when no service owns it.
+        /// </summary>
+        [Test]
+        public void CodeDom_ProviderIsDisposedWhenServiceCreationFails()
+        {
+            CountingCSharpCodeProvider.Disposals = 0;
+            var factory = new FailingCompilerServiceFactory { CodeDomProviderFactory = () => new CountingCSharpCodeProvider() };
+
+            Assert.Throws<NotSupportedException>(() => factory.CreateCompilerService(Language.CSharp));
+            Assert.That(CountingCSharpCodeProvider.Disposals, Is.EqualTo(1));
+        }
     }
 }

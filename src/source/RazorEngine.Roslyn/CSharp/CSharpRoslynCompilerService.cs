@@ -60,6 +60,8 @@ namespace RazorEngine.Roslyn.CSharp
         [SecurityCritical]
         public override string InspectSource(GeneratorResults results, TypeContext context)
         {
+            if (_codeDomProvider == null)
+                throw new ObjectDisposedException(GetType().Name);
             return GenerateSourceCode(_codeDomProvider, results);
         }
 

@@ -60,7 +60,8 @@
 
         #region Methods
         /// <summary>
-        /// Called with the compiler parameters of every compile, after RazorEngine has set them up and before the compiler runs.
+        /// Called with the compiler parameters of every compile, after RazorEngine has set them up completely
+        /// (including the output assembly in the temporary directory) and right before the compiler runs.
         /// Override it to adjust the parameters, for example the <see cref="CompilerParameters.WarningLevel"/>.
         /// </summary>
         /// <param name="parameters">The compiler parameters.</param>
@@ -109,13 +110,13 @@
 
 
             @params.ReferencedAssemblies.AddRange(fileAssemblies);
-            ConfigureCompilerParameters(@params);
             var tempDir = @params.TempFiles.TempDir;
             var assemblyName = Path.Combine(tempDir,
                 String.Format("{0}.dll", GetAssemblyName(context)));
             @params.TempFiles.AddFile(assemblyName, true);
             @params.OutputAssembly = assemblyName;
-            
+            ConfigureCompilerParameters(@params);
+
             var results = _codeDomProvider.CompileAssemblyFromSource(@params, new [] { sourceCode });
             if (Debug)
             {

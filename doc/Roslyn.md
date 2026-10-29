@@ -111,7 +111,31 @@ in your `IConfigCreator.CreateConfiguration` (inside the new `AppDomain`): a lam
 
 `CodeDomProvider.CreateProvider("cs")` returns the C# provider configured in the `<system.codedom>` section of your configuration file.
 It does not apply the `compilerOptions` of that section, so set them in `CompilerOptions`.
-To adjust the `CompilerParameters` further, derive from `CSharpDirectCompilerService` and override `ConfigureCompilerParameters`.
+To adjust the `CompilerParameters` further, derive from `CSharpDirectCompilerService`, override `ConfigureCompilerParameters`,
+and create your service in a factory derived from `CodeDomCompilerServiceFactory`:
+
+```csharp
+public class MyCompilerService : CSharpDirectCompilerService
+{
+    public MyCompilerService(CodeDomProvider provider) : base(provider) { }
+
+    protected override void ConfigureCompilerParameters(CompilerParameters parameters)
+    {
+        parameters.WarningLevel = 0;
+    }
+}
+
+public class MyCompilerServiceFactory : CodeDomCompilerServiceFactory
+{
+    protected override DirectCompilerServiceBase CreateCSharpCompilerService(CodeDomProvider codeDomProvider)
+    {
+        // codeDomProvider is null unless CodeDomProviderFactory is set.
+        return new MyCompilerService(codeDomProvider ?? new Microsoft.CSharp.CSharpCodeProvider());
+    }
+}
+```
+
+`CodeDomProviderFactory` and `CompilerOptions` keep working with your factory.
 
 ## Known limitations
 

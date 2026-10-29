@@ -1,6 +1,5 @@
 ﻿namespace RazorEngine.Templating
 {
-    using Compilation;
     using Configuration;
     using System;
     using System.Runtime.Remoting;
@@ -80,12 +79,9 @@
             /// <returns></returns>
             public ITemplateServiceConfiguration CreateConfiguration()
             {
-                // The default compiler (CodeDom). To compile with Roslyn in the new AppDomain,
+                // The default configuration compiles with CodeDom. To compile with Roslyn in the new AppDomain,
                 // pass an IConfigCreator that sets RoslynCompilerServiceFactory from RazorEngine.NetFramework.Roslyn.
-                return new TemplateServiceConfiguration()
-                {
-                    CompilerServiceFactory = new DefaultCompilerServiceFactory()
-                };
+                return new TemplateServiceConfiguration();
             }
         }
 

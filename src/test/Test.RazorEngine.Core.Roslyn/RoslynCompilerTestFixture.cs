@@ -243,5 +243,16 @@ namespace Test.RazorEngine.Core.Roslyn
             data.DeleteAll();
             Assert.That(new DirectoryInfo(folder), Does.Not.Exist);
         }
+
+        /// <summary>
+        /// A disposed Roslyn compiler service reports that it is disposed, like the CodeDom service.
+        /// </summary>
+        [Test]
+        public void RoslynCompilerService_InspectSourceAfterDisposeThrows()
+        {
+            var service = new global::RazorEngine.Roslyn.CSharp.CSharpRoslynCompilerService();
+            service.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => service.InspectSource(null, null));
+        }
     }
 }
