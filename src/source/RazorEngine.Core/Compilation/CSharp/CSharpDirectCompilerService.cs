@@ -6,7 +6,6 @@
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Security;
     using System.Web.Razor.Parser;
@@ -22,7 +21,6 @@
         /// </summary>
         /// <param name="strictMode">Specifies whether the strict mode parsing is enabled.</param>
         /// <param name="markupParserFactory">The markup parser factory to use.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed"), SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed in base class: DirectCompilerServiceBase")]
         [SecurityCritical]
         public CSharpDirectCompilerService(bool strictMode = true, Func<ParserBase> markupParserFactory = null)
             : base(
@@ -39,7 +37,6 @@
         /// <param name="codeDomProvider">The C# <see cref="CodeDomProvider"/> to compile with.</param>
         /// <param name="strictMode">Specifies whether the strict mode parsing is enabled.</param>
         /// <param name="markupParserFactory">The markup parser factory to use.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SecurityCritical]
         public CSharpDirectCompilerService(CodeDomProvider codeDomProvider, bool strictMode = true, Func<ParserBase> markupParserFactory = null)
             : base(

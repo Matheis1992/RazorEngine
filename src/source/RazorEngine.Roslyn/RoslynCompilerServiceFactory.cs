@@ -2,7 +2,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using RazorEngine.Compilation;
 using RazorEngine.Roslyn.CSharp;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Security;
 
 namespace RazorEngine.Roslyn
@@ -34,7 +33,6 @@ namespace RazorEngine.Roslyn
         /// </summary>
         /// <param name="language">The <see cref="Language"/>.</param>
         /// <returns>An instance of <see cref="ICompilerService"/>.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SecuritySafeCritical]
         public ICompilerService CreateCompilerService(Language language)
         {

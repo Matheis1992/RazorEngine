@@ -3,7 +3,6 @@ namespace RazorEngine.Compilation
     using CSharp;
     using System;
     using System.CodeDom.Compiler;
-    using System.Diagnostics.CodeAnalysis;
     using System.Security;
 
     /// <summary>
@@ -40,7 +39,6 @@ namespace RazorEngine.Compilation
         /// </summary>
         /// <param name="language">The <see cref="Language"/>.</param>
         /// <returns>An instance of <see cref="ICompilerService"/>.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SecuritySafeCritical]
         public ICompilerService CreateCompilerService(Language language)
         {
