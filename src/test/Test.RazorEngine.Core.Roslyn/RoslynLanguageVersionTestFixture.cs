@@ -62,6 +62,35 @@ namespace Test.RazorEngine.Core.Roslyn
         }
 
         /// <summary>
+        /// A factory that pins the version in its constructor, as needed when the factory is named in a configuration file
+        /// (compilerServiceFactoryType), where it is created with its parameterless constructor.
+        /// </summary>
+        public class CSharp13CompilerServiceFactory : DefaultCompilerServiceFactory
+        {
+            public CSharp13CompilerServiceFactory()
+            {
+                LanguageVersion = LanguageVersion.CSharp13;
+            }
+        }
+
+        /// <summary>
+        /// The derived factory from doc/Roslyn.md keeps the C# 13 meaning of "field".
+        /// </summary>
+        [Test]
+        public void Roslyn_DerivedFactory_PinsLanguageVersion()
+        {
+            string result = null;
+            RoslynCompilerTestFixture.RunTestHelper(service =>
+            {
+                result = service.RunCompile(FieldTemplate, "derivedFactory");
+            }, config =>
+            {
+                config.CompilerServiceFactory = (ICompilerServiceFactory)System.Activator.CreateInstance(typeof(CSharp13CompilerServiceFactory));
+            });
+            Assert.That(result, Is.EqualTo("[member]"));
+        }
+
+        /// <summary>
         /// A pinned language version is really used: C# 7.3 rejects a switch expression (C# 8).
         /// </summary>
         [Test]

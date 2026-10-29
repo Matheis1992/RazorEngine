@@ -98,7 +98,8 @@ see "Temporary files" in the [README](https://github.com/Matheis1992/RazorEngine
 
 ## Not to be confused with the reference cache
 
-Since 4.2.0, the Roslyn compiler also caches the assemblies templates are compiled *against*
+Since 4.2.0, the Roslyn compiler also caches the loaded assemblies templates are compiled *against*
 (the .NET Framework and your application's assemblies), so it does not read them again for every template.
+References a custom `IReferenceResolver` gives as a file path are read on every compile.
 That cache is internal, needs no configuration and does not cache templates: a changed template is always compiled again
 when its entry is invalidated or missing.
