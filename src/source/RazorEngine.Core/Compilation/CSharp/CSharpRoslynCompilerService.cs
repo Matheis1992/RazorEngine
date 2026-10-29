@@ -1,16 +1,13 @@
-﻿using System.Web.Razor.Parser;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using RazorEngine.Compilation;
+using RazorEngine.Compilation.ReferenceResolver;
 using System;
 using System.Collections.Generic;
-using System.Security;
-using System.Text;
-using System.CodeDom.Compiler;
-using System.Web.Razor;
 using System.IO;
-using System.Globalization;
-using RazorEngine.Compilation.ReferenceResolver;
+using System.Security;
+using System.Web.Razor;
+using System.Web.Razor.Parser;
 
 namespace RazorEngine.Roslyn.CSharp
 {
@@ -37,6 +34,14 @@ namespace RazorEngine.Roslyn.CSharp
                 markupParserFactory) {
             _codeDomProvider = new Microsoft.CSharp.CSharpCodeProvider(); 
         }
+
+        /// <summary>
+        /// The C# language version templates are compiled with.
+        /// <see cref="LanguageVersion.Default"/> (the default) is the newest version this Roslyn release supports.
+        /// Set an older version to keep the meaning of existing templates when a newer C# version changes it,
+        /// for example <see cref="LanguageVersion.CSharp13"/>, where <c>field</c> inside a property accessor is not yet a keyword.
+        /// </summary>
+        public LanguageVersion LanguageVersion { get; set; }
 
         /// <summary>
         /// Returns "cs".
@@ -85,7 +90,9 @@ namespace RazorEngine.Roslyn.CSharp
         public override Microsoft.CodeAnalysis.SyntaxTree GetSyntaxTree(string sourceCode, string sourceCodePath)
         {
             // Same symbol as the CodeDom compiler service (/define:RAZORENGINE), so templates can use #if RAZORENGINE.
-            var options = CSharpParseOptions.Default.WithPreprocessorSymbols("RAZORENGINE");
+            var options = CSharpParseOptions.Default
+                .WithLanguageVersion(LanguageVersion)
+                .WithPreprocessorSymbols("RAZORENGINE");
             return CSharpSyntaxTree.ParseText(sourceCode, options, sourceCodePath, System.Text.Encoding.UTF8);
         }
 

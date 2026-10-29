@@ -2,10 +2,9 @@ namespace RazorEngine.Tests
 {
     using Autofac;
     using Autofac.Features.ResolveAnything;
-    using NUnit.Framework;
-
     using Compilation;
     using Configuration;
+    using NUnit.Framework;
     using Templating;
     using TestTypes;
     using TestTypes.Activation;

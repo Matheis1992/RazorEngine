@@ -1,20 +1,14 @@
 ﻿namespace RazorEngine.Tests
 {
-    using System;
-    using System.IO;
-
-
-    using Moq;
-    using NUnit.Framework;
-
+    using Autofac;
+    using Autofac.Features.ResolveAnything;
     using Compilation;
     using Configuration;
+    using NUnit.Framework;
+    using System.IO;
     using Templating;
     using TestTypes;
     using TestTypes.Activation;
-    using Text;
-    using Autofac;
-    using Autofac.Features.ResolveAnything;
 
     /// <summary>
     /// Defines a test fixture that provides tests for the <see cref="IActivator"/> type.

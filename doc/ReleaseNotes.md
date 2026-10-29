@@ -1,4 +1,20 @@
-﻿### 4.1.0
+﻿### 4.2.0
+
+ * (NEW) The C# language version of templates can be pinned with `DefaultCompilerServiceFactory.LanguageVersion` (also on `RoslynCompilerServiceFactory`, and `CSharpRoslynCompilerService.LanguageVersion`). The default stays the newest version the bundled Roslyn supports (C# 14). Pin an older version when a newer C# version changes the meaning of existing templates, see the `field` entry under 4.1.0:
+
+   ```csharp
+   config.CompilerServiceFactory = new DefaultCompilerServiceFactory { LanguageVersion = Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp13 };
+   ```
+
+ * (PERFORMANCE) The Roslyn compiler service caches the metadata references of the loaded assemblies templates are compiled against, per `AppDomain`, so Roslyn reuses what it read from them instead of reading and analyzing every referenced assembly on each compile. Each compile after the first is about 35 to 50% faster: in a benchmark, about 25 ms instead of 40 ms with 64 loaded assemblies, and about 48 ms instead of 95 ms with 255. The first compile in a process is unchanged (about 2 s for loading Roslyn). A loaded assembly cannot change, so the cache never goes stale; references given as a file path, stream or byte array (by a custom `IReferenceResolver`) are read on every compile. Templates themselves are not cached by this; changed templates are recompiled as before.
+ * (BUILD) `dotnet pack` validates the package against the last published version (package validation, baseline 4.1.0) and fails on breaking changes of the public API.
+ * (DOCS) The README links the documentation pages in `doc` (with absolute links, so they also work on nuget.org) instead of the original project's website, and its AppDomain example for cleaning up temporary files uses a fully trusted AppDomain instead of suggesting a partially trusted one.
+ * (DOCS) New page [Caching](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Caching.md): how compiled templates are cached (template key and model type), what `RunCompile`, `Compile`, `Run` and `IsTemplateCached` do, the three caching providers with examples for invalidating, why invalidating does not free memory (each recompile loads a new assembly that stays until its `AppDomain` is unloaded) and when temporary files are deleted.
+ * (DOCS) [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md) shows how to pin `LanguageVersion` when RazorEngine is configured in `app.config`/`web.config`: derive a factory that sets it in its constructor and name that type in `compilerServiceFactoryType`.
+ * (DOCS) Outdated passages removed from the documentation: links to the original project's website, notes about Mono (the fork targets .NET Framework 4.8 on Windows) and an old Travis CI link. `ReferenceResolver.md` explains which compiler needs which references.
+ * (BUILD) Removed files and projects that nothing used or shipped: `RazorEngine.Mvc`, `RazorEngine.Hosts.Console`, the old FSharp.Formatting doc site, the class diagram and an unused ruleset. The tests build `TestHelper.dll` instead of using a checked-in binary.
+
+### 4.1.0
 
 4.1.0 switches templates to a modern C# compiler and removes the APIs that were obsolete since 3.5, as well as VB.NET templates.
 Unchanged: the template syntax (Razor 3, Microsoft.AspNet.Razor 3.3.0), the namespaces, the assembly name `RazorEngine.NetFramework.dll` and its signing key, and .NET Framework 4.8.
@@ -21,7 +37,8 @@ Read the breaking changes below before updating; [doc/Upgrading.md](https://gith
 
  * (BREAKING) **Roslyn is the default compiler.** `DefaultCompilerServiceFactory` now compiles templates in-process with Roslyn instead of starting `csc.exe` through CodeDom.
    - Templates are still compiled optimized and with the `RAZORENGINE` preprocessor symbol, as with CodeDom, so `#if RAZORENGINE` keeps working.
-   - The first compile in a process (or `AppDomain`) takes longer, because Roslyn is loaded and JIT-compiled there once. Later compiles do not start a separate `csc.exe` process.
+   - The first compile in a process (or `AppDomain`) takes longer, because Roslyn is loaded and JIT-compiled there once: about 2 s instead of about 0.2 s with CodeDom. Later compiles do not start a separate `csc.exe` process and are faster (in a benchmark about 40 ms instead of about 85 ms; 4.2.0 brings this down to about 25 ms). From about 30 templates per process on, Roslyn is faster overall.
+   - Roslyn runs inside the process: it needs about 55 MB more memory per process, and per `AppDomain` of `IsolatedRazorEngineService`.
    - **Debugging:** with Roslyn, `Debug = true` does not let you step into templates with the debugger.
    - To keep the old compiler (C# 5, `csc.exe`), for example for debugging, use the new `CodeDomCompilerServiceFactory`:
 
@@ -31,6 +48,11 @@ Read the breaking changes below before updating; [doc/Upgrading.md](https://gith
 
      or in the configuration file: `<razorEngine compilerServiceFactoryType="RazorEngine.Compilation.CodeDomCompilerServiceFactory, RazorEngine.NetFramework">`.
    - `RoslynCompilerServiceFactory` still exists and now does the same as `DefaultCompilerServiceFactory`.
+
+ * (BREAKING) **C# 14 can change the meaning of existing template code.** Templates were compiled as C# 5 before and are compiled with the newest C# version now. Code that compiles with both usually behaves the same, with one known exception that does not cause a compile error:
+   - Since C# 14, `field` inside a property accessor is the property's backing field. A template that declares its own member named `field` (for example in `@functions`) and returns it from a property accessor now gets the backing field instead (for example `null`).
+   - Rename the member, or, from 4.2.0 on, pin `LanguageVersion.CSharp13` (see 4.2.0), or keep the CodeDom compiler.
+   - Roslyn lists all C# breaking changes in https://github.com/dotnet/roslyn/tree/main/docs/compilers/CSharp.
 
  * (BREAKING) **Binding redirects for Roslyn's dependencies.** Roslyn 5.6.0 brings newer System.* assemblies (System.Collections.Immutable 10, System.Reflection.Metadata 10, System.Memory and others). .NET Framework applications need binding redirects for them:
    - SDK-style projects generate them automatically (`AutoGenerateBindingRedirects`).

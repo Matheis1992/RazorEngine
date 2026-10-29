@@ -1,17 +1,14 @@
 ﻿namespace RazorEngine.Templating
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Reflection;
-    using System.Linq;
-
     using Compilation;
     using Configuration;
-    using Text;
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Reflection;
     using System.Runtime.Remoting;
     using System.Security;
-    using System.Security.Permissions;
+    using Text;
     
 
     /// <summary>

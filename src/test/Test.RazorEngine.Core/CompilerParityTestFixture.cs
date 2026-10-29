@@ -1,12 +1,11 @@
 namespace RazorEngine.Tests
 {
+    using Compilation;
+    using Configuration;
+    using NUnit.Framework;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
-    using NUnit.Framework;
-
-    using Compilation;
-    using Configuration;
     using Templating;
 
     /// <summary>

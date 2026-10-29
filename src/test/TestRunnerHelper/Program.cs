@@ -1,9 +1,7 @@
-﻿using RazorEngine;
+﻿using RazorEngine.Compilation;
+using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using System;
-using System.Dynamic;
-using RazorEngine.Compilation;
-using RazorEngine.Configuration;
 
 namespace TestRunnerHelper
 {

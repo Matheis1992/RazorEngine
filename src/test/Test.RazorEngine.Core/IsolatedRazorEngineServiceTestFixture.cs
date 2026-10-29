@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 using RazorEngine.Compilation;
+using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Tests.TestTypes;
 using System;
@@ -12,10 +14,7 @@ using System.Runtime.Serialization;
 using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
-using System.Text;
 using System.Threading.Tasks;
-using RazorEngine.Configuration;
-using RazorEngine.Compilation.ReferenceResolver;
 using System.Web.Razor;
 
 namespace Test.RazorEngine

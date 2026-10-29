@@ -1,6 +1,5 @@
 namespace RazorEngine.Templating
 {
-    using System.Diagnostics;
     using System.IO;
 
     /// <summary>

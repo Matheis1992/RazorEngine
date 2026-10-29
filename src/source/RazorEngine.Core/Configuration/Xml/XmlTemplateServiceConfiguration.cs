@@ -1,14 +1,13 @@
 ﻿namespace RazorEngine.Configuration.Xml
 {
+    using Compilation;
+    using RazorEngine.Compilation.ReferenceResolver;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
-
-    using Compilation;
     using Templating;
     using Text;
-    using RazorEngine.Compilation.ReferenceResolver;
 
     /// <summary>
     /// Represents a template service configuration that supports the xml configuration mechanism.

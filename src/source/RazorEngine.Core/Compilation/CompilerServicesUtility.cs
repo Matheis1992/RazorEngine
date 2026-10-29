@@ -3,13 +3,12 @@
 namespace RazorEngine.Compilation
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Dynamic;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Text.RegularExpressions;
-    using System.Collections;
 
     /// <summary>
     /// Provides service methods for compilation.

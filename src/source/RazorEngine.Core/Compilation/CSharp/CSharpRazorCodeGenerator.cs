@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace RazorEngine.Compilation.CSharp
 {
-    using System.CodeDom;
     using System.Security;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
-    using OriginalCSharpRazorCodeGenerator = System.Web.Razor.Generator.CSharpRazorCodeGenerator;
     using Templating;
+    using OriginalCSharpRazorCodeGenerator = System.Web.Razor.Generator.CSharpRazorCodeGenerator;
 
     /// <summary>
     /// Defines a code generator that supports C# syntax.

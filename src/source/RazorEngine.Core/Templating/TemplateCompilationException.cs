@@ -2,7 +2,6 @@
 {
     using RazorEngine.Compilation;
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;

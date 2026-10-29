@@ -8,7 +8,7 @@ The original package `RazorEngine` (3.10.x) stays on nuget.org but is no longer 
 
 The assembly is `RazorEngine.NetFramework.dll` with its own signing key, so it never overwrites or replaces the original `RazorEngine.dll`.
 The namespaces are unchanged (`RazorEngine`, `RazorEngine.Templating`, ...), so switching from the original package usually only means replacing the package
-and updating assembly names in `app.config`/`web.config` (see the [release notes](doc/ReleaseNotes.md)).
+and updating assembly names in `app.config`/`web.config` (see the [release notes](https://github.com/Matheis1992/RazorEngine/blob/master/doc/ReleaseNotes.md)).
 
 If another library still pulls in the original package, both can be loaded in the same application, with these limits:
 
@@ -99,7 +99,7 @@ config.EncodedStringFactory = new HtmlEncodedStringFactory(); // Html encoding.
 Templates are compiled in-process with Roslyn, so they can use modern C# (up to C# 14),
 for example string interpolation, `?.`, tuples and switch expressions.
 On .NET Framework, Roslyn's dependencies need binding redirects; SDK-style projects generate them automatically.
-See [Roslyn](doc/Roslyn.md) for details.
+See [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md) for details.
 
 To use the old CodeDom compiler (`csc.exe`, C# 5) instead, for example to step into templates with the debugger:
 
@@ -138,7 +138,7 @@ The API is designed around the idea that you do not have the templates sitting a
 (while you can do that as seen above).
 The main interface to provide RazorEngine with templates is the `ITemplateManager` interface.	
 You should either pick one of the available implementations or write your own.
-See [TemplateManager and Caching documentation](http://antaris.github.io/RazorEngine/TemplateManager.html) for details.
+See [TemplateManager and Caching documentation](https://github.com/Matheis1992/RazorEngine/blob/master/doc/TemplateManager.md) for details.
 
 ## Temporary files
 
@@ -153,17 +153,10 @@ static int Main(string[] args)
     if (AppDomain.CurrentDomain.IsDefaultAppDomain())
     {
         // RazorEngine cannot clean up from the default appdomain...
-        Console.WriteLine("Switching to secound AppDomain, for RazorEngine...");
-        AppDomainSetup adSetup = new AppDomainSetup();
-        adSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-        var current = AppDomain.CurrentDomain;
-        // You only need to add strongnames when your appdomain is not a full trust environment.
-        var strongNames = new StrongName[0];
-
-        var domain = AppDomain.CreateDomain(
-            "MyMainDomain", null,
-            current.SetupInformation, new PermissionSet(PermissionState.Unrestricted),
-            strongNames);
+        Console.WriteLine("Switching to second AppDomain, for RazorEngine...");
+        // A fully trusted AppDomain with the same settings, including the configuration file (binding redirects).
+        // Do not use a partially trusted (sandboxed) AppDomain: it is no security boundary for templates (CVE-2021-46703).
+        var domain = AppDomain.CreateDomain("MyMainDomain", null, AppDomain.CurrentDomain.SetupInformation);
         var exitCode = domain.ExecuteAssembly(Assembly.GetExecutingAssembly().Location);
         // RazorEngine will cleanup. 
         AppDomain.Unload(domain);
@@ -196,10 +189,21 @@ Only use templates from trusted sources, and never build templates by concatenat
 
 `IsolatedRazorEngineService` is meant for unloading templates, not as a sandbox. Partially trusted (sandboxed) `AppDomain`s
 are refused, because templates can escape them ([CVE-2021-46703](https://github.com/advisories/GHSA-ph3v-2hq5-5qfq)).
-See [Isolation](doc/Isolation.md) for details.
+See [Isolation](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Isolation.md) for details.
 
 ## More
 
-On the right side you can find links to advanced topics and additional [documentation](http://antaris.github.io/RazorEngine/).
-You should definitely read "About Razor" and "Template basics".
+The documentation is in the [doc](https://github.com/Matheis1992/RazorEngine/tree/master/doc) folder. Start with [About Razor](https://github.com/Matheis1992/RazorEngine/blob/master/doc/AboutRazor.md) and [Template basics](https://github.com/Matheis1992/RazorEngine/blob/master/doc/TemplateBasics.md).
+
+ * [About Razor](https://github.com/Matheis1992/RazorEngine/blob/master/doc/AboutRazor.md): the Razor syntax.
+ * [Template basics](https://github.com/Matheis1992/RazorEngine/blob/master/doc/TemplateBasics.md): typed, anonymous and dynamic models, the supported syntax and how to extend it.
+ * [Layout and partial templates](https://github.com/Matheis1992/RazorEngine/blob/master/doc/LayoutAndPartial.md)
+ * [Encoding](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Encoding.md): HTML and raw encoding of values.
+ * [Template manager](https://github.com/Matheis1992/RazorEngine/blob/master/doc/TemplateManager.md): where templates come from.
+ * [Caching](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Caching.md): how compiled templates are cached and invalidated, and what that means for memory.
+ * [Reference resolver](https://github.com/Matheis1992/RazorEngine/blob/master/doc/ReferenceResolver.md): which assemblies templates can use.
+ * [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md): the compiler, the C# language version and binding redirects.
+ * [Isolation](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Isolation.md): unloading templates with `IsolatedRazorEngineService`.
+ * [Intellisense and ReSharper](https://github.com/Matheis1992/RazorEngine/blob/master/doc/IntellisenseAndResharper.md): editor support for template files.
+ * [Upgrading](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Upgrading.md) and [Release notes](https://github.com/Matheis1992/RazorEngine/blob/master/doc/ReleaseNotes.md)
 

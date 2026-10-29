@@ -15,10 +15,8 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
 
 namespace RazorEngine.Compilation.ImpromptuInterface
 {

@@ -1,9 +1,8 @@
 namespace RazorEngine.Compilation
 {
+    using CSharp;
     using System;
     using System.Diagnostics.CodeAnalysis;
-
-    using CSharp;
     using System.Security;
 
     /// <summary>

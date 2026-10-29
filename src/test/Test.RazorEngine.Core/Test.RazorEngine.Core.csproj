@@ -8,7 +8,6 @@
   <ItemGroup>
     <None Remove="Templating\Templates\*.cshtml" />
     <EmbeddedResource Include="Templating\Templates\*.cshtml" />
-    <None Update="test\TestHelper.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +26,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\source\RazorEngine.Core\RazorEngine.Core.csproj" />
+    <!-- Built but not referenced: some tests need an assembly that only the templates reference.
+         They load it from test\TestHelper.dll next to the test assembly. -->
+    <ProjectReference Include="..\TestHelper\TestHelper.csproj" ReferenceOutputAssembly="false" OutputItemType="TestHelperAssembly" />
   </ItemGroup>
+
+  <Target Name="CopyTestHelper" AfterTargets="Build">
+    <Copy SourceFiles="@(TestHelperAssembly)" DestinationFolder="$(OutDir)test" SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>

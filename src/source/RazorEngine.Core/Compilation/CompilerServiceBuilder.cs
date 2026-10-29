@@ -1,8 +1,7 @@
 ﻿namespace RazorEngine.Compilation
 {
-    using System.Diagnostics.Contracts;
-
     using Configuration;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Manages creation of <see cref="ICompilerService"/> instances.

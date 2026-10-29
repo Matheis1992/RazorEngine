@@ -1,19 +1,17 @@
-﻿using RazorEngine.Compilation;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
+using RazorEngine.Compilation;
 using RazorEngine.Compilation.ReferenceResolver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using System.Web.Razor.Parser;
-using System.Web.Razor;
-using Microsoft.CodeAnalysis.Text;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Security.Permissions;
-using Microsoft.CodeAnalysis.Emit;
+using System.Web.Razor;
+using System.Web.Razor.Parser;
 
 
 namespace RazorEngine.Roslyn.CSharp
@@ -24,13 +22,33 @@ namespace RazorEngine.Roslyn.CSharp
     [SecurityCritical]
     public abstract class RoslynCompilerServiceBase : CompilerServiceBase
     {
+        /// <summary>
+        /// Metadata references of loaded assemblies, shared by all compiles in this AppDomain.
+        /// Passing the same reference objects again lets Roslyn reuse the symbols it built for them,
+        /// instead of reading and analyzing every referenced assembly on each compile.
+        /// A loaded assembly cannot change, so its reference never goes stale, and there is at most one entry per loaded assembly.
+        /// References given as a file path, stream or byte array are not cached: their content can change between compiles.
+        /// </summary>
+        private static readonly ConditionalWeakTable<Assembly, MetadataReference> AssemblyReferences =
+            new ConditionalWeakTable<Assembly, MetadataReference>();
+
+        /// <summary>
+        /// Converts a <see cref="CompilerReference"/> to a Roslyn <see cref="MetadataReference"/>,
+        /// reusing the reference of a loaded assembly from earlier compiles.
+        /// </summary>
+        [SecurityCritical]
+        internal static MetadataReference ToMetadataReference(CompilerReference reference)
+        {
+            return reference.Visit(new SelectMetadataReference());
+        }
+
         [SecuritySafeCritical]
         private class SelectMetadataReference : CompilerReference.ICompilerReferenceVisitor<MetadataReference>
         {
             [SecuritySafeCritical]
             public MetadataReference Visit(Assembly assembly)
             {
-                return Visit(assembly.Location);
+                return AssemblyReferences.GetValue(assembly, a => MetadataReference.CreateFromFile(a.Location));
             }
 
             [SecuritySafeCritical]
@@ -274,7 +292,7 @@ namespace RazorEngine.Roslyn.CSharp
         [SecurityCritical]
         private MetadataReference[] GetMetadataReferences(IEnumerable<CompilerReference> references)
         {
-            return references.Select(reference => reference.Visit(new SelectMetadataReference())).ToArray();
+            return references.Select(ToMetadataReference).ToArray();
         }
     }
 }
