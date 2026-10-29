@@ -1,7 +1,7 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
+using System;
 using Test.RazorEngine.Templating.Templates;
 
 namespace Test.RazorEngine.Templating

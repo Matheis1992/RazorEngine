@@ -1,8 +1,7 @@
 ﻿namespace RazorEngine.Tests.TestTypes.Activation
 {
-    using System;
     using Autofac;
-
+    using System;
     using Templating;
 
     /// <summary>

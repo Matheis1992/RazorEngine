@@ -4,7 +4,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Security;
-    using System.Web.Razor.Parser.SyntaxTree;
 
     /// <summary>
     /// Defines an exception that occurs during template parsing.

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RazorEngine.Compilation.ImpromptuInterface.Optimization;
+using System;
 using System.Dynamic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-//using RazorEngine.Compilation.ImpromptuInterface.Internal.Support;
-using RazorEngine.Compilation.ImpromptuInterface.Optimization;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic
 {

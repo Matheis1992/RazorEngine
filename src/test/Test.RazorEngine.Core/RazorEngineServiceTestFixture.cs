@@ -1,6 +1,6 @@
-﻿using RazorEngine.Compilation.ImpromptuInterface;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RazorEngine.Compilation;
+using RazorEngine.Compilation.ImpromptuInterface;
 using RazorEngine.Compilation.ReferenceResolver;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
@@ -13,11 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Test.RazorEngine.TestTypes.BaseTypes;
-using System.Runtime.Remoting;
-using System.Collections.Concurrent;
 using System.Threading;
+using Test.RazorEngine.TestTypes.BaseTypes;
 
 namespace Test.RazorEngine
 {

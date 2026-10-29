@@ -1,15 +1,12 @@
 ﻿namespace RazorEngine.Templating
 {
-    using System;
-    using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Reflection;
-
     using Compilation;
     using Configuration;
-    using System.Security;
-    using System.Threading.Tasks;
     using RazorEngine.Compilation.ReferenceResolver;
+    using System;
+    using System.Diagnostics.Contracts;
+    using System.Reflection;
+    using System.Security;
 
     internal class RazorEngineCore : IDisposable
     {

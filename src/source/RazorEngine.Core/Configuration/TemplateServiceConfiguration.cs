@@ -1,14 +1,12 @@
 ﻿namespace RazorEngine.Configuration
 {
+    using Compilation;
+    using RazorEngine.Compilation.ReferenceResolver;
     using System;
     using System.Collections.Generic;
-
-    using Compilation;
+    using System.Security;
     using Templating;
     using Text;
-    using RazorEngine.Compilation.ReferenceResolver;
-    using System.Security;
-    using RazorEngine.Configuration.Xml;
 
     /// <summary>
     /// Provides a default implementation of a template service configuration.

@@ -1,13 +1,12 @@
 ﻿namespace RazorEngine.Configuration
 {
+    using Compilation;
+    using RazorEngine.Compilation.ReferenceResolver;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-
-    using Compilation;
     using Templating;
     using Text;
-    using RazorEngine.Compilation.ReferenceResolver;
 
     /// <summary>
     /// Defines a fluent template service configuration

@@ -13,22 +13,20 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
+using RazorEngine.Compilation.ImpromptuInterface.Optimization;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
-//using RazorEngine.Compilation.ImpromptuInterface.Internal.Support;
-using RazorEngine.Compilation.ImpromptuInterface.Optimization;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Build
 {
+    using Microsoft.CSharp.RuntimeBinder;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
-    using Microsoft.CSharp.RuntimeBinder;
 
 
     ///<summary>

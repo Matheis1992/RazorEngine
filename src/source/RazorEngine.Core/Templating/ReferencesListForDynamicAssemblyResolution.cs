@@ -1,8 +1,8 @@
-﻿using System;
+﻿using RazorEngine.Compilation.ReferenceResolver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using RazorEngine.Compilation.ReferenceResolver;
 
 namespace RazorEngine.Templating
 {

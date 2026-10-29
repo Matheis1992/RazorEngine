@@ -1,10 +1,9 @@
-﻿using System;
+﻿using NUnit.Framework;
+using RazorEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RazorEngine;
-using NUnit.Framework;
 
 namespace Test.RazorEngine
 {

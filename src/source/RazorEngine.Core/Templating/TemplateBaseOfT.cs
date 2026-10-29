@@ -1,10 +1,8 @@
 ﻿namespace RazorEngine.Templating
 {
-    using System.Dynamic;
-
     using Compilation;
     using System;
-    using System.Security;
+    using System.Dynamic;
 
     /// <summary>
     /// Provides a base implementation of a template with a model.

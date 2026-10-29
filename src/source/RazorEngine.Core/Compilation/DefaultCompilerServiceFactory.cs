@@ -1,10 +1,9 @@
 ﻿namespace RazorEngine.Compilation
 {
+    using RazorEngine.Roslyn.CSharp;
     using System;
     using System.Diagnostics.CodeAnalysis;
-
     using System.Security;
-    using RazorEngine.Roslyn.CSharp;
 
     /// <summary>
     /// Provides a default implementation of a <see cref="ICompilerServiceFactory"/>:

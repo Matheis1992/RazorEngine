@@ -1,10 +1,8 @@
 ﻿namespace RazorEngine.Compilation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-
     using RazorEngine.Compilation.ReferenceResolver;
+    using System;
+    using System.Reflection;
     using System.Security;
 
     /// <summary>

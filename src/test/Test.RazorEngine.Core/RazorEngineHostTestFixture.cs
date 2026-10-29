@@ -1,18 +1,10 @@
-﻿using RazorEngine.Tests.TestTypes.BaseTypes;
-
-namespace RazorEngine.Tests
+﻿namespace RazorEngine.Tests
 {
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.IO;
-    using System.Linq;
-
-    using NUnit.Framework;
-
     using Compilation;
-    using Configuration;
+    using NUnit.Framework;
+    using System.Collections.Generic;
+    using System.IO;
     using Templating;
-    using Text;
     using TestTypes;
 
     /// <summary>

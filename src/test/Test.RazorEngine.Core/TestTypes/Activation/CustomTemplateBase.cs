@@ -1,7 +1,6 @@
 ﻿namespace RazorEngine.Tests.TestTypes.Activation
 {
     using System;
-
     using Templating;
 
     /// <summary>

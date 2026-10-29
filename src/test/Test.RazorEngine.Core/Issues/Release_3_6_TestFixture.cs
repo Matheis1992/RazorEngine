@@ -1,11 +1,9 @@
 ﻿namespace RazorEngine.Tests.TestTypes.Issues
 {
+    using NUnit.Framework;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Collections.Generic;
-
-    using NUnit.Framework;
-
     using Templating;
     using Test.RazorEngine;
 

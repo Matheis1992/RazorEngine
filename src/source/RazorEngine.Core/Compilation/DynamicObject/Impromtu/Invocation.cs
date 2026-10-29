@@ -14,9 +14,9 @@
 //    limitations under the License.
 
 
+using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Linq;
-using Microsoft.CSharp.RuntimeBinder;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic
 {
