@@ -1,12 +1,11 @@
 ﻿namespace RazorEngine.Compilation
 {
+    using Microsoft.CSharp.RuntimeBinder;
     using RazorEngine.Compilation.ImpromptuInterface;
     using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
     using RazorEngine.Compilation.ImpromptuInterface.Optimization;
-    using Microsoft.CSharp.RuntimeBinder;
     using System;
-    using System.Collections;
-    using System.Diagnostics;
+    using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -14,7 +13,6 @@
     using System.Runtime.Serialization;
     using System.Security;
     using System.Security.Permissions;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Wraps a dynamic object for serialization of dynamic objects and anonymous type support.

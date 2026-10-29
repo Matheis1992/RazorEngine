@@ -1,7 +1,7 @@
 ﻿namespace RazorEngine.Tests.TestTypes
 {
-    using System;
     using RazorEngine.Templating;
+    using System;
 
     /// <summary>
     /// Test class.

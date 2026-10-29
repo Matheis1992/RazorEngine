@@ -1,12 +1,9 @@
 ﻿namespace RazorEngine.Hosts.Console
 {
-    using System;
-    using System.Linq;
-
-    using Compilation;
-    using Templating;
-    using RazorEngine.Text;
     using RazorEngine.Configuration;
+    using RazorEngine.Text;
+    using System;
+    using Templating;
     /// <summary>
     /// A simple helper demonstrating the @Html.Raw
     /// </summary>

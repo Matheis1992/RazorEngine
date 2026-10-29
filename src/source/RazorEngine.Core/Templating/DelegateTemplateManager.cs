@@ -1,7 +1,6 @@
 ﻿namespace RazorEngine.Templating
 {
     using System;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// Provides an <see cref="ITemplateManager"/> that supports delegated template resolution.

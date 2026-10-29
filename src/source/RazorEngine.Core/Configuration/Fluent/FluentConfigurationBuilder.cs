@@ -1,9 +1,8 @@
 ﻿namespace RazorEngine.Configuration
 {
+    using Compilation;
     using System;
     using System.Diagnostics.Contracts;
-
-    using Compilation;
     using Templating;
     using Text;
 

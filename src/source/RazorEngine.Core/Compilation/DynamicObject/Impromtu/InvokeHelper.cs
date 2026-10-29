@@ -14,12 +14,12 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
+using RazorEngine.Compilation.ImpromptuInterface.Build;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using RazorEngine.Compilation.ImpromptuInterface.Build;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace RazorEngine.Compilation.ImpromptuInterface.Optimization
 {

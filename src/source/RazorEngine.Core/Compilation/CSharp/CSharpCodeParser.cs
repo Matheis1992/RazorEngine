@@ -1,11 +1,11 @@
 ﻿namespace RazorEngine.Compilation.CSharp
 {
-    using System.Web.Razor.Generator;
-    using System.Web.Razor.Text;
-    using System.Web.Razor.Parser;
-    using RazorCSharpCodeParser = System.Web.Razor.Parser.CSharpCodeParser;
     using CodeGenerators;
     using System.Security;
+    using System.Web.Razor.Generator;
+    using System.Web.Razor.Parser;
+    using System.Web.Razor.Text;
+    using RazorCSharpCodeParser = System.Web.Razor.Parser.CSharpCodeParser;
 
     /// <summary>
     /// Defines a code parser that supports the C# syntax.

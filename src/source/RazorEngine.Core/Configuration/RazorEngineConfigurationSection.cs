@@ -1,6 +1,5 @@
 ﻿namespace RazorEngine.Configuration
 {
-    using System;
     using System.Configuration;
     using Xml;
 

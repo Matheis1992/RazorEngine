@@ -1,21 +1,17 @@
 ﻿namespace RazorEngine.Compilation
 {
     using System;
-    using System.CodeDom;
     using System.CodeDom.Compiler;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Security;
     using System.Security.Permissions;
-    using System.Text;
+    using System.Security.Principal;
     using System.Web.Razor;
     using System.Web.Razor.Parser;
     using Templating;
-    using System.Security.Principal;
 
     /// <summary>
     /// Provides a base implementation of a direct compiler service.

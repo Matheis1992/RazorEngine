@@ -1,8 +1,8 @@
-﻿using System.IO;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Tests.TestTypes;
+using System.IO;
 
 namespace Test.RazorEngine.Templating
 {

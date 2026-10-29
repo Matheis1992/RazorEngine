@@ -1,16 +1,13 @@
-﻿using System.Web.Razor.Parser;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using RazorEngine.Compilation;
+using RazorEngine.Compilation.ReferenceResolver;
 using System;
 using System.Collections.Generic;
-using System.Security;
-using System.Text;
-using System.CodeDom.Compiler;
-using System.Web.Razor;
 using System.IO;
-using System.Globalization;
-using RazorEngine.Compilation.ReferenceResolver;
+using System.Security;
+using System.Web.Razor;
+using System.Web.Razor.Parser;
 
 namespace RazorEngine.Roslyn.CSharp
 {

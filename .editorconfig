@@ -1,0 +1,7 @@
+root = true
+
+[*.cs]
+# Using directives: one alphabetical block (System is not placed first, no blank lines between groups).
+# Visual Studio and dotnet format follow this when sorting usings.
+dotnet_sort_system_directives_first = false
+dotnet_separate_import_directive_groups = false

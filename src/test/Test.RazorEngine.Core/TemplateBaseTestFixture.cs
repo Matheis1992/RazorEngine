@@ -1,16 +1,11 @@
 ﻿namespace RazorEngine.Tests
 {
-    using System.Collections.Generic;
+    using NUnit.Framework;
     using System.Dynamic;
     using System.IO;
-    using System.Linq;
-
-    using NUnit.Framework;
-
-    using Configuration;
     using Templating;
-    using Text;
     using TestTypes;
+    using Text;
 
     /// <summary>
     /// Defines a test fixture that provides tests for the <see cref="TemplateBase"/> type.

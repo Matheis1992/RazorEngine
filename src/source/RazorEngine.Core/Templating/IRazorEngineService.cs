@@ -1,10 +1,6 @@
 ﻿namespace RazorEngine.Templating
 {
     using System;
-    using System.Collections.Generic;
-
-    using Configuration;
-    using Text;
     using System.IO;
 
 

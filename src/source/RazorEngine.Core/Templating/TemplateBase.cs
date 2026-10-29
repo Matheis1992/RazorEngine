@@ -2,11 +2,8 @@ namespace RazorEngine.Templating
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.IO;
-    using System.Security;
     using System.Text;
-    using System.Threading.Tasks;
     using Text;
     using SectionAction = System.Action;
 
