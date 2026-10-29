@@ -1,4 +1,8 @@
-﻿### 4.1.0
+﻿### 4.1.1
+
+ * (PERFORMANCE) The Roslyn compiler service caches the metadata references of the referenced assemblies per `AppDomain`, so Roslyn reuses what it read from them instead of reading and analyzing every referenced assembly on each compile. Each compile after the first is about 30% faster: in a benchmark, about 27 ms instead of 40 ms with 64 loaded assemblies, and about 65 ms instead of 95 ms with 255. The first compile in a process is unchanged (about 2 s for loading Roslyn). A referenced file that changes on disk (modification time or size) is read again. Templates themselves are not cached by this; changed templates are recompiled as before.
+
+### 4.1.0
 
 4.1.0 switches templates to a modern C# compiler and removes the APIs that were obsolete since 3.5, as well as VB.NET templates.
 Unchanged: the template syntax (Razor 3, Microsoft.AspNet.Razor 3.3.0), the namespaces, the assembly name `RazorEngine.NetFramework.dll` and its signing key, and .NET Framework 4.8.
