@@ -194,16 +194,6 @@ namespace RazorEngine.Roslyn.CSharp
         public abstract CompilationOptions CreateOptions(TypeContext context);
 
         /// <summary>
-        /// Check for mono runtime as Roslyn needs to generate portable PDBs for
-        /// proper execution on Mono/Unix.
-        /// </summary>
-        /// <returns></returns>
-        private static bool IsMono()
-        {
-            return Type.GetType("Mono.Runtime") != null;
-        }
-
-        /// <summary>
         /// Configures and runs the compiler.
         /// </summary>
         /// <param name="context"></param>
@@ -247,11 +237,6 @@ namespace RazorEngine.Roslyn.CSharp
                 var opts = new EmitOptions()
                     .WithPdbFilePath(assemblyPdbFile);
                 var pdbStreamHelper = pdbStream;
-
-                if (IsMono())
-                {
-                    opts = opts.WithDebugInformationFormat(DebugInformationFormat.PortablePdb);
-                }
 
                 var result = compilation.Emit(assemblyStream, pdbStreamHelper, options: opts);
                 if (!result.Success)

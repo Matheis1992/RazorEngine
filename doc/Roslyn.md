@@ -14,7 +14,7 @@ To compile templates with CodeDom (C# 5) as before version 4, set:
 config.CompilerServiceFactory = new RazorEngine.Compilation.CodeDomCompilerServiceFactory();
 ```
 
-`RazorEngine.Roslyn.RoslynCompilerServiceFactory` is still available and does the same as `DefaultCompilerServiceFactory`.
+`RazorEngine.Roslyn.RoslynCompilerServiceFactory` does the same as `DefaultCompilerServiceFactory`. It is obsolete since 4.3 and will be removed in 5.0; use `DefaultCompilerServiceFactory`.
 
 Templates are always C#: VB.NET templates (`.vbhtml`, `Language.VisualBasic`) are not supported since version 4.
 

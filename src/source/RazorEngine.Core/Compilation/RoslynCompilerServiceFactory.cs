@@ -9,6 +9,7 @@ namespace RazorEngine.Roslyn
     /// it is kept for existing configurations.
     /// </summary>
     [Serializable]
+    [Obsolete("Roslyn is the default compiler, so RoslynCompilerServiceFactory is the same as DefaultCompilerServiceFactory; use that instead. RoslynCompilerServiceFactory will be removed in 5.0.")]
     public class RoslynCompilerServiceFactory : DefaultCompilerServiceFactory
     {
     }

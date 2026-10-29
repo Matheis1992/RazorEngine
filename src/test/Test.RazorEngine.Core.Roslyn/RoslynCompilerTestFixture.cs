@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using RazorEngine.Compilation;
 using RazorEngine.Configuration;
-using RazorEngine.Roslyn;
 using RazorEngine.Templating;
 using RazorEngine.Tests.TestTypes;
 using RazorEngine.Text;
@@ -26,7 +25,7 @@ namespace Test.RazorEngine.Core.Roslyn
         {
             var defaultConfig = new Action<TemplateServiceConfiguration>((config) => {
                     config.Debug = true;
-                    config.CompilerServiceFactory = new RoslynCompilerServiceFactory();
+                    config.CompilerServiceFactory = new DefaultCompilerServiceFactory();
                 });
             if (withConfig == null)
             {

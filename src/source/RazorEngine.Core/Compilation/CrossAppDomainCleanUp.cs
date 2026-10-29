@@ -105,16 +105,20 @@ namespace RazorEngine.Compilation
         /// <summary>
         /// Helper class to communicate with the Cleanup AppDomain.
         /// Inits the cleanup AppDomain (AssemblyResolve) and registers items to delete.
+        /// This is an implementation detail of <see cref="CrossAppDomainCleanUp"/>; do not use it directly.
         /// </summary>
         [SecurityCritical]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public class CleanupHelper : global::RazorEngine.CrossAppDomainObject
         {
             /// <summary>
             /// A helper to be able to subscribe to the DomainUnload event.
-            /// Additionally we use this object to check if the printer lives in the wrong appdomain 
+            /// Additionally we use this object to check if the printer lives in the wrong appdomain
             /// (which would lead to an application crash).
+            /// This is an implementation detail of <see cref="CrossAppDomainCleanUp"/>; do not use it directly.
             /// </summary>
             [SecurityCritical]
+            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
             public class SubscribeHelper : CrossAppDomainObject
             {
                 private CleanupHelper _helper = null;
@@ -484,29 +488,6 @@ namespace RazorEngine.Compilation
 
         private readonly AppDomain _domain;
         private readonly CleanupHelper _helper;
-        /*
-        [SecurityCritical]
-        public static AppDomain GetDefaultAppDomain()
-        {
-            (new PermissionSet(PermissionState.Unrestricted)).Assert();
-            if (AppDomain.CurrentDomain.IsDefaultAppDomain())
-            {
-                return AppDomain.CurrentDomain;
-            }
-            var isMono = Type.GetType("Mono.Runtime") != null;
-            if (isMono)
-            {
-                var prop = typeof(System.AppDomain).GetProperty("DefaultDomain", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                return (AppDomain)prop.GetMethod.Invoke(null, null);
-            }
-            else
-            {
-                mscoree.ICorRuntimeHost host = new mscoree.CorRuntimeHostClass();
-                object domain;
-                host.GetDefaultDomain(out domain);
-                return (AppDomain)domain;
-            }
-        }*/
 
 
         /// <summary>
