@@ -1,0 +1,37 @@
+version: 2
+updates:
+  # NuGet packages. Versions live in src/Directory.Packages.props (central package management).
+  - package-ecosystem: nuget
+    directory: /src
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    target-branch: develop
+    commit-message:
+      prefix: "Update"
+    groups:
+      # One PR for the test packages; they only affect the tests, not the package.
+      test-packages:
+        patterns:
+          - Autofac
+          - Microsoft.NET.Test.Sdk
+          - Moq
+          - NUnit
+          - NUnit.Analyzers
+          - NUnit3TestAdapter
+    ignore:
+      # Roslyn is updated by hand: a new version changes the template C# version, the binding redirects users need,
+      # and newer releases may depend on prerelease packages (see the comment in Directory.Packages.props).
+      - dependency-name: Microsoft.CodeAnalysis.CSharp
+      # Razor 3.x is the template syntax of this package; Microsoft.AspNetCore.Razor would be a different engine.
+      - dependency-name: Microsoft.AspNet.Razor
+        update-types: ["version-update:semver-major"]
+
+  # Actions used by the CI and release workflows.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    target-branch: develop
+    commit-message:
+      prefix: "Update"
