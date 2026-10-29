@@ -1,14 +1,14 @@
-﻿namespace RazorEngine.Tests
-{
-    using Compilation;
-    using Configuration;
-    using Moq;
-    using NUnit.Framework;
-    using System;
-    using System.IO;
-    using Templating;
-    using Text;
+﻿using Moq;
+using NUnit.Framework;
+using RazorEngine.Compilation;
+using RazorEngine.Configuration;
+using RazorEngine.Templating;
+using RazorEngine.Text;
+using System;
+using System.IO;
 
+namespace RazorEngine.Tests
+{
     /// <summary>
     /// Defines a test fixture that provides tests for the <see cref="ITemplateServiceConfiguration"/> type.
     /// </summary>

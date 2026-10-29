@@ -1,10 +1,10 @@
+using RazorEngine.Compilation.CSharp;
+using System;
+using System.CodeDom.Compiler;
+using System.Security;
+
 namespace RazorEngine.Compilation
 {
-    using CSharp;
-    using System;
-    using System.CodeDom.Compiler;
-    using System.Security;
-
     /// <summary>
     /// Provides a <see cref="ICompilerServiceFactory"/> that compiles templates with CodeDom, in a separate compiler process.
     /// By default this is the <c>csc.exe</c> of .NET Framework (C# 5). Set <see cref="CodeDomProviderFactory"/> to compile with

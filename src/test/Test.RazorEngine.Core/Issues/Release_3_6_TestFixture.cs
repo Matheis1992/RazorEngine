@@ -1,12 +1,12 @@
-﻿namespace RazorEngine.Tests.TestTypes.Issues
-{
-    using NUnit.Framework;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using Templating;
-    using Test.RazorEngine;
+﻿using NUnit.Framework;
+using RazorEngine.Templating;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Test.RazorEngine;
 
+namespace RazorEngine.Tests.TestTypes.Issues
+{
     /// <summary>
     /// Provides tests for the Release 3.6
     /// </summary>

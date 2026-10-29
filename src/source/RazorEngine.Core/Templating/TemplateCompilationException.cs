@@ -1,13 +1,13 @@
-﻿namespace RazorEngine.Templating
-{
-    using RazorEngine.Compilation;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Runtime.Serialization;
-    using System.Security;
+﻿using RazorEngine.Compilation;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Security;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines a compiler error.
     /// </summary>

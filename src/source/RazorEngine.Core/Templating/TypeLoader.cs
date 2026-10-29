@@ -1,14 +1,14 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Security;
-    using System.Security.Permissions;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Security;
+using System.Security.Permissions;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines a type loader.
     /// </summary>

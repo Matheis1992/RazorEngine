@@ -1,9 +1,9 @@
-﻿namespace RazorEngine.Tests.TestTypes.Issues
-{
-    using NUnit.Framework;
-    using System.IO;
-    using Templating;
+﻿using NUnit.Framework;
+using RazorEngine.Templating;
+using System.IO;
 
+namespace RazorEngine.Tests.TestTypes.Issues
+{
     /// <summary>
     /// Provides tests for the Release 3.0
     /// </summary>

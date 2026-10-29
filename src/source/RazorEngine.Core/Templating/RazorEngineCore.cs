@@ -1,12 +1,12 @@
-﻿namespace RazorEngine.Templating
-{
-    using Compilation;
-    using Configuration;
-    using RazorEngine.Compilation.ReferenceResolver;
-    using System;
-    using System.Reflection;
-    using System.Security;
+﻿using RazorEngine.Compilation;
+using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Configuration;
+using System;
+using System.Reflection;
+using System.Security;
 
+namespace RazorEngine.Templating
+{
     internal class RazorEngineCore : IDisposable
     {
         private readonly ReadOnlyTemplateServiceConfiguration _config;

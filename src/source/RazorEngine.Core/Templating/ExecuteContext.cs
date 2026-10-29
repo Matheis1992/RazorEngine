@@ -1,10 +1,10 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using SectionAction = System.Action;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using SectionAction = System.Action;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines a context for tracking template execution.
     /// </summary>

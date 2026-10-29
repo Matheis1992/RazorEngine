@@ -1,11 +1,10 @@
-﻿namespace RazorEngine.Templating
-{
-    using Configuration;
-    using System;
-    using System.Runtime.Remoting;
-    using System.Security;
-    
+﻿using RazorEngine.Configuration;
+using System;
+using System.Runtime.Remoting;
+using System.Security;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Provides template parsing and compilation in an isolated application domain.
     /// </summary>

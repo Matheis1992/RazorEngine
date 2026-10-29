@@ -1,8 +1,8 @@
-﻿namespace RazorEngine.Tests.TestTypes
-{
-    using System.Collections.Generic;
-    using System.Dynamic;
+﻿using System.Collections.Generic;
+using System.Dynamic;
 
+namespace RazorEngine.Tests.TestTypes
+{
     /// <summary>
     /// Test class.
     /// </summary>

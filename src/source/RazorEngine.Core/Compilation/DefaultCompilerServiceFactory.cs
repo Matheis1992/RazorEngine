@@ -1,7 +1,7 @@
+using System;
+
 namespace RazorEngine.Compilation
 {
-    using System;
-
     /// <summary>
     /// Provides the default implementation of a <see cref="ICompilerServiceFactory"/>: templates are compiled with CodeDom,
     /// the same as <see cref="CodeDomCompilerServiceFactory"/>. To compile templates in-process with Roslyn (modern C#),

@@ -1,8 +1,8 @@
-﻿namespace RazorEngine.Configuration
-{
-    using System.Configuration;
-    using Xml;
+﻿using RazorEngine.Configuration.Xml;
+using System.Configuration;
 
+namespace RazorEngine.Configuration
+{
     /// <summary>
     /// Defines the main configuration section for the RazorEngine.
     /// </summary>

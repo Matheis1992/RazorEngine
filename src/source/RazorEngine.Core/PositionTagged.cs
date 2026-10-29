@@ -1,10 +1,9 @@
 ﻿using RazorEngine.Common;
+using System;
+using System.Diagnostics;
 
 namespace RazorEngine
 {
-    using System;
-    using System.Diagnostics;
-
     /// <summary>
     /// PositionTagged
     /// </summary>

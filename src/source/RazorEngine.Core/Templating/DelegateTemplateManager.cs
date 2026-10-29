@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Provides an <see cref="ITemplateManager"/> that supports delegated template resolution.
     /// </summary>

@@ -10,6 +10,8 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)RazorEngine.NetFramework.snk</AssemblyOriginatorKeyFile>
     <!-- Deterministic paths in PDBs and symbol packages built by GitHub Actions. -->
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <!-- Apply the code style rules that .editorconfig sets to warning or error (using directive placement) in every build. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
 </Project>

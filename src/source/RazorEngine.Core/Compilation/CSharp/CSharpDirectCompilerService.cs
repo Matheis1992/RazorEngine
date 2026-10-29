@@ -1,14 +1,14 @@
-﻿namespace RazorEngine.Compilation.CSharp
-{
-    using Microsoft.CSharp;
-    using Microsoft.CSharp.RuntimeBinder;
-    using RazorEngine.Compilation.ReferenceResolver;
-    using System;
-    using System.CodeDom.Compiler;
-    using System.Collections.Generic;
-    using System.Security;
-    using System.Web.Razor.Parser;
+﻿using Microsoft.CSharp;
+using Microsoft.CSharp.RuntimeBinder;
+using RazorEngine.Compilation.ReferenceResolver;
+using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Security;
+using System.Web.Razor.Parser;
 
+namespace RazorEngine.Compilation.CSharp
+{
     /// <summary>
     /// Defines a direct compiler service for the C# syntax.
     /// </summary>

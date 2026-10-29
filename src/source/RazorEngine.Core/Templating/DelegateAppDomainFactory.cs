@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Provides an <see cref="AppDomain"/> factory that supports delegated <see cref="AppDomain"/> creation.
     /// </summary>
