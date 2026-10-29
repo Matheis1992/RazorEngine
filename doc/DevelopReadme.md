@@ -53,11 +53,13 @@ Z version changes are bug-fixes and are highly backwards compatible.
 
 ### High level documentation ordered by project.
 
-- `RazorEngine.Core`: The Core of the RazorEngine framework, basically all you need to get started (including Roslyn support).
+- `RazorEngine.Core`: The Core of the RazorEngine framework, basically all you need to get started (including Roslyn support). It is the only shipped project (package `RazorEngine.NetFramework`).
 
-- `RazorEngine.Mvc`: A template base-class implementation which uses MVC classes to get the @Html and @Url features.
+- `Test.RazorEngine.Core`, `Test.RazorEngine.Core.Roslyn`: The unit tests.
 
-- `RazorEngine.Hosts.Console`: A simple console application showing the beauty of RazorEngine.
+- `TestHelper`: A small library that only templates reference; some tests load it from `test\TestHelper.dll` next to the test assembly.
+
+- `TestRunnerHelper`: A console application to step into a template with the debugger.
 
 
 ### The Project structure:
@@ -69,7 +71,6 @@ Z version changes are bug-fixes and are highly backwards compatible.
 - /doc/
 
 	Project documentation files. This folder contains both development and user documentation, read directly on GitHub.
-	`doc/templates` and `doc/content` are left over from the old FSharp.Formatting doc site and are currently unused.
 
 - /src/
 
