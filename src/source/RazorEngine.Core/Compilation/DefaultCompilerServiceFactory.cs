@@ -1,5 +1,6 @@
 ﻿namespace RazorEngine.Compilation
 {
+    using Microsoft.CodeAnalysis.CSharp;
     using RazorEngine.Roslyn.CSharp;
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -13,6 +14,17 @@
     [Serializable]
     public class DefaultCompilerServiceFactory : ICompilerServiceFactory
     {
+        #region Properties
+        /// <summary>
+        /// The C# language version templates are compiled with.
+        /// <see cref="LanguageVersion.Default"/> (the default) is the newest version the bundled Roslyn supports.
+        /// Pin an older version to keep the meaning of existing templates when a newer C# version changes it,
+        /// for example <see cref="LanguageVersion.CSharp13"/>, where <c>field</c> inside a property accessor is not yet a keyword:
+        /// <code>config.CompilerServiceFactory = new DefaultCompilerServiceFactory { LanguageVersion = LanguageVersion.CSharp13 };</code>
+        /// </summary>
+        public LanguageVersion LanguageVersion { [SecuritySafeCritical] get; [SecuritySafeCritical] set; }
+        #endregion
+
         #region Methods
         /// <summary>
         /// Creates a <see cref="ICompilerService"/> that supports the specified language.
@@ -26,7 +38,7 @@
             switch (language)
             {
                 case Language.CSharp:
-                    return new CSharpRoslynCompilerService();
+                    return new CSharpRoslynCompilerService { LanguageVersion = LanguageVersion };
 
                 default:
                     throw new ArgumentException("Unsupported language: " + language);
