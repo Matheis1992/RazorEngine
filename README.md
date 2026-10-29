@@ -1,5 +1,6 @@
 # RazorEngine
 
+[![NuGet](https://img.shields.io/nuget/v/RazorEngine.NetFramework.svg)](https://www.nuget.org/packages/RazorEngine.NetFramework)
 [![CI](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/Matheis1992/RazorEngine/actions/workflows/ci.yml)
 
 This is a maintained fork of [Antaris/RazorEngine](https://github.com/Antaris/RazorEngine), which has not been updated since 2018.
