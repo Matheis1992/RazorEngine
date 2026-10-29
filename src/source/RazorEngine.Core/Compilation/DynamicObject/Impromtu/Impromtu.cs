@@ -937,18 +937,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface
             return originalDynamic.Select(it => it.WithContext(caller).ActLike<TInterface>(otherInterfaces));
         }
 
-#if SILVERLIGHT5
-
-        /// <summary>
-        /// Gets the custom Type.
-        /// </summary>
-        /// <returns></returns>
-        public static Type GetDynamicCustomType(this object target)
-        {
-            return new ImpromptuRuntimeType(target.GetType(), target);
-        }
-#endif
-
     }
 
 }

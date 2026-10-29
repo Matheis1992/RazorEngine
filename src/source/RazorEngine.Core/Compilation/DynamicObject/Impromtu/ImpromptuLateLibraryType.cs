@@ -62,12 +62,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic
                 result = Impromptu.InvokeConstructor(_type, Util.NameArgsIfNecessary(binder.CallInfo, args));
                 return true;
             }
-#if SILVERLIGHT5
-            public Type GetCustomType()
-            {
-                return this.GetDynamicCustomType();
-            }
-#endif
         }
 
         /// <summary>
@@ -93,7 +87,6 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic
         }
 
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the <see cref="ImpromptuForwarder"/> class.
         /// </summary>
@@ -104,6 +97,5 @@ namespace RazorEngine.Compilation.ImpromptuInterface.Dynamic
         {
         }
 
-#endif
     }
 }
