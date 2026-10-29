@@ -67,6 +67,8 @@ Z version changes are bug-fixes and are highly backwards compatible.
 - /.github/workflows/
 
 	The GitHub Actions workflows: `ci.yml` builds, tests and packs the solution, `release.yml` publishes a tagged version.
+	`/.github/dependabot.yml` opens update PRs against `develop` for the NuGet packages (weekly, test packages grouped) and the actions (monthly).
+	Roslyn (`Microsoft.CodeAnalysis.CSharp`) is excluded and updated by hand, because it changes the template C# version and the binding redirects users need.
 
 - /doc/
 
