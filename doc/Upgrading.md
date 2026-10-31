@@ -17,7 +17,7 @@ The template syntax is unchanged. Decide which compiler your templates need:
       the namespaces stay.
  - **Use CodeDom** (the new default): nothing to do, but templates are compiled as C# 5 again.
    Templates with C# 6 or newer syntax fail to compile, and code that relied on `field` as the C# 14 backing field changes meaning back.
-   To get modern C# without Roslyn in your process, use another `CodeDomProvider`, see [Roslyn](Roslyn.md#modern-c-with-codedom).
+   To get modern C# without Roslyn in your process, use another `CodeDomProvider`, see [DotNetCompilerPlatform](DotNetCompilerPlatform.md).
  - The types obsolete since 4.3 are removed: replace `HtmlTemplateBase<T>` with `TemplateBase<T>`, and set
    `CompilerServiceFactory` on the `TemplateServiceConfiguration` instead of using `CompilerServiceBuilder`.
  - The members obsolete since 3.x are removed: use `Razor` instead of `RazorEngine` on templates (`TemplateBase`, `ITemplate`),
