@@ -58,6 +58,7 @@ namespace Test.RazorEngine.Core.DotNetCompilerPlatform
 
         /// <summary>
         /// Without the provider, the same template fails: the default CodeDom compiler is C# 5. This shows the provider makes the difference.
+        /// The errors are syntax errors (CS1xxx), so the template fails because of its C# 7/8 syntax and not for another reason.
         /// </summary>
         [Test]
         public void Default_RejectsModernCSharp()
@@ -65,12 +66,15 @@ namespace Test.RazorEngine.Core.DotNetCompilerPlatform
             using (var service = RazorEngineService.Create())
             {
                 var exception = Assert.Throws<TemplateCompilationException>(() => service.RunCompile(ModernTemplate, "dncp-default", typeof(Person), Matt));
+                var errors = exception.CompilerErrors.Where(e => !e.IsWarning).Select(e => e.ErrorNumber).ToList();
+                Assert.That(errors, Is.Not.Empty.And.All.Matches(@"^CS1\d{3}$"));
                 exception.CompilationData.DeleteAll();
             }
         }
 
         /// <summary>
-        /// <see cref="CodeDomCompilerServiceFactory.CompilerOptions"/> reach the provider's compiler: with /langversion:7.3 the C# 8 switch expression is rejected.
+        /// <see cref="CodeDomCompilerServiceFactory.CompilerOptions"/> reach the provider's compiler: with /langversion:7.3 the C# 8 switch expression
+        /// is rejected with CS8370 (feature not available in this language version).
         /// </summary>
         [Test]
         public void CompilerOptions_LimitTheLanguageVersion()
@@ -80,7 +84,7 @@ namespace Test.RazorEngine.Core.DotNetCompilerPlatform
             {
                 Assert.That(service.RunCompile("@(Model.Forename is string s ? s : \"nobody\")", "dncp-csharp73", typeof(Person), Matt), Is.EqualTo("Matt"));
                 var exception = Assert.Throws<TemplateCompilationException>(() => service.RunCompile(ModernTemplate, "dncp-csharp73-switch", typeof(Person), Matt));
-                Assert.That(exception.CompilerErrors.Select(e => e.ErrorText), Has.Some.Contains("8.0"));
+                Assert.That(exception.CompilerErrors.Select(e => e.ErrorNumber), Has.Some.EqualTo("CS8370"));
                 exception.CompilationData.DeleteAll();
             }
         }
