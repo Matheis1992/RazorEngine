@@ -208,6 +208,7 @@ The documentation is in the [doc](https://github.com/Matheis1992/RazorEngine/tre
  * [Caching](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Caching.md): how compiled templates are cached and invalidated, and what that means for memory.
  * [Reference resolver](https://github.com/Matheis1992/RazorEngine/blob/master/doc/ReferenceResolver.md): which assemblies templates can use.
  * [Roslyn](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Roslyn.md): the compiler, the C# language version and binding redirects.
+ * [DotNetCompilerPlatform](https://github.com/Matheis1992/RazorEngine/blob/master/doc/DotNetCompilerPlatform.md): modern C# with CodeDom, without Roslyn in your process.
  * [Isolation](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Isolation.md): unloading templates with `IsolatedRazorEngineService`.
  * [Intellisense and ReSharper](https://github.com/Matheis1992/RazorEngine/blob/master/doc/IntellisenseAndResharper.md): editor support for template files.
  * [Upgrading](https://github.com/Matheis1992/RazorEngine/blob/master/doc/Upgrading.md) and [Release notes](https://github.com/Matheis1992/RazorEngine/blob/master/doc/ReleaseNotes.md)

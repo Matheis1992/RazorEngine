@@ -16,6 +16,8 @@
   <!-- Tests -->
   <ItemGroup>
     <PackageVersion Include="Autofac" Version="9.3.4" />
+    <!-- doc/DotNetCompilerPlatform.md names this version and the C# version of its compiler (C# 10); update both together. -->
+    <PackageVersion Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="4.1.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="Moq" Version="4.21.0" />
     <PackageVersion Include="NUnit" Version="5.0.0" />
