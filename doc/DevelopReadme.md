@@ -57,7 +57,7 @@ Z version changes are bug-fixes and are highly backwards compatible.
 
 - `RazorEngine.Roslyn`: The Roslyn compiler service (`RoslynCompilerServiceFactory`), for modern C# in templates (package `RazorEngine.NetFramework.Roslyn`). Both packages share version and package settings in `src/source/Directory.Build.props` and are released together.
 
-- `Test.RazorEngine.Core`, `Test.RazorEngine.Core.Roslyn`: The unit tests.
+- `Test.RazorEngine.Core`, `Test.RazorEngine.Core.Roslyn`, `Test.RazorEngine.Core.DotNetCompilerPlatform`: The unit tests. The last one runs the core with the real Microsoft.CodeDom.Providers.DotNetCompilerPlatform (see `doc/DotNetCompilerPlatform.md`).
 
 - `TestHelper`: A small library that only templates reference; some tests load it from `test\TestHelper.dll` next to the test assembly.
 

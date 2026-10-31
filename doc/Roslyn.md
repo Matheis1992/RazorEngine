@@ -23,7 +23,8 @@ Installing the package alone does not change how templates are compiled; you cho
 > Do not install the old `RazorEngine.Roslyn` package. It depends on the original `RazorEngine` package,
 > which ships an assembly with the same name and conflicts with `RazorEngine.NetFramework`.
 
-Without the Roslyn package, CodeDom can still compile modern C# with another `CodeDomProvider`, see [Modern C# with CodeDom](#modern-c-with-codedom).
+Without the Roslyn package, CodeDom can still compile modern C# with another `CodeDomProvider`, see [Modern C# with CodeDom](#modern-c-with-codedom)
+and the step-by-step guide [DotNetCompilerPlatform](DotNetCompilerPlatform.md).
 
 Templates are always C#: VB.NET templates (`.vbhtml`, `Language.VisualBasic`) are not supported since version 4.
 
@@ -105,6 +106,8 @@ config.CompilerServiceFactory = new CodeDomCompilerServiceFactory
     CompilerOptions = "/langversion:7.3"
 };
 ```
+
+[DotNetCompilerPlatform](DotNetCompilerPlatform.md) describes this provider step by step: installation, language version, deployment and troubleshooting.
 
 `CodeDomProviderFactory` must return a new provider on every call (never `null`). With `IsolatedRazorEngineService`, create the factory
 in your `IConfigCreator.CreateConfiguration` (inside the new `AppDomain`): a lambda that captures variables cannot be serialized into it.
