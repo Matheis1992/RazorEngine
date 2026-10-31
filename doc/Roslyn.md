@@ -35,10 +35,30 @@ Templates are always C#: VB.NET templates (`.vbhtml`, `Language.VisualBasic`) ar
 | C# version in templates | C# 5 (the `csc.exe` of .NET Framework) | latest C# supported by Microsoft.CodeAnalysis.CSharp 5.6 (C# 14) |
 | Compilation | starts `csc.exe` as a separate process for each template | runs in-process; the first compilation in a process (or `AppDomain`) is slower because Roslyn has to be loaded |
 | First compile in a process (benchmark) | about 0.2 s | about 2 s |
-| Each further compile (benchmark) | about 85 ms | about 25 ms |
+| Each further compile (benchmark) | about 85 ms, more with many loaded assemblies (see [Reference resolver](ReferenceResolver.md#compile-time-with-codedom)) | about 25 ms |
 | Memory | the compiler runs in its own process | Roslyn stays loaded in your process: about 55 MB more |
 
 From about 30 templates per process on, Roslyn is faster overall.
+
+### Warming up Roslyn
+
+The first compile in a process takes about 2 s because Roslyn itself is loaded and compiled to machine code then, independent of your template.
+To keep that wait away from the first user, compile a small template at startup in the background:
+
+```csharp
+Task.Run(() =>
+{
+    var config = new TemplateServiceConfiguration { CompilerServiceFactory = new RoslynCompilerServiceFactory() };
+    using (var service = RazorEngineService.Create(config))
+    {
+        service.RunCompile("@Model.Length @foreach (var c in Model) {<i>@c.ToString().ToUpper()</i>} @if (Model.Any()) {<b>x</b>}",
+            "warmup", typeof(string), "x");
+    }
+});
+```
+
+This works for every later service in the same `AppDomain`. Use a warm-up template with the constructs your templates use (loops, conditions, LINQ):
+with the template above, the first real compile took about 50 ms; with just `@Model` it still took about 250 ms.
 
 With Roslyn, templates can use modern C#, for example:
 
