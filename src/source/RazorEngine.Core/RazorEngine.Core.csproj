@@ -15,9 +15,8 @@
     <PackageId>RazorEngine.NetFramework</PackageId>
     <Description>RazorEngine - A templating engine based on the Razor parser, for .NET Framework 4.8. Compiles templates with CodeDom; add RazorEngine.NetFramework.Roslyn to compile them with Roslyn (modern C#).</Description>
     <PackageTags>C# razor template engine programming</PackageTags>
-    <!-- Set the baseline to the new version after each release (see Releasing in CONTRIBUTING.md).
-         The Roslyn types that moved to RazorEngine.NetFramework.Roslyn in 5.0.0 are listed in CompatibilitySuppressions.xml. -->
-    <PackageValidationBaselineVersion>4.3.0</PackageValidationBaselineVersion>
+    <!-- Set the baseline to the new version after each release (see Releasing in CONTRIBUTING.md). -->
+    <PackageValidationBaselineVersion>5.0.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>

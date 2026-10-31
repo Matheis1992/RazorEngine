@@ -3,6 +3,7 @@ using RazorEngine.Compilation.ImpromptuInterface;
 using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
 using RazorEngine.Compilation.ImpromptuInterface.Optimization;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -32,6 +33,19 @@ namespace RazorEngine.Compilation
             private List<IDisposable> _disposables;
 
             /// <summary>
+            /// Members without arguments that the DLR cannot bind, but the reflection fallback in <see cref="GetResult"/> can, per type
+            /// and member name: for example MoveNext and Current of the enumerator of a list of anonymous objects. Each failed DLR attempt
+            /// throws a <see cref="RuntimeBinderException"/>, which costs several microseconds (three per item when a template enumerates
+            /// such a list), so these members are invoked directly. One table for property gets, one for method calls, so a remembered
+            /// getter never answers a method call (or the other way round). Not used for dynamic objects, whose members depend on the instance.
+            /// </summary>
+            private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, MethodInfo>> ReflectionOnlyGets =
+                new ConcurrentDictionary<Type, ConcurrentDictionary<string, MethodInfo>>();
+
+            private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, MethodInfo>> ReflectionOnlyCalls =
+                new ConcurrentDictionary<Type, ConcurrentDictionary<string, MethodInfo>>();
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="MarshalWrapper"/> class.
             /// </summary>
             /// <param name="wrapped">the wrapped object.</param>
@@ -45,53 +59,62 @@ namespace RazorEngine.Compilation
             }
 
             /// <summary>
-            /// Tries to find a member with the given name, the given arguments 
-            /// and the given parameter types and invokes that member.
+            /// Finds the method, property setter or property getter with the given name that takes the given parameter types.
             /// </summary>
             /// <param name="typeToSearch">the type we search for that member.</param>
             /// <param name="name">the name of the member</param>
-            /// <param name="args">the arguments of the member</param>
-            /// <param name="paramTypes">the type of the arguments of the member</param>
-            /// <param name="result">the result of invoking the found member.</param>
-            /// <returns>true if a member was found and invoked.</returns>
-            private bool TryFindInvokeMember(Type typeToSearch, string name, object[] args, Type[] paramTypes, out object result)
+            /// <param name="paramTypes">the types of the arguments (null for a null argument)</param>
+            /// <returns>the method to invoke, or null if there is none.</returns>
+            private static MethodInfo FindMethod(Type typeToSearch, string name, Type[] paramTypes)
             {
-                var members = typeToSearch.GetMember(name, RazorDynamicObject.Flags);
-                var found = false;
-                result = null;
-                foreach (var member in members)
+                foreach (var member in typeToSearch.GetMember(name, RazorDynamicObject.Flags))
                 {
                     var methodInfo = member as MethodInfo;
-                    if (!found && methodInfo != null && RazorDynamicObject.CompatibleWith(methodInfo.GetParameters(), paramTypes))
+                    if (methodInfo != null && RazorDynamicObject.CompatibleWith(methodInfo.GetParameters(), paramTypes))
                     {
-                        result = methodInfo.Invoke(_component, args);
-                        found = true;
-                        break;
+                        return methodInfo;
                     }
                     var property = member as PropertyInfo;
-                    if (!found && property != null)
+                    if (property != null)
                     {
                         var setMethod = property.GetSetMethod(true);
                         if (setMethod != null && RazorDynamicObject.CompatibleWith(setMethod.GetParameters(), paramTypes))
                         {
-                            result = setMethod.Invoke(_component, args);
-                            found = true;
-                            break;
+                            return setMethod;
                         }
                         var getMethod = property.GetGetMethod(true);
                         if (getMethod != null && RazorDynamicObject.CompatibleWith(getMethod.GetParameters(), paramTypes))
                         {
-                            result = getMethod.Invoke(_component, args);
-                            found = true;
-                            break;
+                            return getMethod;
                         }
                     }
                 }
-                return found;
+                return null;
             }
 
             /// <summary>
-            /// Unwrap the currently wrapped object 
+            /// Finds the member with reflection, on the runtime type and then on its public interfaces.
+            /// </summary>
+            private MethodInfo FindMethodWithInterfaces(string name, Type[] paramTypes)
+            {
+                return FindMethod(_runtimeType, name, paramTypes)
+                    ?? _runtimeType.GetInterfaces()
+                        .Where(i => i.IsPublic)
+                        .Select(i => FindMethod(i, name, paramTypes))
+                        .FirstOrDefault(m => m != null);
+            }
+
+            private object WrapResult(object result)
+            {
+                if (RazorDynamicObject.IsPrimitive(result))
+                {
+                    return result;
+                }
+                return RazorDynamicObject.Create(result, _disposables.Add, _allowMissing);
+            }
+
+            /// <summary>
+            /// Unwrap the currently wrapped object
             /// (note that this can cause crossing an app-domain boundary).
             /// </summary>
             /// <returns></returns>
@@ -112,7 +135,20 @@ namespace RazorEngine.Compilation
                 object result = null;
                 string name = invocation.Name.Name;
                 object[] args = invocation.Args;
-                Type[] paramTypes = args.Select(o => o.GetType()).ToArray();
+                Type[] paramTypes = args.Select(o => o == null ? null : o.GetType()).ToArray();
+
+                // Members without arguments whose DLR binding failed before on this type: invoke them directly (see ReflectionOnlyGets).
+                var reflectionOnly = args.Length != 0 || _component is IDynamicMetaObjectProvider ? null
+                    : invocation.Kind == InvocationKind.Get ? ReflectionOnlyGets
+                    : invocation.Kind == InvocationKind.InvokeMemberUnknown ? ReflectionOnlyCalls
+                    : null;
+                ConcurrentDictionary<string, MethodInfo> remembered;
+                MethodInfo rememberedMethod;
+                if (reflectionOnly != null && reflectionOnly.TryGetValue(_runtimeType, out remembered) && remembered.TryGetValue(name, out rememberedMethod))
+                {
+                    return WrapResult(rememberedMethod.Invoke(_component, args));
+                }
+
                 try
                 {
                     if (invocation.Kind == InvocationKind.NotSet && invocation.Name.Name == "_BinaryOperator")
@@ -169,25 +205,15 @@ namespace RazorEngine.Compilation
                         case InvocationKind.Get:
                         case InvocationKind.Set:
                         case InvocationKind.InvokeMemberUnknown:
+                            var method = FindMethodWithInterfaces(name, paramTypes);
+                            if (method != null)
                             {
-                                if (!found)
+                                result = method.Invoke(_component, args);
+                                found = true;
+                                if (reflectionOnly != null)
                                 {
-                                    if (!TryFindInvokeMember(_runtimeType, name, args, paramTypes, out result))
-                                    {
-                                        // search all interfaces as well
-                                        foreach (var @interface in _runtimeType.GetInterfaces().Where(i => i.IsPublic))
-                                        {
-                                            if (TryFindInvokeMember(@interface, name, args, paramTypes, out result))
-                                            {
-                                                found = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        found = true;
-                                    }
+                                    // Next time skip the DLR attempt that just failed.
+                                    reflectionOnly.GetOrAdd(_runtimeType, _ => new ConcurrentDictionary<string, MethodInfo>()).TryAdd(name, method);
                                 }
                             }
                             break;
@@ -204,14 +230,7 @@ namespace RazorEngine.Compilation
                         throw;
                     }
                 }
-                if (RazorDynamicObject.IsPrimitive(result))
-                {
-                    return result;
-                }
-                else
-                {
-                    return RazorDynamicObject.Create(result, _disposables.Add, _allowMissing);
-                }
+                return WrapResult(result);
             }
 
             protected override void Dispose(bool disposing)
@@ -391,7 +410,7 @@ namespace RazorEngine.Compilation
         /// Checks if the fiven ParameterInfo array is compatible with the given type array.
         /// </summary>
         /// <param name="parameterInfo"></param>
-        /// <param name="paramTypes"></param>
+        /// <param name="paramTypes">The argument types; a null entry stands for a null argument.</param>
         /// <returns></returns>
         public static bool CompatibleWith(ParameterInfo[] parameterInfo, Type[] paramTypes)
         {
@@ -401,7 +420,12 @@ namespace RazorEngine.Compilation
             }
             for (int i = 0; i < paramTypes.Length; i++)
             {
-                if (!parameterInfo[i].ParameterType.IsAssignableFrom(paramTypes[i]))
+                var parameterType = parameterInfo[i].ParameterType;
+                var compatible = paramTypes[i] == null
+                    // A null argument fits reference types and Nullable<T>.
+                    ? !parameterType.IsValueType || Nullable.GetUnderlyingType(parameterType) != null
+                    : parameterType.IsAssignableFrom(paramTypes[i]);
+                if (!compatible)
                 {
                     return false;
                 }
