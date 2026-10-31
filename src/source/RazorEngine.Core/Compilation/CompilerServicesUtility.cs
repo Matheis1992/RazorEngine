@@ -1,15 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace RazorEngine.Compilation
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Dynamic;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-
     /// <summary>
     /// Provides service methods for compilation.
     /// </summary>
@@ -167,7 +165,6 @@ namespace RazorEngine.Compilation
         /// Gets an enumerable of all assemblies loaded in the current domain.
         /// </summary>
         /// <returns>An enumerable of loaded assemblies.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static IEnumerable<Assembly> GetLoadedAssemblies()
         {
             var domain = AppDomain.CurrentDomain;

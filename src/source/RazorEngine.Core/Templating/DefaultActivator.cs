@@ -1,8 +1,7 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
-    using System.Diagnostics.Contracts;
+﻿using System;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Provides a default implementation of an <see cref="IActivator"/>.
     /// </summary>
@@ -14,7 +13,6 @@
         /// </summary>
         /// <param name="context">The instance context.</param>
         /// <returns>An instance of <see cref="ITemplate"/>.</returns>
-        [Pure]
         public ITemplate CreateInstance(InstanceContext context)
         {
             if (context == null)

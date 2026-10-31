@@ -5,7 +5,8 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
-  <!-- RazorEngine.Core: these become dependencies of the RazorEngine.NetFramework package. -->
+  <!-- Shipped packages: Microsoft.AspNet.Razor is the dependency of RazorEngine.NetFramework (RazorEngine.Core),
+       Microsoft.CodeAnalysis.CSharp only of RazorEngine.NetFramework.Roslyn (RazorEngine.Roslyn). -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.AspNet.Razor" Version="3.3.0" />
     <!-- 5.6.0 is the newest Roslyn whose dependencies are all stable releases (5.9.0 depends on a prerelease analyzer package). -->

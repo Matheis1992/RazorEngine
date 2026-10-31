@@ -1,9 +1,8 @@
-﻿namespace RazorEngine.Templating
+﻿using System;
+using System.IO;
+
+namespace RazorEngine.Templating
 {
-    using System;
-    using System.IO;
-
-
     /// <summary>
     /// Defines the required contract for implementing a template service.
     /// The main API for running templates.

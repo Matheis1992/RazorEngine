@@ -4,12 +4,14 @@
     <TargetFramework>net48</TargetFramework>
     <!-- Assembly attributes come from Properties\AssemblyInfo.cs. -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <!-- Only RazorEngine.Core is shipped as a NuGet package. -->
+    <!-- Only the projects in src\source are shipped as NuGet packages (see src\source\Directory.Build.props). -->
     <IsPackable>false</IsPackable>
     <!-- Shared strong-name key; projects opt in with <SignAssembly>true</SignAssembly>. -->
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)RazorEngine.NetFramework.snk</AssemblyOriginatorKeyFile>
     <!-- Deterministic paths in PDBs and symbol packages built by GitHub Actions. -->
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <!-- Apply the code style rules that .editorconfig sets to warning or error (using directive placement) in every build. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
 </Project>

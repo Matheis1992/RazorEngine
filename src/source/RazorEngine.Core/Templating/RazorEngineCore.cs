@@ -1,13 +1,12 @@
-﻿namespace RazorEngine.Templating
-{
-    using Compilation;
-    using Configuration;
-    using RazorEngine.Compilation.ReferenceResolver;
-    using System;
-    using System.Diagnostics.Contracts;
-    using System.Reflection;
-    using System.Security;
+﻿using RazorEngine.Compilation;
+using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Configuration;
+using System;
+using System.Reflection;
+using System.Security;
 
+namespace RazorEngine.Templating
+{
     internal class RazorEngineCore : IDisposable
     {
         private readonly ReadOnlyTemplateServiceConfiguration _config;
@@ -61,7 +60,8 @@
         /// <param name="modelType">The model type.</param>
         public ICompiledTemplate Compile(ITemplateKey key, Type modelType)
         {
-            Contract.Requires(key != null);
+            if (key == null)
+                throw new ArgumentNullException("key");
             var source = Resolve(key);
             var result = CreateTemplateType(source, modelType);
             return new CompiledTemplate(result.Item2, key, source, result.Item1, modelType);
@@ -74,7 +74,6 @@
         /// <param name="model">The model instance or NULL if no model exists.</param>
         /// <param name="viewbag"></param>
         /// <returns>An instance of <see cref="ITemplate"/>.</returns>
-        [Pure]
         internal virtual ITemplate CreateTemplate(ICompiledTemplate template, object model, DynamicViewBag viewbag)
         {
             var context = CreateInstanceContext(template.TemplateType);
@@ -91,7 +90,7 @@
         /// <param name="razorTemplate">The string template.</param>
         /// <param name="modelType">The model type or NULL if no model exists.</param>
         /// <returns>An instance of <see cref="Type"/>.</returns>
-        [Pure][SecuritySafeCritical] // This should not be SecuritySafeCritical (make the template classes SecurityCritical instead)
+        [SecuritySafeCritical] // This should not be SecuritySafeCritical (make the template classes SecurityCritical instead)
         public virtual Tuple<Type, CompilationData> CreateTemplateType(ITemplateSource razorTemplate, Type modelType)
         {
             var context = new TypeContext(_references.AddReferences)
@@ -140,7 +139,6 @@
         /// </summary>
         /// <param name="templateType">The template type.</param>
         /// <returns>An instance of <see cref="InstanceContext"/>.</returns>
-        [Pure]
         protected internal virtual InstanceContext CreateInstanceContext(Type templateType)
         {
             return new InstanceContext(_config.CachingProvider.TypeLoader, templateType);

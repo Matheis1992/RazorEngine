@@ -1,8 +1,7 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
-    using System.Diagnostics.Contracts;
+﻿using System;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines an activator that supports delegated activation.
     /// </summary>
@@ -19,7 +18,8 @@
         /// <param name="activator">The delegated used to create an instance of the template.</param>
         public DelegateActivator(Func<InstanceContext, ITemplate> activator)
         {
-            Contract.Requires(activator != null);
+            if (activator == null)
+                throw new ArgumentNullException("activator");
 
             _activator = activator;
         }
@@ -38,7 +38,6 @@
         /// </summary>
         /// <param name="context">The instance context.</param>
         /// <returns>An instance of <see cref="ITemplate"/>.</returns>
-        [Pure]
         public ITemplate CreateInstance(InstanceContext context)
         {
             return _activator(context);

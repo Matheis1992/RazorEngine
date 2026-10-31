@@ -1,11 +1,10 @@
-﻿namespace RazorEngine.Configuration
-{
-    using Compilation;
-    using System;
-    using System.Diagnostics.Contracts;
-    using Templating;
-    using Text;
+﻿using RazorEngine.Compilation;
+using RazorEngine.Templating;
+using RazorEngine.Text;
+using System;
 
+namespace RazorEngine.Configuration
+{
     /// <summary>
     /// Provides a default implementation of a <see cref="IConfigurationBuilder"/>.
     /// </summary>
@@ -22,7 +21,8 @@
         /// <param name="config">The default configuration that we build a new configuration from.</param>
         public FluentConfigurationBuilder(TemplateServiceConfiguration config)
         {
-            Contract.Requires(config != null);
+            if (config == null)
+                throw new ArgumentNullException("config");
 
             _config = config;
         }
@@ -162,7 +162,8 @@
         /// <returns>The current configuration builder.</returns>
         public IConfigurationBuilder ManageUsing(ITemplateManager resolver)
         {
-            Contract.Requires(resolver != null);
+            if (resolver == null)
+                throw new ArgumentNullException("resolver");
 
             _config.TemplateManager = resolver;
             return this;
@@ -175,7 +176,8 @@
         /// <returns>The current configuration builder.</returns>
         public IConfigurationBuilder ResolveUsing(Func<string, string> resolver)
         {
-            Contract.Requires(resolver != null);
+            if (resolver == null)
+                throw new ArgumentNullException("resolver");
 
             _config.TemplateManager = new DelegateTemplateManager(resolver);
             return this;

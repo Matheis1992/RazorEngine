@@ -16,18 +16,15 @@
 using RazorEngine.Compilation.ImpromptuInterface.Build;
 using RazorEngine.Compilation.ImpromptuInterface.InvokeExt;
 using RazorEngine.Compilation.ImpromptuInterface.Optimization;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+
 namespace RazorEngine.Compilation.ImpromptuInterface
 {
-    using System;
-
-
-
-
     /// <summary>
     /// Main API
     /// </summary>

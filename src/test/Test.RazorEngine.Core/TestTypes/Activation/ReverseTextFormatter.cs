@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Tests.TestTypes.Activation
-{
-    using System;
+﻿using System;
 
+namespace RazorEngine.Tests.TestTypes.Activation
+{
     /// <summary>
     /// Reverses the contents of the specified string,
     /// </summary>

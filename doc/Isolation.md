@@ -18,7 +18,7 @@ using (var service = IsolatedRazorEngineService.Create())
 
 You can provide your own `IAppDomainFactory` or use the `Func<AppDomain>` overloads of `IsolatedRazorEngineService.Create`
 to control how the `AppDomain` is created, as long as it is fully trusted.
-Pass your application's configuration file to the new `AppDomain`, so the binding redirects for Roslyn's dependencies apply there too:
+Pass your application's configuration file to the new `AppDomain`, so its binding redirects apply there too (needed for Roslyn's dependencies if you use RazorEngine.NetFramework.Roslyn):
 
 ```csharp
 var setup = new AppDomainSetup

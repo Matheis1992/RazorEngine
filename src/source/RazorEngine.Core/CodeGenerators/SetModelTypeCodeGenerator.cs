@@ -1,11 +1,11 @@
-﻿namespace RazorEngine.CodeGenerators
-{
-    using Common;
-    using RazorEngine.Compilation;
-    using System;
-    using System.Security;
-    using System.Web.Razor.Generator;
+﻿using RazorEngine.Common;
+using RazorEngine.Compilation;
+using System;
+using System.Security;
+using System.Web.Razor.Generator;
 
+namespace RazorEngine.CodeGenerators
+{
     [SecurityCritical]
     internal class SetModelTypeCodeGenerator : SetBaseTypeCodeGenerator
     {

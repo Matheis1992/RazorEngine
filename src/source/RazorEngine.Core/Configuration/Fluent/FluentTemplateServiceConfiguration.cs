@@ -1,13 +1,12 @@
-﻿namespace RazorEngine.Configuration
-{
-    using Compilation;
-    using RazorEngine.Compilation.ReferenceResolver;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using Templating;
-    using Text;
+﻿using RazorEngine.Compilation;
+using RazorEngine.Compilation.ReferenceResolver;
+using RazorEngine.Templating;
+using RazorEngine.Text;
+using System;
+using System.Collections.Generic;
 
+namespace RazorEngine.Configuration
+{
     /// <summary>
     /// Defines a fluent template service configuration
     /// </summary>
@@ -24,7 +23,8 @@
         /// <param name="config">The delegate used to create the configuration.</param>
         public FluentTemplateServiceConfiguration(Action<IConfigurationBuilder> config)
         {
-            Contract.Requires(config != null);
+            if (config == null)
+                throw new ArgumentNullException("config");
 
             config(new FluentConfigurationBuilder(_innerConfig));
         }

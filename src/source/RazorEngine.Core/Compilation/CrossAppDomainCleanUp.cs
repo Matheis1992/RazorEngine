@@ -105,21 +105,17 @@ namespace RazorEngine.Compilation
         /// <summary>
         /// Helper class to communicate with the Cleanup AppDomain.
         /// Inits the cleanup AppDomain (AssemblyResolve) and registers items to delete.
-        /// This is an implementation detail of <see cref="CrossAppDomainCleanUp"/>; do not use it directly.
         /// </summary>
         [SecurityCritical]
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public class CleanupHelper : global::RazorEngine.CrossAppDomainObject
+        internal class CleanupHelper : global::RazorEngine.CrossAppDomainObject
         {
             /// <summary>
             /// A helper to be able to subscribe to the DomainUnload event.
             /// Additionally we use this object to check if the printer lives in the wrong appdomain
             /// (which would lead to an application crash).
-            /// This is an implementation detail of <see cref="CrossAppDomainCleanUp"/>; do not use it directly.
             /// </summary>
             [SecurityCritical]
-            [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-            public class SubscribeHelper : CrossAppDomainObject
+            internal class SubscribeHelper : CrossAppDomainObject
             {
                 private CleanupHelper _helper = null;
                 /// <summary>

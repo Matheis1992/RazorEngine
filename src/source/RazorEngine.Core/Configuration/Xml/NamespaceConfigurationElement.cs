@@ -1,7 +1,7 @@
-﻿namespace RazorEngine.Configuration.Xml
-{
-    using System.Configuration;
+﻿using System.Configuration;
 
+namespace RazorEngine.Configuration.Xml
+{
     /// <summary>
     /// Defines a configuration of a namespace.
     /// </summary>

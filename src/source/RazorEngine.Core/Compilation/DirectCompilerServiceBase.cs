@@ -1,18 +1,17 @@
-﻿namespace RazorEngine.Compilation
-{
-    using System;
-    using System.CodeDom.Compiler;
-    using System.Diagnostics.Contracts;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Security;
-    using System.Security.Permissions;
-    using System.Security.Principal;
-    using System.Web.Razor;
-    using System.Web.Razor.Parser;
-    using Templating;
+﻿using RazorEngine.Templating;
+using System;
+using System.CodeDom.Compiler;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security;
+using System.Security.Permissions;
+using System.Security.Principal;
+using System.Web.Razor;
+using System.Web.Razor.Parser;
 
+namespace RazorEngine.Compilation
+{
     /// <summary>
     /// Provides a base implementation of a direct compiler service.
     /// </summary>
@@ -28,12 +27,16 @@
         /// Initialises a new instance of <see cref="DirectCompilerServiceBase"/>.
         /// </summary>
         /// <param name="codeLanguage">The razor code language.</param>
-        /// <param name="codeDomProvider">The code dom provider used to generate code.</param>
+        /// <param name="codeDomProvider">The code dom provider used to generate and compile the code.
+        /// The compiler service owns it and disposes it when the service is disposed.</param>
         /// <param name="markupParserFactory">The markup parser factory.</param>
         [SecurityCritical]
         protected DirectCompilerServiceBase(RazorCodeLanguage codeLanguage, CodeDomProvider codeDomProvider, Func<ParserBase> markupParserFactory)
             : base(codeLanguage, new ParserBaseCreator(markupParserFactory))
         {
+            if (codeDomProvider == null)
+                throw new ArgumentNullException("codeDomProvider");
+
             _codeDomProvider = codeDomProvider;
         }
         #endregion
@@ -43,16 +46,33 @@
         /// The underlaying CodeDomProvider instance.
         /// </summary>
         public virtual CodeDomProvider CodeDomProvider { get { return _codeDomProvider; } }
+
+        /// <summary>
+        /// Additional compiler switches, appended to the ones RazorEngine sets
+        /// (<c>/target:library /optimize /define:RAZORENGINE</c>), for example <c>/define:MYSYMBOL</c>.
+        /// Switches like <c>/langversion:7.3</c> need a provider that supports them; the default C# 5 compiler rejects them.
+        /// Note that <see cref="CodeDomProvider.CreateProvider(string)"/> does not apply the <c>compilerOptions</c>
+        /// of the <c>&lt;system.codedom&gt;</c> configuration section; set them here instead.
+        /// </summary>
+        public string CompilerOptions { get; set; }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Called with the compiler parameters of every compile, after RazorEngine has set them up completely
+        /// (including the output assembly in the temporary directory) and right before the compiler runs.
+        /// Override it to adjust the parameters, for example the <see cref="CompilerParameters.WarningLevel"/>.
+        /// </summary>
+        /// <param name="parameters">The compiler parameters.</param>
+        protected virtual void ConfigureCompilerParameters(CompilerParameters parameters)
+        {
+        }
 
         /// <summary>
         /// Creates the compile results for the specified <see cref="TypeContext"/>.
         /// </summary>
         /// <param name="context">The type context.</param>
         /// <returns>The compiler results.</returns>
-        [Pure]
         [SecurityCritical]
         private Tuple<CompilerResults, string> Compile(TypeContext context)
         {
@@ -81,8 +101,9 @@
                 TreatWarningsAsErrors = false,
                 TempFiles = new TempFileCollection(GetTemporaryDirectory(), true),
                 CompilerOptions =
-                    string.Format("/target:library /optimize /define:RAZORENGINE {0}",
-                        haveMscorlib ? "/nostdlib" : "")
+                    string.Format("/target:library /optimize /define:RAZORENGINE {0} {1}",
+                        haveMscorlib ? "/nostdlib" : "",
+                        CompilerOptions ?? "").Trim()
             };
 
 
@@ -92,7 +113,8 @@
                 String.Format("{0}.dll", GetAssemblyName(context)));
             @params.TempFiles.AddFile(assemblyName, true);
             @params.OutputAssembly = assemblyName;
-            
+            ConfigureCompilerParameters(@params);
+
             var results = _codeDomProvider.CompileAssemblyFromSource(@params, new [] { sourceCode });
             if (Debug)
             {
@@ -131,7 +153,7 @@
             return GenerateSourceCode(CodeDomProvider, results);
         }
 
-        [Pure, SecurityCritical]
+        [SecurityCritical]
         private Tuple<Type, CompilationData> CompileTypeImpl(TypeContext context)
         {
             var result = Compile(context);
@@ -195,7 +217,7 @@
         /// </summary>
         /// <param name="context">The type context which defines the type to compile.</param>
         /// <returns>The compiled type.</returns>
-        [Pure, SecurityCritical]
+        [SecurityCritical]
         public override Tuple<Type, CompilationData> CompileType(TypeContext context)
         {
             if (context == null)

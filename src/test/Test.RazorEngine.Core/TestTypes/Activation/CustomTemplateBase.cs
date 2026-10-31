@@ -1,8 +1,8 @@
-﻿namespace RazorEngine.Tests.TestTypes.Activation
-{
-    using System;
-    using Templating;
+﻿using RazorEngine.Templating;
+using System;
 
+namespace RazorEngine.Tests.TestTypes.Activation
+{
     /// <summary>
     /// Defines a test template base.
     /// </summary>

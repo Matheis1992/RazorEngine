@@ -1,14 +1,13 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Serialization;
-    using System.Security;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Security;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Defines an exception that occurs during template parsing.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors"), Serializable]
+    [Serializable]
     public class TemplateParsingException : Exception
     {
         #region Constructors

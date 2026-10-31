@@ -1,9 +1,9 @@
-﻿namespace RazorEngine.Tests.TestTypes.Activation
-{
-    using Autofac;
-    using System;
-    using Templating;
+﻿using Autofac;
+using RazorEngine.Templating;
+using System;
 
+namespace RazorEngine.Tests.TestTypes.Activation
+{
     /// <summary>
     /// Defines an activator that supports Unity.
     /// </summary>

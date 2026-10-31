@@ -1,12 +1,12 @@
+using RazorEngine.Text;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using SectionAction = System.Action;
+
 namespace RazorEngine.Templating
 {
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    using Text;
-    using SectionAction = System.Action;
-
     /// <summary>
     /// Provides a base implementation of a template.
     /// NOTE: This class is not serializable to prevent subtle errors 
@@ -56,11 +56,6 @@ namespace RazorEngine.Templating
         /// </summary>
         public IInternalTemplateService InternalTemplateService { internal get; set; }
 
-        /// <summary>
-        /// Gets or sets the current <see cref="IRazorEngineService"/> instance.
-        /// </summary>
-        [Obsolete("Use the Razor property instead, this is obsolete as it makes it difficult to use the RazorEngine namespace within templates.")]
-        public IRazorEngineService RazorEngine { get { return Razor; } set { Razor = value; } }
         /// <summary>
         /// Gets or sets the current <see cref="IRazorEngineService"/> instance.
         /// </summary>

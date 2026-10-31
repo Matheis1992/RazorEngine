@@ -1,12 +1,10 @@
-﻿namespace RazorEngine.Templating
-{
-    using Compilation;
-    using Configuration;
-    using System;
-    using System.Runtime.Remoting;
-    using System.Security;
-    
+﻿using RazorEngine.Configuration;
+using System;
+using System.Runtime.Remoting;
+using System.Security;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Provides template parsing and compilation in an isolated application domain.
     /// </summary>
@@ -80,26 +78,17 @@
             /// <returns></returns>
             public ITemplateServiceConfiguration CreateConfiguration()
             {
-                // We need to use the DefaultCompilerServiceFactory because we
-                // get conflicting TypeLoadExceptions in RazorEngineSourceReferenceResolver
-                // that cannot be resolved.
-                // ie) When not used inside the IsolatedRazorEngineService, we
-                // need [SecuritySafeCritical] for the methods. However, inside
-                // the Isolated service, it requires everything to be [SecurityCritical].
-                return new TemplateServiceConfiguration()
-                {
-                    CompilerServiceFactory = new DefaultCompilerServiceFactory()
-                };
+                // The default configuration compiles with CodeDom. To compile with Roslyn in the new AppDomain,
+                // pass an IConfigCreator that sets RoslynCompilerServiceFactory from RazorEngine.NetFramework.Roslyn.
+                return new TemplateServiceConfiguration();
             }
         }
 
         /// <summary>
         /// A helper to create the <see cref="IRazorEngineService"/> in the new <see cref="AppDomain"/>.
-        /// This is an implementation detail of <see cref="IsolatedRazorEngineService"/>; do not use it directly.
         /// Despite its name it is no sandbox: the <see cref="AppDomain"/> must be fully trusted.
         /// </summary>
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public class SanboxHelper : CrossAppDomainObject
+        internal class SanboxHelper : CrossAppDomainObject
         {
             /// <summary>
             /// Create the <see cref="IRazorEngineService"/> in the new <see cref="AppDomain"/>.

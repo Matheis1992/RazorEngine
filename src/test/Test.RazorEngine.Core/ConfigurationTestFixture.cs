@@ -1,14 +1,14 @@
-﻿namespace RazorEngine.Tests
-{
-    using Compilation;
-    using Configuration;
-    using Moq;
-    using NUnit.Framework;
-    using System;
-    using System.IO;
-    using Templating;
-    using Text;
+﻿using Moq;
+using NUnit.Framework;
+using RazorEngine.Compilation;
+using RazorEngine.Configuration;
+using RazorEngine.Templating;
+using RazorEngine.Text;
+using System;
+using System.IO;
 
+namespace RazorEngine.Tests
+{
     /// <summary>
     /// Defines a test fixture that provides tests for the <see cref="ITemplateServiceConfiguration"/> type.
     /// </summary>
@@ -153,6 +153,21 @@
             var delegateActivator = (DelegateActivator)config.Activator;
 
             Assert.That(delegateActivator.Activator == activator);
+        }
+
+        /// <summary>
+        /// Missing arguments are rejected right away. The checks used to be Code Contracts calls,
+        /// which the compiler removes unless CONTRACTS_FULL is defined, so they never ran.
+        /// </summary>
+        [Test]
+        public void NullArguments_ThrowArgumentNullException()
+        {
+            Assert.That(() => new FluentTemplateServiceConfiguration(null),
+                Throws.TypeOf<ArgumentNullException>().With.Property("ParamName").EqualTo("config"));
+            Assert.That(() => new FluentTemplateServiceConfiguration(c => c.ActivateUsing((Func<InstanceContext, ITemplate>)null)),
+                Throws.TypeOf<ArgumentNullException>().With.Property("ParamName").EqualTo("activator"));
+            Assert.That(() => new TypeLoader(null, new System.Reflection.Assembly[0]),
+                Throws.TypeOf<ArgumentNullException>().With.Property("ParamName").EqualTo("appDomain"));
         }
         #endregion
     }

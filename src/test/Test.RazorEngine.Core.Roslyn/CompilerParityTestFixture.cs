@@ -1,15 +1,16 @@
-namespace RazorEngine.Tests
-{
-    using Compilation;
-    using Configuration;
-    using NUnit.Framework;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Reflection;
-    using Templating;
+using NUnit.Framework;
+using RazorEngine.Compilation;
+using RazorEngine.Configuration;
+using RazorEngine.Roslyn;
+using RazorEngine.Templating;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 
+namespace Test.RazorEngine.Core.Roslyn
+{
     /// <summary>
-    /// Checks that the Roslyn (default) and the CodeDom compiler services compile templates the same way.
+    /// Checks that the Roslyn and the CodeDom (default) compiler services compile templates the same way.
     /// </summary>
     [TestFixture]
     public class CompilerParityTestFixture
@@ -19,8 +20,8 @@ namespace RazorEngine.Tests
         /// </summary>
         public static IEnumerable<TestCaseData> Factories()
         {
-            yield return new TestCaseData(new DefaultCompilerServiceFactory()).SetArgDisplayNames("Roslyn");
-            yield return new TestCaseData(new CodeDomCompilerServiceFactory()).SetArgDisplayNames("CodeDom");
+            yield return new TestCaseData(new RoslynCompilerServiceFactory()).SetArgDisplayNames("Roslyn");
+            yield return new TestCaseData(new DefaultCompilerServiceFactory()).SetArgDisplayNames("CodeDom");
         }
 
         private static ICompiledTemplate Compile(ICompilerServiceFactory factory, string template, bool debug, out string result)
@@ -63,8 +64,8 @@ namespace RazorEngine.Tests
         {
             foreach (var debug in new[] { false, true })
             {
-                yield return new TestCaseData(new DefaultCompilerServiceFactory(), debug).SetArgDisplayNames("Roslyn", "Debug=" + debug);
-                yield return new TestCaseData(new CodeDomCompilerServiceFactory(), debug).SetArgDisplayNames("CodeDom", "Debug=" + debug);
+                yield return new TestCaseData(new RoslynCompilerServiceFactory(), debug).SetArgDisplayNames("Roslyn", "Debug=" + debug);
+                yield return new TestCaseData(new DefaultCompilerServiceFactory(), debug).SetArgDisplayNames("CodeDom", "Debug=" + debug);
             }
         }
 

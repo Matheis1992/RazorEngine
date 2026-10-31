@@ -1,9 +1,9 @@
-﻿namespace RazorEngine.Compilation
-{
-    using RazorEngine.Compilation.ReferenceResolver;
-    using System;
-    using System.Security;
+﻿using RazorEngine.Compilation.ReferenceResolver;
+using System;
+using System.Security;
 
+namespace RazorEngine.Compilation
+{
     /// <summary>
     /// Defines the required contract for implementing a compiler service.
     /// </summary>

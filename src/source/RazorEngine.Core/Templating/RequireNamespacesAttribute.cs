@@ -1,8 +1,8 @@
-﻿namespace RazorEngine.Templating
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace RazorEngine.Templating
+{
     /// <summary>
     /// Allows base templates to define require template imports when
     /// generating templates.

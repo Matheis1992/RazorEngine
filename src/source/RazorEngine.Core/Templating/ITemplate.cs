@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 namespace RazorEngine.Templating
 {
     /// <summary>
@@ -13,11 +12,6 @@ namespace RazorEngine.Templating
         /// </summary>
         IInternalTemplateService InternalTemplateService { set; }
 
-        /// <summary>
-        /// Sets the cached template service.
-        /// </summary>
-        [Obsolete("Use the Razor property instead, this is obsolete as it makes it difficult to use the RazorEngine namespace within templates.")]
-        IRazorEngineService RazorEngine { set; }
         /// <summary>
         /// Sets the cached template service.
         /// </summary>

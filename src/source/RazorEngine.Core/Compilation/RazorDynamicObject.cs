@@ -1,19 +1,19 @@
-﻿namespace RazorEngine.Compilation
-{
-    using Microsoft.CSharp.RuntimeBinder;
-    using RazorEngine.Compilation.ImpromptuInterface;
-    using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
-    using RazorEngine.Compilation.ImpromptuInterface.Optimization;
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Security;
-    using System.Security.Permissions;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using RazorEngine.Compilation.ImpromptuInterface;
+using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
+using RazorEngine.Compilation.ImpromptuInterface.Optimization;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Security;
+using System.Security.Permissions;
 
+namespace RazorEngine.Compilation
+{
     /// <summary>
     /// Wraps a dynamic object for serialization of dynamic objects and anonymous type support.
     /// But this type will also make (static) types work which are not serializable.
