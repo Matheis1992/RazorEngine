@@ -32,6 +32,21 @@ Its build targets copy the compiler into the `roslyn` folder of the output folde
 Installing it only in a class library is not enough: the application that references the library gets the provider's assembly,
 but not the `roslyn` folder, and compiling fails (see [Troubleshooting](#troubleshooting)).
 
+Outside web projects, the package copies the `roslyn` folder only into the build output, not into the publish output:
+`dotnet publish` (or publishing to a folder in Visual Studio) leaves it out. To publish it too, add this target to the project file:
+
+```xml
+<!-- Publish the compiler too: Microsoft.CodeDom.Providers.DotNetCompilerPlatform copies it only into the build output. -->
+<Target Name="PublishRoslynCompiler" AfterTargets="ComputeResolvedFilesToPublishList">
+  <ItemGroup>
+    <_RoslynCompilerFile Include="$(OutDir)roslyn\**\*" />
+    <ResolvedFileToPublish Include="@(_RoslynCompilerFile)" RelativePath="roslyn\%(RecursiveDir)%(Filename)%(Extension)" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Target>
+```
+
+Web projects publish `bin\roslyn` without it.
+
 Version 4.x of the package needs .NET Framework 4.7.2 or newer.
 
 ## Configuration
@@ -66,7 +81,7 @@ Templates still run on .NET Framework: language features that need types .NET Fr
 
 ### With IsolatedRazorEngineService
 
-A lambda cannot be serialized into the isolated `AppDomain`, so create the configuration there, in an `IConfigCreator`:
+A lambda that captures variables cannot be serialized into the isolated `AppDomain`, so create the configuration there, in an `IConfigCreator`:
 
 ```csharp
 [Serializable]
@@ -90,11 +105,14 @@ using (var service = IsolatedRazorEngineService.Create(new DotNetCompilerPlatfor
 }
 ```
 
-The isolated `AppDomain` has the same application folder, so the provider finds the same `roslyn` folder.
+The provider looks for the `roslyn` folder in the application folder (`ApplicationBase`) of the isolated `AppDomain`. With the default
+`AppDomain` factory, that is the same folder as your application's. If you create the `AppDomain` yourself with another `ApplicationBase`,
+set `ROSLYN_COMPILER_LOCATION` (see [Troubleshooting](#troubleshooting)) or copy the `roslyn` folder there.
 
 ## Side effect: the configuration file of your project
 
-On every build, the package's build targets register its provider in the `<system.codedom>` section of the project's `App.config` or `web.config`.
+If the project has an `App.config` or `web.config`, the package's build targets register its provider in its `<system.codedom>` section on every build.
+Without such a file nothing is registered.
 RazorEngine does not need this entry, because you create the provider in code. In ASP.NET, however, this entry also changes how ASP.NET compiles
 its own views and pages, which is often why the package is installed in web projects anyway.
 
@@ -110,8 +128,11 @@ To keep your configuration file unchanged, turn the registration off in your pro
 
 The provider starts `VBCSCompiler.exe` from the `roslyn` folder, which keeps the compiler loaded between compiles. It is the reason the first
 compile is slow and the further compiles are fast. Outside ASP.NET it ended about 10 seconds after the last compile in our tests;
-the environment variable `VBCSCOMPILER_TTL` sets this time in seconds. While it runs, it locks the files in the `roslyn` folder;
-the package's build targets end it before they copy new files.
+the environment variable `VBCSCOMPILER_TTL` sets this time in seconds.
+
+While it runs, it locks the files in the `roslyn` folder. When you build in Visual Studio, the package's build targets end it before they copy
+new files. With `dotnet build` that does not work (you only get the warning "System.Management currently is only supported for Windows desktop
+applications"), and locked files are skipped with a warning. After updating the package, end `VBCSCompiler.exe` (or wait until it ends) before you build.
 
 ## Troubleshooting
 
