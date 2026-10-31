@@ -12,7 +12,9 @@
   <PropertyGroup>
     <PackageId>RazorEngine.NetFramework.Roslyn</PackageId>
     <PackageTags>C# razor template engine roslyn</PackageTags>
-    <!-- First release of this package in 5.0.0: no baseline yet. Set it after the first release (see Releasing in CONTRIBUTING.md). -->
+    <!-- dotnet pack compares the public API with this published version and fails on breaking changes.
+         Set it to the new version after each release (see Releasing in CONTRIBUTING.md). -->
+    <PackageValidationBaselineVersion>5.0.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>

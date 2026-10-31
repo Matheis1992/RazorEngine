@@ -12,14 +12,13 @@ namespace RazorEngine.Templating
         /// <summary>
         /// We wrap it without calling any memory leaking API.
         /// </summary>
-        private InvalidatingCachingProvider inner;
+        private readonly InvalidatingCachingProvider inner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultCachingProvider"/> class.
         /// </summary>
         public DefaultCachingProvider() : this(null)
         {
-            inner = new InvalidatingCachingProvider();
         }
 
         /// <summary>

@@ -23,6 +23,11 @@ The service methods use the cache like this:
 
 Use the same model type on every call for a template (or always `null`), otherwise each type is compiled separately.
 
+When several threads miss the cache for the same template and model type at the same time (`RunCompile`, and layouts and
+`@Include` while a template runs), it is compiled once: the other threads wait for that compile and use its result (since 5.0.1).
+If the compile fails, they all get its exception, and the next call compiles again. Different templates still compile in parallel.
+`Compile` always compiles, as in the table.
+
 ```csharp
 var config = new TemplateServiceConfiguration
 {

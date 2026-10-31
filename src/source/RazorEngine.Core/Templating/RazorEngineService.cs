@@ -14,7 +14,7 @@ namespace RazorEngine.Templating
         #region Fields
         private readonly ITemplateServiceConfiguration _config;
         //private readonly RazorEngineCore _core;
-        private readonly RazorEngineCore _core_with_cache;
+        private readonly RazorEngineCoreWithCache _core_with_cache;
 
         private bool disposed;
         #endregion
@@ -185,18 +185,16 @@ namespace RazorEngine.Templating
         /// <returns></returns>
         internal ICompiledTemplate GetCompiledTemplate(ITemplateKey key, Type modelType, bool compileOnCacheMiss)
         {
-            ICompiledTemplate template;
+            if (compileOnCacheMiss)
+            {
+                // Compiles only once when several threads miss the cache for the same template at the same time.
+                return _core_with_cache.GetOrCompile(key, modelType);
+            }
 
+            ICompiledTemplate template;
             if (!_config.CachingProvider.TryRetrieveTemplate(key, modelType, out template))
             {
-                if (compileOnCacheMiss)
-                {
-                    template = CompileAndCacheInternal(key, modelType);
-                }
-                else
-                {
-                    throw new InvalidOperationException("No template exists with key '" + key.GetUniqueKeyString() + "'");
-                }
+                throw new InvalidOperationException("No template exists with key '" + key.GetUniqueKeyString() + "'");
             }
             return template;
         }
